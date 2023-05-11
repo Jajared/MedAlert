@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity } from "react-native";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 

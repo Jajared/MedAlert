@@ -1,7 +1,5 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, SafeAreaView, Image, View } from "react-native";
 import MedicationItem from "../components/MedicationItem/MedicationItem";
-import { Component } from "react";
 import { FlatList } from "react-native";
 import HomeNavBar from "../components/HomeNavBar/HomeNavBar";
 

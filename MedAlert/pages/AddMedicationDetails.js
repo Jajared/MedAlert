@@ -1,10 +1,15 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity, TextInput, Button } from "react-native";
+import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button } from "react-native";
 import { useState } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function AddMedicationDetails({ props, navigation }) {
   const [state, setState] = useState({ name: "", purpose: "", tabletsPerIntake: 1, frequencyPerIntake: 0 });
+  const [date, setDate] = useState(new Date(1598051730000));
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setDate(currentDate);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -31,6 +36,10 @@ export default function AddMedicationDetails({ props, navigation }) {
         />
         <Text style={styles.text}>{state.tabletsPerIntake}</Text>
         <Button title="+" onPress={() => setState((prevState) => ({ ...prevState, tabletsPerIntake: prevState.tabletsPerIntake + 1 }))} />
+      </View>
+      <View>
+        <Text>Start Time</Text>
+        <DateTimePicker testID="dateTimePicker" value={date} mode={"time"} is24Hour={true} onChange={onChange} />
       </View>
     </SafeAreaView>
   );

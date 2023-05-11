@@ -1,6 +1,4 @@
-import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity } from "react-native";
-import { Component } from "react";
 
 export default function BackNavBar({ title, props, navigation }) {
   return (
