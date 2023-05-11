@@ -2,23 +2,23 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity } from "react-native";
 import { Component } from "react";
 
-export default function BackNavBar({ props, navigation }) {
+export default function BackNavBar({ title, props, navigation }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate("Home")}>
         <Image src={"/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/back-icon.png"} style={styles.backButton} />
       </TouchableOpacity>
-      <Text style={{ fontSize: 20, fontWeight: "bold" }}>Select type of medication</Text>
+      <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" }}>{title}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "column",
+    flexDirection: "row",
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "flex-starts",
+    justifyContent: "flex-start",
     borderColor: "black",
     borderWidth: 1,
   },
@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
   backButton: {
     width: 30,
     height: 30,
-    resizeMode: "contain",
-    margin: 1,
+    borderRadius: 1,
+    borderColor: "black",
   },
 
   textContainer: {

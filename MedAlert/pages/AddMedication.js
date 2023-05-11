@@ -1,18 +1,19 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity } from "react-native";
-import MedicationItem from "../components/MedicationItem/MedicationItem";
-import { Component } from "react";
-import { FlatList } from "react-native";
-import HomeNavBar from "../components/HomeNavBar/HomeNavBar";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 
 export default function AddMedication({ props, navigation }) {
   return (
     <SafeAreaView style={styles.container}>
-      <BackNavBar navigation={navigation} />
-      {/*</>View style={styles.textContainer}>
-        <Text>Hello</Text>
-  </View>*/}
+      <BackNavBar navigation={navigation} title="Select type of navigation" />
+      <View style={styles.typeContainer}>
+        <Image src={"/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/pill-icon.png"} style={styles.icon} />
+        <Text style={styles.medicineType}>Tablet</Text>
+      </View>
+      <View style={styles.typeContainer}>
+        <Image src={"/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/syrup-icon.png"} style={styles.icon} />
+        <Text style={styles.medicineType}>Liquid</Text>
+      </View>
     </SafeAreaView>
   );
 }
@@ -24,16 +25,20 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-starts",
   },
-
-  backButton: {
+  medicineType: {
+    flex: 2,
+    fontWeight: "bold",
+    fontSize: 25,
+  },
+  icon: {
     flex: 1,
-    width: 30,
-    height: 30,
+    width: "100%",
+    height: "100%",
     resizeMode: "contain",
-    margin: 1,
+    margin: 20,
   },
 
-  textContainer: {
+  typeContainer: {
     backgroundColor: "#FAF6E0",
     borderColor: "black",
     borderWidth: 1,
@@ -41,7 +46,7 @@ const styles = StyleSheet.create({
     margin: 15,
     alignItems: "center",
     height: 100,
-    width: 350,
+    width: 200,
     flexDirection: "row",
   },
 });
