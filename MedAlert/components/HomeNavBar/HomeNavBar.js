@@ -6,7 +6,7 @@ export default function HomeNavBar({ props, navigation }) {
   return (
     <View style={styles.container}>
       <Text style={{ fontSize: 25, fontWeight: "bold" }}>Upcoming Reminders </Text>
-      <TouchableOpacity onPress={() => navigation.navigate("Add Medication")}>
+      <TouchableOpacity onPress={() => navigation.navigate("Add Medication Type")}>
         <Image src={"/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/plus-icon.png"} style={styles.addButton} />
       </TouchableOpacity>
     </View>

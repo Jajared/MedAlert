@@ -4,7 +4,8 @@ import { useState, useEffect } from "react";
 import HomeScreen from "./pages/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import AddMedication from "./pages/AddMedication";
+import AddMedicationType from "./pages/AddMedicationType";
+import AddMedicationDetails from "./pages/AddMedicationDetails";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -18,8 +19,11 @@ export default function App() {
         <Stack.Screen name="Home" options={{ headerShown: false }}>
           {(props) => <HomeScreen {...props} props={{ allMedicationItems: allMedicationItems }} />}
         </Stack.Screen>
-        <Stack.Screen name="Add Medication" options={{ headerShown: false }}>
-          {(props) => <AddMedication {...props} />}
+        <Stack.Screen name="Add Medication Type" options={{ headerShown: false }}>
+          {(props) => <AddMedicationType {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="Add Medication Details" options={{ headerShown: false }}>
+          {(props) => <AddMedicationDetails {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

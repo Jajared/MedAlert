@@ -8,7 +8,7 @@ export default class MedicationItem extends Component {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.textContainer}>
-          <Image src={"/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/pill-icon.png"} style={styles.icon} />
+          <Image source={require("../../assets/pill-icon.png")} style={styles.icon} />
           <View style={styles.medicationInfo}>
             <Text style={{ fontWeight: "bold", fontSize: 20 }}>{medicationData.Name}</Text>
             <Text>{medicationData.Purpose}</Text>

@@ -5,8 +5,8 @@ import { Component } from "react";
 export default function BackNavBar({ title, props, navigation }) {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-        <Image src={"/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/back-icon.png"} style={styles.backButton} />
+      <TouchableOpacity onPress={() => navigation.goBack()}>
+        <Image source={require("../../assets/back-icon.png")} style={styles.backButton} />
       </TouchableOpacity>
       <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" }}>{title}</Text>
     </View>
@@ -19,8 +19,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "flex-start",
-    borderColor: "black",
-    borderWidth: 1,
   },
 
   backButton: {
