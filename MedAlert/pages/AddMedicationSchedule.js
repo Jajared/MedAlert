@@ -89,6 +89,7 @@ export default function AddMedicationSchedule({ props, navigation, route, addMed
           }}
         />
       </View>
+      <View style={styles.bottomNavBar}></View>
     </SafeAreaView>
   );
 }
@@ -100,6 +101,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "flex-starts",
+  },
+  bottomNavBar: {
+    flex: 1,
   },
   optionsSection: {
     flex: 1,

@@ -108,7 +108,7 @@ export default function AddMedicationDetails({ props, navigation, route }) {
           }}
         />
       </View>
-      <View style={{ flex: 1 }} />
+      <View style={styles.bottomNavBar} />
     </SafeAreaView>
   );
 }
@@ -124,6 +124,9 @@ const styles = StyleSheet.create({
   nameSection: {
     flex: 1,
     width: "80%",
+  },
+  bottomNavBar: {
+    flex: 1,
   },
   purposeSection: {
     flex: 1,

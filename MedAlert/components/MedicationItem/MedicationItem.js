@@ -76,7 +76,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-end",
     paddingRight: 30,
-    height: 80,
+    height: 100,
+    margin: 15,
   },
   actionText: {
     color: "#fff",

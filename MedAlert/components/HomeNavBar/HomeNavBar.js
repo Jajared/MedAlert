@@ -1,30 +1,50 @@
 import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function HomeNavBar({ props, navigation }) {
   return (
     <View style={styles.container}>
-      <Text style={{ fontSize: 25, fontWeight: "bold" }}>Upcoming Reminders </Text>
-      <TouchableOpacity onPress={() => navigation.navigate("Add Medication Type")}>
-        <Image source={require("../../assets/plus-icon.png")} style={styles.addButton} />
+      <TouchableOpacity onPress={() => navigation.navigate("Add Medication Type")} style={styles.addButton}>
+        <AntDesign name="plus" size={40} color="black" />
       </TouchableOpacity>
+      <Text style={styles.userSection}>Hey Jane!</Text>
+      <Text style={styles.daySection}>{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(new Date())}</Text>
+      <Text style={styles.upcomingRemindersSection}>Upcoming Reminders </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
+    flex: 1,
+    flexDirection: "column",
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    margin: 4,
+  },
+  userSection: {
+    flex: 1,
+    width: "90%",
+    fontSize: 20,
+    fontWeight: "300",
+  },
+  upcomingRemindersSection: {
+    flex: 1,
+    fontSize: 25,
+    fontWeight: "bold",
+    width: "90%",
+  },
+  daySection: {
+    flex: 1,
+    fontSize: 30,
+    fontWeight: "bold",
+    width: "90%",
   },
   addButton: {
-    height: 35,
-    width: 35,
-    resizeMode: "contain",
-    borderWidth: 1,
-    borderColor: "transparent",
-    // justifyContent: "flex-end",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    paddingRight: 30,
+    width: "100%",
   },
 });

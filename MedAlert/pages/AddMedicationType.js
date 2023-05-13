@@ -13,6 +13,7 @@ export default function AddMedicationType({ props, navigation }) {
         <Image source={require("../assets/syrup-icon.png")} style={styles.icon} />
         <Text style={styles.medicineType}>Liquid</Text>
       </TouchableOpacity>
+      <View style={styles.bottomNavBar}></View>
     </SafeAreaView>
   );
 }
@@ -24,6 +25,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "flex-starts",
+  },
+  bottomNavBar: {
+    flex: 1,
   },
   medicineType: {
     flex: 2,
