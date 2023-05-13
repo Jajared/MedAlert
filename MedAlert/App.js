@@ -13,6 +13,9 @@ export default function App() {
     { Name: "Paracetamol", Type: "Pill", Purpose: "Fever", Instructions: { TabletsPerIntake: 2, FrequencyPerDay: 4, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
     { Name: "Metophan", Type: "Liquid", Purpose: "Cough", Instructions: { TabletsPerIntake: 4, FrequencyPerDay: 4, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
   ]);
+  function addMedication(medicationData) {
+    setAllMedicationItems((prevState) => [...prevState, medicationData]);
+  }
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -26,7 +29,7 @@ export default function App() {
           {(props) => <AddMedicationDetails {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Add Medication Schedule" options={{ headerShown: false }}>
-          {(props) => <AddMedicationSchedule {...props} />}
+          {(props) => <AddMedicationSchedule {...props} addMedication={addMedication} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

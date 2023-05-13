@@ -4,14 +4,17 @@ import BackNavBar from "../components/BackNavBar/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-export default function AddMedicationSchedule({ props, navigation }) {
-  const [state, setState] = useState({ name: "", purpose: "", tabletsPerIntake: 1, frequencyPerIntake: 0 });
+export default function AddMedicationSchedule({ props, navigation, route, addMedication }) {
+  const [state, setState] = useState({ ...route.params.state });
   const [date, setDate] = useState(new Date(1598051730000));
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setDate(currentDate);
   };
-
+  function setSpecifications(value) {
+    setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, Specifications: value } }));
+  }
+  console.log(state);
   return (
     <SafeAreaView style={styles.container}>
       <BackNavBar navigation={navigation} title="Schedule" />
@@ -25,6 +28,9 @@ export default function AddMedicationSchedule({ props, navigation }) {
                 textDecorationLine: "none",
               }}
               style={styles.optionsItem}
+              isChecked={state.Instructions.Specifications === "Before Meal"}
+              onPress={() => setSpecifications("Before Meal")}
+              disableBuiltInState={true}
             />
             <BouncyCheckbox
               text="After Meal"
@@ -32,6 +38,9 @@ export default function AddMedicationSchedule({ props, navigation }) {
                 textDecorationLine: "none",
               }}
               style={styles.optionsItem}
+              isChecked={state.Instructions.Specifications === "After Meal"}
+              onPress={() => setSpecifications("After Meal")}
+              disableBuiltInState={true}
             />
           </View>
           <View style={styles.optionsRow}>
@@ -41,6 +50,9 @@ export default function AddMedicationSchedule({ props, navigation }) {
                 textDecorationLine: "none",
               }}
               style={styles.optionsItem}
+              isChecked={state.Instructions.Specifications === "Every morning"}
+              onPress={() => setSpecifications("Every morning")}
+              disableBuiltInState={true}
             />
             <BouncyCheckbox
               text="No specific instructions"
@@ -48,6 +60,9 @@ export default function AddMedicationSchedule({ props, navigation }) {
                 textDecorationLine: "none",
               }}
               style={styles.optionsItem}
+              isChecked={state.Instructions.Specifications === "No specific instructions"}
+              onPress={() => setSpecifications("No specific instructions")}
+              disableBuiltInState={true}
             />
           </View>
         </View>
@@ -58,7 +73,13 @@ export default function AddMedicationSchedule({ props, navigation }) {
       </View>
       <View style={{ flex: 3 }} />
       <View style={styles.nextSection}>
-        <Button title="next" onPress={() => navigation.navigate("Add Medication Schedule")} />
+        <Button
+          title="next"
+          onPress={() => {
+            addMedication(state);
+            navigation.navigate("Home");
+          }}
+        />
       </View>
     </SafeAreaView>
   );

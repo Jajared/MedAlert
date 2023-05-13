@@ -5,7 +5,7 @@ export default function AddMedicationType({ props, navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <BackNavBar navigation={navigation} title="Select type of medication" />
-      <TouchableOpacity style={styles.typeContainer} onPress={() => navigation.navigate("Add Medication Details")}>
+      <TouchableOpacity style={styles.typeContainer} onPress={() => navigation.navigate("Add Medication Details", { Type: "Pill" })}>
         <Image source={require("../assets/pill-icon.png")} style={styles.icon} />
         <Text style={styles.medicineType}>Tablet</Text>
       </TouchableOpacity>

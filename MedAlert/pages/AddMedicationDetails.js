@@ -1,42 +1,90 @@
 import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button } from "react-native";
 import { useState } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 
-export default function AddMedicationDetails({ props, navigation }) {
-  const [state, setState] = useState({ name: "", purpose: "", tabletsPerIntake: 1, frequencyPerIntake: 0 });
-
+export default function AddMedicationDetails({ props, navigation, route }) {
+  const [state, setState] = useState({ Name: "", Type: route.params.Type, Purpose: "", Instructions: { TabletsPerIntake: 1, FrequencyPerDay: 0, Specifications: "", FirstDosageTiming: "" } });
+  function setFrequencyPerIntake(value) {
+    setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FrequencyPerDay: value } }));
+  }
   return (
     <SafeAreaView style={styles.container}>
       <BackNavBar navigation={navigation} title="Add Medication" />
       <View style={styles.nameSection}>
         <Text style={styles.textHeader}>Name of Medication</Text>
-        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, name: text })} value={state.name} placeholder="Name" />
+        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Name: text })} value={state.name} placeholder="Name" />
       </View>
       <View style={styles.purposeSection}>
         <Text style={styles.textHeader}>Purpose of Medication</Text>
-        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, purpose: text })} value={state.purpose} placeholder="Purpose" />
+        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Purpose: text })} value={state.purpose} placeholder="Purpose" />
       </View>
       <View style={styles.intakeSection}>
         <Text style={styles.textHeader}>Tablets per Intake</Text>
         <Button
           title="-"
           onPress={() => {
-            if (state < 1) {
-              setState((prevState) => ({ ...prevState, tabletsPerIntake: prevState.tabletsPerIntake - 1 }));
+            if (state.tabletsPerIntake > 1) {
+              setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake - 1 } }));
             } else {
               alert("Cannot be less than 1");
             }
           }}
         />
-        <Text style={styles.text}>{state.tabletsPerIntake}</Text>
-        <Button title="+" onPress={() => setState((prevState) => ({ ...prevState, tabletsPerIntake: prevState.tabletsPerIntake + 1 }))} />
+        <Text style={styles.text}>{state.Instructions.TabletsPerIntake}</Text>
+        <Button title="+" onPress={() => setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake + 1 } }))} />
       </View>
       <View style={styles.frequencySection}>
         <Text style={styles.textHeader}>Take this medication:</Text>
+        <View style={styles.optionsContainer}>
+          <View style={styles.optionsRow}>
+            <BouncyCheckbox
+              text="Daily"
+              textStyle={{
+                textDecorationLine: "none",
+              }}
+              style={styles.frequencyItem}
+              isChecked={state.Instructions.FrequencyPerDay === 1}
+              onPress={() => setFrequencyPerIntake(1)}
+              disableBuiltInState={true}
+            />
+            <BouncyCheckbox
+              text="Twice a day"
+              textStyle={{
+                textDecorationLine: "none",
+              }}
+              style={styles.frequencyItem}
+              isChecked={state.Instructions.FrequencyPerDay === 2}
+              onPress={() => setFrequencyPerIntake(2)}
+              disableBuiltInState={true}
+            />
+          </View>
+          <View style={styles.optionsRow}>
+            <BouncyCheckbox
+              text="Three times a day"
+              textStyle={{
+                textDecorationLine: "none",
+              }}
+              style={styles.frequencyItem}
+              isChecked={state.Instructions.FrequencyPerDay === 3}
+              onPress={() => setFrequencyPerIntake(3)}
+              disableBuiltInState={true}
+            />
+            <BouncyCheckbox
+              text="Four times a day"
+              textStyle={{
+                textDecorationLine: "none",
+              }}
+              style={styles.frequencyItem}
+              isChecked={state.Instructions.FrequencyPerDay === 4}
+              onPress={() => setFrequencyPerIntake(4)}
+              disableBuiltInState={true}
+            />
+          </View>
+        </View>
       </View>
       <View style={styles.nextSection}>
-        <Button title="next" onPress={() => navigation.navigate("Add Medication Schedule")} />
+        <Button title="next" onPress={() => navigation.navigate("Add Medication Schedule", { state })} />
       </View>
       <View style={{ flex: 1 }} />
     </SafeAreaView>
@@ -68,8 +116,11 @@ const styles = StyleSheet.create({
     width: "80%",
   },
   frequencySection: {
-    flex: 3,
+    flex: 2,
     width: "80%",
+  },
+  frequencyItem: {
+    marginTop: 5,
   },
   textHeader: {
     fontSize: 16,
