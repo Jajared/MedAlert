@@ -1,12 +1,13 @@
 import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function BackNavBar({ title, props, navigation }) {
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Image source={require("../../assets/back-icon.png")} style={styles.backButton} />
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
-      <Text style={{ fontSize: 20, fontWeight: "bold", textAlign: "center" }}>{title}</Text>
+      <Text style={styles.title}>{title}</Text>
     </View>
   );
 }
@@ -14,27 +15,17 @@ export default function BackNavBar({ title, props, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
+    alignItems: "center",
     backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "flex-start",
+    height: 50,
+    paddingHorizontal: 16,
   },
-
   backButton: {
-    width: 30,
-    height: 30,
-    borderRadius: 1,
-    borderColor: "black",
+    marginLeft: -20,
   },
-
-  textContainer: {
-    backgroundColor: "#FAF6E0",
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 15,
-    margin: 15,
-    alignItems: "center",
-    height: 100,
-    width: 350,
-    flexDirection: "row",
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginLeft: 16,
   },
 });

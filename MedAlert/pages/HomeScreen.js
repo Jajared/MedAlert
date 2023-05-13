@@ -15,6 +15,7 @@ export default function HomeScreen({ props, navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     flexDirection: "column",
     backgroundColor: "#fff",
     alignItems: "center",
