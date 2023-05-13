@@ -8,7 +8,7 @@ export default function MedicationItem({ props, navigation }) {
   const syrupIcon = require("../../assets/syrup-icon.png");
   const rightActions = (progress, dragX) => {
     const scale = dragX.interpolate({
-      inputRange: [-100, 0],
+      inputRange: [-50, 0],
       outputRange: [1, 0],
       extrapolate: "clamp",
     });
@@ -72,17 +72,16 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   rightAction: {
-    backgroundColor: "#6f6f6f",
+    backgroundColor: "green",
     justifyContent: "center",
-    alignItems: "flex-end",
-    paddingRight: 30,
     height: 100,
     margin: 15,
+    borderRadius: 15,
   },
   actionText: {
     color: "#fff",
     fontWeight: "600",
     fontSize: 16,
-    padding: 20,
+    padding: 10,
   },
 });
