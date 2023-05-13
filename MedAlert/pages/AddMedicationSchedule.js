@@ -14,7 +14,13 @@ export default function AddMedicationSchedule({ props, navigation, route, addMed
   function setSpecifications(value) {
     setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, Specifications: value } }));
   }
-  console.log(state);
+  function handleSubmit() {
+    if (state.Instructions.Specifications.trim() == "") {
+      alert("Please select instructions");
+      return false;
+    }
+    return true;
+  }
   return (
     <SafeAreaView style={styles.container}>
       <BackNavBar navigation={navigation} title="Schedule" />
@@ -76,8 +82,10 @@ export default function AddMedicationSchedule({ props, navigation, route, addMed
         <Button
           title="next"
           onPress={() => {
-            addMedication(state);
-            navigation.navigate("Home");
+            if (handleSubmit() == true) {
+              addMedication(state);
+              navigation.navigate("Home");
+            }
           }}
         />
       </View>

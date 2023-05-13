@@ -8,7 +8,7 @@ export default function HomeScreen({ props, navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <HomeNavBar navigation={navigation} />
-      {allMedicationItems && <FlatList data={allMedicationItems} renderItem={(data) => <MedicationItem title={data.Name} props={data} />} keyExtractor={(item) => item.Name} />}
+      {allMedicationItems && <FlatList data={allMedicationItems} renderItem={(data) => <MedicationItem title={data.Name} props={data} navigation={navigation} />} keyExtractor={(item) => item.Name} />}
     </SafeAreaView>
   );
 }

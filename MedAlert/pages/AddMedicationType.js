@@ -9,7 +9,7 @@ export default function AddMedicationType({ props, navigation }) {
         <Image source={require("../assets/pill-icon.png")} style={styles.icon} />
         <Text style={styles.medicineType}>Tablet</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.typeContainer}>
+      <TouchableOpacity style={styles.typeContainer} onPress={() => navigation.navigate("Add Medication Details", { Type: "Liquid" })}>
         <Image source={require("../assets/syrup-icon.png")} style={styles.icon} />
         <Text style={styles.medicineType}>Liquid</Text>
       </TouchableOpacity>

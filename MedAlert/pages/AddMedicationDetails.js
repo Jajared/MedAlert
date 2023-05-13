@@ -8,16 +8,31 @@ export default function AddMedicationDetails({ props, navigation, route }) {
   function setFrequencyPerIntake(value) {
     setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FrequencyPerDay: value } }));
   }
+  function handleSubmit() {
+    if (state.Name.trim() === "") {
+      alert("Please enter name of medication");
+      return false;
+    }
+    if (state.Purpose.trim() === "") {
+      alert("Please enter purpose of medication");
+      return false;
+    }
+    if (state.Instructions.FrequencyPerDay == 0) {
+      alert("Please select frequency");
+      return false;
+    }
+    return true;
+  }
   return (
     <SafeAreaView style={styles.container}>
       <BackNavBar navigation={navigation} title="Add Medication" />
       <View style={styles.nameSection}>
         <Text style={styles.textHeader}>Name of Medication</Text>
-        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Name: text })} value={state.name} placeholder="Name" />
+        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Name: text.trim() })} value={state.name} placeholder="Name" />
       </View>
       <View style={styles.purposeSection}>
         <Text style={styles.textHeader}>Purpose of Medication</Text>
-        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Purpose: text })} value={state.purpose} placeholder="Purpose" />
+        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Purpose: text.trim() })} value={state.purpose} placeholder="Purpose" />
       </View>
       <View style={styles.intakeSection}>
         <Text style={styles.textHeader}>Tablets per Intake</Text>
@@ -84,7 +99,14 @@ export default function AddMedicationDetails({ props, navigation, route }) {
         </View>
       </View>
       <View style={styles.nextSection}>
-        <Button title="next" onPress={() => navigation.navigate("Add Medication Schedule", { state })} />
+        <Button
+          title="next"
+          onPress={() => {
+            if (handleSubmit() == true) {
+              navigation.navigate("Add Medication Schedule", { state });
+            }
+          }}
+        />
       </View>
       <View style={{ flex: 1 }} />
     </SafeAreaView>
