@@ -6,11 +6,21 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function AddMedicationSchedule({ props, navigation, route, addMedication }) {
   const [state, setState] = useState({ ...route.params.state });
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [date, setDate] = useState(new Date(2023, 1, 1, 8, 0, 0));
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setDate(currentDate);
+    setFirstDosageTiming(currentDate);
   };
+  function setFirstDosageTiming(date) {
+    setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FirstDosageTiming: convertTimeStringtoInteger(date) } }));
+  }
+  function convertTimeStringtoInteger(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var time = hours * 60 + minutes;
+    return time;
+  }
   function setSpecifications(value) {
     setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, Specifications: value } }));
   }
