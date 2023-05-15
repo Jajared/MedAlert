@@ -80,22 +80,16 @@ export default function UpdateAccountPage({ navigation, userInformation, setUser
               <Button title="Hide modal" onPress={handleModal} />
             </View>
           </Modal>
-          {/* <View style={styles.calendar}>
-            <CalendarPicker onDateChange={(date) => setState({...state, DateOfBirth: date})}/>
-          </View> */}
-          {/* <View style={styles.editBox}>
-            <TextInput value={state.DateOfBirth} onChangeText={(text) => setState({...state, DateOfBirth: text})}></TextInput>
-          </View> */}
         </View>
       </View>
 
       <View>
         <Button title = "Update"
           onPress={() => {
-            if (handleSubmit() == true) {
-              navigation.navigate("Add Medication Schedule", { state });
-            }
-          }}
+            setUserInformation(state)
+            navigation.goBack()
+          }
+          }
           />
       </View>
       <View style={styles.emptySection}></View>
