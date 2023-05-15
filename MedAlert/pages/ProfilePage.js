@@ -1,19 +1,20 @@
 import { Text, SafeAreaView, StyleSheet, View, TouchableOpacity, Image } from "react-native";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
+import SlideButton from "rn-slide-button";
 import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons, Feather } from "@expo/vector-icons";
 
-export default function ProfilePage({ props, navigation }) {
+export default function ProfilePage({ props, navigation, userInformation }) {
   return (
     <SafeAreaView style={styles.container}>
       <BackNavBar navigation={navigation} title="Profile" />
       <View style={styles.profileSection}>
         <View style={styles.profileImage}>
-          <Image source={require("../assets/jamal.png")} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
+          <Image source={userInformation.profileImage} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
         </View>
-        <Text style={styles.profileName}>Jane</Text>
+        <Text style={styles.profileName}>{userInformation.Username}</Text>
       </View>
       <View style={styles.mainSettingsSection}>
-        <TouchableOpacity style={styles.settingsItem}>
+        <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Update Account")}>
           <MaterialCommunityIcons name="account" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Update Account</Text>
@@ -35,7 +36,7 @@ export default function ProfilePage({ props, navigation }) {
             <Text style={styles.settingsTitle}>Face ID / Touch ID</Text>
             <Text style={styles.settingsDescription}>Manage your device security</Text>
           </View>
-          <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
+          <SlideButton width={30} height={30} containerStyle={{ flex: 1 }}></SlideButton>
         </TouchableOpacity>
         <TouchableOpacity style={styles.settingsItem}>
           <Ionicons name="exit-outline" size={30} color="black" style={{ flex: 1 }} />

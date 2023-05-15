@@ -7,18 +7,20 @@ import AddMedicationType from "./pages/AddMedicationType";
 import AddMedicationDetails from "./pages/AddMedicationDetails";
 import AddMedicationSchedule from "./pages/AddMedicationSchedule";
 import ProfilePage from "./pages/ProfilePage";
+import UpdateAccountPage from "./pages/UpdateAccountPage";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
+  const userInformation = { Username: "Jane", Gender: "Male", DateOfBirth: "29/05/2001", EmailAddress: "test@gmail.com", PhoneNumber: "9123456", ProfileImage: "./assets/jamal.png", Preferences: {} };
   const [allMedicationItems, setAllMedicationItems] = useState([
     { Name: "Paracetamol", Type: "Pill", Purpose: "Fever", Instructions: { TabletsPerIntake: 2, FrequencyPerDay: 4, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
     { Name: "Metophan", Type: "Liquid", Purpose: "Cough", Instructions: { TabletsPerIntake: 4, FrequencyPerDay: 4, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
   ]);
 
-  const scheduledItems = []
-  const scheduledItemsInOrder = []
+  const scheduledItems = [];
+  const scheduledItemsInOrder = [];
   for (let i = 0; i < allMedicationItems.length; i++) {
-    const timeInterval = 24 / allMedicationItems[i].Instructions.FrequencyPerDay
+    const timeInterval = 24 / allMedicationItems[i].Instructions.FrequencyPerDay;
     for (let j = 0; j < allMedicationItems[i].Instructions.FrequencyPerDay; j++) {
       scheduledItems.push({
         Name: allMedicationItems[i].Name,
@@ -27,38 +29,35 @@ export default function App() {
         Instructions: {
           TabletsPerIntake: allMedicationItems[i].Instructions.TabletsPerIntake,
           FrequencyPerDay: allMedicationItems[i].Instructions.FrequencyPerDay,
-          Specifications: allMedicationItems[i].Instructions.Specifications, 
-          FirstDosageTiming: allMedicationItems[i].Instructions.FirstDosageTiming + ((timeInterval * 60) * j) > 24 * 60 
-            ? allMedicationItems[i].Instructions.FirstDosageTiming + ((timeInterval * 60) * j) - (24 * 60)
-            : allMedicationItems[i].Instructions.FirstDosageTiming + ((timeInterval * 60) * j)
-        }
-      })
+          Specifications: allMedicationItems[i].Instructions.Specifications,
+          FirstDosageTiming: allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j > 24 * 60 ? allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j - 24 * 60 : allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j,
+        },
+      });
     }
   }
-  
-  var lowestTime = 24 * 60
-  var prevLowest = -1
+
+  var lowestTime = 24 * 60;
+  var prevLowest = -1;
   while (scheduledItems.length != scheduledItemsInOrder.length) {
     for (let i = 0; i < scheduledItems.length; i++) {
       if (scheduledItems[i].Instructions.FirstDosageTiming < lowestTime && scheduledItems[i].Instructions.FirstDosageTiming > prevLowest) {
-        lowestTime = scheduledItems[i].Instructions.FirstDosageTiming
+        lowestTime = scheduledItems[i].Instructions.FirstDosageTiming;
       }
 
       if (i == scheduledItems.length - 1) {
-        prevLowest = lowestTime
+        prevLowest = lowestTime;
         for (let j = 0; j < scheduledItems.length; j++) {
           if (scheduledItems[j].Instructions.FirstDosageTiming == lowestTime) {
-            scheduledItemsInOrder.push(scheduledItems[j])
+            scheduledItemsInOrder.push(scheduledItems[j]);
           }
         }
-        lowestTime = 24 * 60
+        lowestTime = 24 * 60;
       }
     }
   }
 
   function addMedication(medicationData) {
     setAllMedicationItems((prevState) => [...prevState, medicationData]);
-    
   }
 
   function deleteMedication(medicationData) {
@@ -81,7 +80,10 @@ export default function App() {
           {(props) => <AddMedicationSchedule {...props} addMedication={addMedication} />}
         </Stack.Screen>
         <Stack.Screen name="Profile Page" options={{ headerShown: false }}>
-          {(props) => <ProfilePage {...props} />}
+          {(props) => <ProfilePage {...props} userInformation={userInformation} />}
+        </Stack.Screen>
+        <Stack.Screen name="Update Account" options={{ headerShown: false }}>
+          {(props) => <UpdateAccountPage {...props} userInformation={userInformation} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
