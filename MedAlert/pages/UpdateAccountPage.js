@@ -1,11 +1,21 @@
 import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacity, Button } from "react-native";
 import { useState } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
+import CalendarPicker from 'react-native-calendar-picker';
+import Modal from "react-native-modal";
+import * as React from "react";
 
 export default function UpdateAccountPage({ navigation, userInformation, setUserInformation }) {
   const [state, setState] = useState({...userInformation});
-  console.log(state)
-  // console.log(userInformation)
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [selectedDOB, setSelectedDOB] = useState(null);
+  const handleModal = () => setIsModalVisible(() => !isModalVisible);
+  function onDateChange(date) {
+    var newDate = (date.dates() < 10 ? "0" + date.dates() : date.dates()) + "/" + (date.months() < 10 ? "0" + date.months(): date.months()) + "/" + date.year()
+    setSelectedDOB(date)
+    setState({...state, DateOfBirth: newDate})
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <BackNavBar navigation={navigation} title="Update Account" />
@@ -60,9 +70,22 @@ export default function UpdateAccountPage({ navigation, userInformation, setUser
           <View style={styles.title}>
             <Text style={styles.text}> Date of Birth: </Text>
           </View>
-          <View style={styles.editBox}>
+          <TouchableOpacity style={styles.editBox} onPress={handleModal}>
+            <Text>{state.DateOfBirth}</Text>
+          </TouchableOpacity>
+
+          <Modal isVisible={isModalVisible}>
+            <View style={{backgroundColor: "white", width: "100%"}}>
+              <CalendarPicker onDateChange={onDateChange}/>
+              <Button title="Hide modal" onPress={handleModal} />
+            </View>
+          </Modal>
+          {/* <View style={styles.calendar}>
+            <CalendarPicker onDateChange={(date) => setState({...state, DateOfBirth: date})}/>
+          </View> */}
+          {/* <View style={styles.editBox}>
             <TextInput value={state.DateOfBirth} onChangeText={(text) => setState({...state, DateOfBirth: text})}></TextInput>
-          </View>
+          </View> */}
         </View>
       </View>
 
@@ -114,7 +137,7 @@ const styles = StyleSheet.create({
   },
 
   mainSection: {
-    flex: 4,
+    flex: 5,
     width: "70%"
   },
 
@@ -146,5 +169,9 @@ const styles = StyleSheet.create({
    
   text: {
     fontWeight: "bold",
+  },
+
+  calendar: {
+    width: "100%"
   }
 });
