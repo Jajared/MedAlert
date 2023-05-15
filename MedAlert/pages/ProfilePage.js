@@ -1,9 +1,33 @@
-import { Text, SafeAreaView, StyleSheet, View, TouchableOpacity, Image } from "react-native";
+import { Text, SafeAreaView, StyleSheet, View, TouchableOpacity, Image, Alert } from "react-native";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import SlideButton from "rn-slide-button";
+import * as LocalAuthentication from "expo-local-authentication";
 import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons, Feather } from "@expo/vector-icons";
 
 export default function ProfilePage({ props, navigation, userInformation }) {
+  const onFaceId = async () => {
+    try {
+      // Checking if device is compatible
+      const isCompatible = await LocalAuthentication.hasHardwareAsync();
+      if (!isCompatible) {
+        throw new Error("Your device isn't compatible.");
+      }
+
+      // Checking if device has biometrics records
+      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+
+      if (!isEnrolled) {
+        throw new Error("No Faces / Fingers found.");
+      }
+
+      // Authenticate user
+      await LocalAuthentication.authenticateAsync();
+
+      Alert.alert("Authenticated", "Welcome back !");
+    } catch (error) {
+      Alert.alert("An error as occured", error?.message);
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <BackNavBar navigation={navigation} title="Profile" />
@@ -30,14 +54,14 @@ export default function ProfilePage({ props, navigation, userInformation }) {
           </View>
           <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.settingsItem}>
+        <View style={styles.settingsItem}>
           <AntDesign name="lock" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Face ID / Touch ID</Text>
             <Text style={styles.settingsDescription}>Manage your device security</Text>
           </View>
-          <SlideButton width={30} height={30} containerStyle={{ flex: 1 }}></SlideButton>
-        </TouchableOpacity>
+          <SlideButton width={30} height={30} containerStyle={{ flex: 1 }} onSlideEnd={onFaceId} />
+        </View>
         <TouchableOpacity style={styles.settingsItem}>
           <Ionicons name="exit-outline" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>

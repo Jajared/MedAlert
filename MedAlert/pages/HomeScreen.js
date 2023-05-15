@@ -4,7 +4,7 @@ import { FlatList } from "react-native";
 import HomeNavBar from "../components/HomeNavBar/HomeNavBar";
 import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
 
-export default function HomeScreen({ props, navigation }) {
+export default function HomeScreen({ props, navigation, setAcknowledged }) {
   const allMedicationItems = props.allMedicationItems;
 
   function deleteMedication(medicationData) {
@@ -19,7 +19,7 @@ export default function HomeScreen({ props, navigation }) {
       <View style={styles.topNavBar}>
         <HomeNavBar navigation={navigation} />
       </View>
-      <View style={styles.medicationSection}>{allMedicationItems && <FlatList data={allMedicationItems} renderItem={(data) => <MedicationItem title={data.Name} props={data} navigation={navigation} deleteMedicationItem={deleteMedicationItem} />} keyExtractor={(item) => item.Name + item.Instructions.FirstDosageTiming} />}</View>
+      <View style={styles.medicationSection}>{allMedicationItems && <FlatList data={allMedicationItems.filter((data) => data.Acknowledged === false)} renderItem={(data) => <MedicationItem title={data.Name} props={data} navigation={navigation} deleteMedicationItem={deleteMedicationItem} setAcknowledged={setAcknowledged} />} keyExtractor={(item) => item.id} />}</View>
       <View style={styles.bottomNavBar}>
         <BottomNavBar navigation={navigation} />
       </View>

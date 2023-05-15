@@ -1,24 +1,20 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Animated } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 
-export default function MedicationItem({ props, navigation, deleteMedicationItem }) {
+export default function MedicationItem({ props, navigation, deleteMedicationItem, setAcknowledged }) {
   const medicationData = props.item;
   const pillIcon = require("../../assets/pill-icon.png");
   const syrupIcon = require("../../assets/syrup-icon.png");
-
   const rightActions = (progress, dragX) => {
     const scale = dragX.interpolate({
       inputRange: [-50, 0],
       outputRange: [1, 0],
       extrapolate: "clamp",
     });
-
     return (
-      <TouchableOpacity onPress={() => alert("Consumed")}>
-      {/* // <TouchableOpacity onPress={() => deleteMedication()}> */}
+      <TouchableOpacity onPress={() => setAcknowledged(medicationData.id)}>
         <View style={styles.rightAction}>
-          <Animated.Text style={[styles.actionText, { transform: [{ scale }] }]}>Consumed
-          </Animated.Text>
+          <Animated.Text style={[styles.actionText, { transform: [{ scale }] }]}>Consumed</Animated.Text>
         </View>
       </TouchableOpacity>
     );

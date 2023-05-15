@@ -13,50 +13,86 @@ const Stack = createNativeStackNavigator();
 export default function App() {
   const [userInformation, setUserInformation] = useState({ Username: "Jane", Gender: "Male", DateOfBirth: "29/05/2001", EmailAddress: "test@gmail.com", PhoneNumber: "9123456", ProfileImage: "./assets/jamal.png", Preferences: {} })
   const [allMedicationItems, setAllMedicationItems] = useState([
-    { Name: "Paracetamol", Type: "Pill", Purpose: "Fever", Instructions: { TabletsPerIntake: 2, FrequencyPerDay: 4, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
-    { Name: "Metophan", Type: "Liquid", Purpose: "Cough", Instructions: { TabletsPerIntake: 4, FrequencyPerDay: 4, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
+    { Name: "Paracetamol", Type: "Pill", Purpose: "Fever", Instructions: { TabletsPerIntake: 2, FrequencyPerDay: 2, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
+    { Name: "Metophan", Type: "Liquid", Purpose: "Cough", Instructions: { TabletsPerIntake: 4, FrequencyPerDay: 2, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
   ]);
 
-  const scheduledItems = [];
-  const scheduledItemsInOrder = [];
-  for (let i = 0; i < allMedicationItems.length; i++) {
-    const timeInterval = 24 / allMedicationItems[i].Instructions.FrequencyPerDay;
-    for (let j = 0; j < allMedicationItems[i].Instructions.FrequencyPerDay; j++) {
-      scheduledItems.push({
-        Name: allMedicationItems[i].Name,
-        Type: allMedicationItems[i].Type,
-        Purpose: allMedicationItems[i].Purpose,
-        Instructions: {
-          TabletsPerIntake: allMedicationItems[i].Instructions.TabletsPerIntake,
-          FrequencyPerDay: allMedicationItems[i].Instructions.FrequencyPerDay,
-          Specifications: allMedicationItems[i].Instructions.Specifications,
-          FirstDosageTiming: allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j > 24 * 60 ? allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j - 24 * 60 : allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j,
-        },
-      });
+  const [scheduledItems, setScheduledItems] = useState([...getScheduledItems()]);
+  function setAcknowledged(id) {
+    var temp = [...scheduledItems];
+    for (let i = 0; i < temp.length; i++) {
+      if (temp[i].id === id) {
+        temp[i].Acknowledged = true;
+      }
     }
+    setScheduledItems(temp);
+  }
+  function getScheduledItems() {
+    var temp = [];
+    var count = 1;
+    for (let i = 0; i < allMedicationItems.length; i++) {
+      const timeInterval = 24 / allMedicationItems[i].Instructions.FrequencyPerDay;
+      for (let j = 0; j < allMedicationItems[i].Instructions.FrequencyPerDay; j++) {
+        temp.push({
+          ...allMedicationItems[i],
+          Acknowledged: false,
+          id: count,
+          Instructions: {
+            ...allMedicationItems[i].Instructions,
+            FirstDosageTiming: allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j > 24 * 60 ? allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j - 24 * 60 : allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j,
+          },
+        });
+        count++;
+      }
+    }
+    var result = sortScheduledItems(temp);
+    return result;
   }
 
-  var lowestTime = 24 * 60;
-  var prevLowest = -1;
-  while (scheduledItems.length != scheduledItemsInOrder.length) {
-    for (let i = 0; i < scheduledItems.length; i++) {
-      if (scheduledItems[i].Instructions.FirstDosageTiming < lowestTime && scheduledItems[i].Instructions.FirstDosageTiming > prevLowest) {
-        lowestTime = scheduledItems[i].Instructions.FirstDosageTiming;
-      }
-
-      if (i == scheduledItems.length - 1) {
-        prevLowest = lowestTime;
-        for (let j = 0; j < scheduledItems.length; j++) {
-          if (scheduledItems[j].Instructions.FirstDosageTiming == lowestTime) {
-            scheduledItemsInOrder.push(scheduledItems[j]);
-          }
+  function getNewScheduledItems(medicationData) {
+    var count = scheduledItems.length + 1;
+    var temp = [];
+    const timeInterval = 24 / medicationData.Instructions.FrequencyPerDay;
+    for (let j = 0; j < medicationData.Instructions.FrequencyPerDay; j++) {
+      temp.push({
+        ...medicationData,
+        Acknowledged: false,
+        id: count,
+        Instructions: {
+          ...medicationData.Instructions,
+          FirstDosageTiming: medicationData.Instructions.FirstDosageTiming + timeInterval * 60 * j > 24 * 60 ? medicationData.Instructions.FirstDosageTiming + timeInterval * 60 * j - 24 * 60 : medicationData.Instructions.FirstDosageTiming + timeInterval * 60 * j,
+        },
+      });
+      count++;
+    }
+    return temp;
+  }
+  function sortScheduledItems(data) {
+    var scheduledItemsInOrder = [];
+    var lowestTime = 24 * 60;
+    var prevLowest = -1;
+    while (data.length != scheduledItemsInOrder.length) {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].Instructions.FirstDosageTiming < lowestTime && data[i].Instructions.FirstDosageTiming > prevLowest) {
+          lowestTime = data[i].Instructions.FirstDosageTiming;
         }
-        lowestTime = 24 * 60;
+
+        if (i == data.length - 1) {
+          prevLowest = lowestTime;
+          for (let j = 0; j < data.length; j++) {
+            if (data[j].Instructions.FirstDosageTiming == lowestTime) {
+              scheduledItemsInOrder.push(data[j]);
+            }
+          }
+          lowestTime = 24 * 60;
+        }
       }
     }
+    return scheduledItemsInOrder;
   }
 
   function addMedication(medicationData) {
+    setScheduledItems(sortScheduledItems([...scheduledItems, ...JSON.parse(JSON.stringify(getNewScheduledItems(medicationData)))]));
     setAllMedicationItems((prevState) => [...prevState, medicationData]);
   }
 
@@ -68,7 +104,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" options={{ headerShown: false }}>
-          {(props) => <HomeScreen {...props} props={{ allMedicationItems: scheduledItemsInOrder }} />}
+          {(props) => <HomeScreen {...props} props={{ allMedicationItems: scheduledItems }} setAcknowledged={setAcknowledged} />}
         </Stack.Screen>
         <Stack.Screen name="Add Medication Type" options={{ headerShown: false }}>
           {(props) => <AddMedicationType {...props} />}
