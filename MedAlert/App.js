@@ -11,7 +11,7 @@ import UpdateAccountPage from "./pages/UpdateAccountPage";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
-  const [userInformation, setUserInformation] = useState({ Username: "Jane", Gender: "Male", DateOfBirth: "29/05/2001", EmailAddress: "test@gmail.com", PhoneNumber: "9123456", ProfileImage: "./assets/jamal.png", Preferences: {} })
+  const [userInformation, setUserInformation] = useState({ Username: "Jane", Gender: "Male", DateOfBirth: "29/05/2001", EmailAddress: "test@gmail.com", PhoneNumber: "9123456", ProfileImage: require("./assets/jamal.png"), Preferences: {} });
   const [allMedicationItems, setAllMedicationItems] = useState([
     { Name: "Paracetamol", Type: "Pill", Purpose: "Fever", Instructions: { TabletsPerIntake: 2, FrequencyPerDay: 2, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
     { Name: "Metophan", Type: "Liquid", Purpose: "Cough", Instructions: { TabletsPerIntake: 4, FrequencyPerDay: 2, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
@@ -119,7 +119,7 @@ export default function App() {
           {(props) => <ProfilePage {...props} userInformation={userInformation} />}
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
-          {(props) => <UpdateAccountPage {...props} userInformation={userInformation} setUserInformation={setUserInformation}/>}
+          {(props) => <UpdateAccountPage {...props} userInformation={userInformation} setUserInformation={setUserInformation} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
