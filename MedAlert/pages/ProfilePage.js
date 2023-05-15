@@ -1,0 +1,139 @@
+import { Text, SafeAreaView, StyleSheet, View, TouchableOpacity, Image } from "react-native";
+import BackNavBar from "../components/BackNavBar/BackNavBar";
+import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons, Feather } from "@expo/vector-icons";
+
+export default function ProfilePage({ props, navigation }) {
+  return (
+    <SafeAreaView style={styles.container}>
+      <BackNavBar navigation={navigation} title="Profile" />
+      <View style={styles.profileSection}>
+        <View style={styles.profileImage}>
+          <Image source={require("../assets/jamal.png")} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
+        </View>
+        <Text style={styles.profileName}>Jane</Text>
+      </View>
+      <View style={styles.mainSettingsSection}>
+        <TouchableOpacity style={styles.settingsItem}>
+          <MaterialCommunityIcons name="account" size={30} color="black" style={{ flex: 1 }} />
+          <View style={styles.settingInfo}>
+            <Text style={styles.settingsTitle}>Update Account</Text>
+            <Text style={styles.settingDescription}>Make changes to your account</Text>
+          </View>
+          <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.settingsItem}>
+          <MaterialIcons name="supervisor-account" size={30} color="black" style={{ flex: 1 }} />
+          <View style={styles.settingInfo}>
+            <Text style={styles.settingsTitle}>Saved Guardian</Text>
+            <Text style={styles.settingsDescription}>Manage your guardian information</Text>
+          </View>
+          <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.settingsItem}>
+          <AntDesign name="lock" size={30} color="black" style={{ flex: 1 }} />
+          <View style={styles.settingInfo}>
+            <Text style={styles.settingsTitle}>Face ID / Touch ID</Text>
+            <Text style={styles.settingsDescription}>Manage your device security</Text>
+          </View>
+          <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.settingsItem}>
+          <Ionicons name="exit-outline" size={30} color="black" style={{ flex: 1 }} />
+          <View style={styles.settingInfo}>
+            <Text style={styles.settingsTitle}>Log Out</Text>
+            <Text style={styles.settingsDescription}>Further secure your account for safety</Text>
+          </View>
+          <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
+        </TouchableOpacity>
+      </View>
+      <View style={styles.moreSettingsSection}>
+        <Text style={{ fontSize: 15, fontWeight: "bold", flex: 1 }}>More</Text>
+        <View style={styles.moreSettingsContainer}>
+          <TouchableOpacity style={styles.settingsItem}>
+            <MaterialIcons name="support-agent" size={24} color="black" style={{ flex: 1 }} />
+            <View style={styles.settingInfo}>
+              <Text style={styles.settingsTitle}>Help & Support</Text>
+            </View>
+            <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.settingsItem}>
+            <Ionicons name="ios-heart-circle" size={24} color="black" style={{ flex: 1 }} />
+            <View style={styles.settingInfo}>
+              <Text style={styles.settingsTitle}>About App</Text>
+            </View>
+            <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    flex: 1,
+    width: "100%",
+  },
+  profileSection: {
+    flex: 1,
+    width: "90%",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 80 / 2,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "black",
+    backgroundColor: "#fff",
+  },
+  profileName: {
+    fontWeight: "bold",
+    fontSize: 20,
+    margin: 5,
+  },
+  mainSettingsSection: {
+    flex: 5,
+    flexDirection: "column",
+    borderColor: "black",
+    borderWidth: 1,
+    margin: 10,
+    width: "90%",
+    borderRadius: 15,
+  },
+  settingsItem: {
+    flex: 1,
+    padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  settingInfo: {
+    flex: 6,
+  },
+  settingsTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  settingDescription: {
+    fontSize: 12,
+  },
+  moreSettingsSection: {
+    flex: 3,
+    flexDirection: "column",
+    margin: 10,
+    width: "90%",
+  },
+  moreSettingsContainer: {
+    flex: 4,
+    borderColor: "black",
+    borderWidth: 1,
+    borderRadius: 15,
+  },
+});

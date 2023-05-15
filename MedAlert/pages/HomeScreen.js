@@ -2,6 +2,7 @@ import { StyleSheet, Text, SafeAreaView, Image, View, useState } from "react-nat
 import MedicationItem from "../components/MedicationItem/MedicationItem";
 import { FlatList } from "react-native";
 import HomeNavBar from "../components/HomeNavBar/HomeNavBar";
+import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
 
 export default function HomeScreen({ props, navigation }) {
   const allMedicationItems = props.allMedicationItems;
@@ -33,13 +34,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   topNavBar: {
-    flex: 1,
+    flex: 2,
   },
   bottomNavBar: {
     flex: 1,
   },
   medicationSection: {
-    flex: 4,
+    flex: 7,
     width: "100%",
   },
 });
