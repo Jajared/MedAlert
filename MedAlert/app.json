@@ -10,7 +10,13 @@
       [
         "expo-local-authentication",
         {
-          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID."
+          "faceIDPermission": "Allow app to use Face ID."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow app to access your camera."
         }
       ]
     ],
@@ -23,7 +29,8 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSFaceIDUsageDescription": "Face ID is used to authenticate the user."
+        "NSFaceIDUsageDescription": "Face ID is used to authenticate the user.",
+        "NSCameraUsageDescription": "Camera is used to scan medication labels."
       }
     },
     "android": {

@@ -1,10 +1,14 @@
 import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button } from "react-native";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { Entypo } from "@expo/vector-icons";
+import CameraComponent from "../components/CameraComponent/CameraComponent";
 
 export default function AddMedicationDetails({ props, navigation, route }) {
   const [state, setState] = useState({ Name: "", Type: route.params.Type, Purpose: "", Instructions: { TabletsPerIntake: 1, FrequencyPerDay: 0, Specifications: "", FirstDosageTiming: 540 } });
+  const [showCamera, setShowCamera] = useState(false);
+
   function setFrequencyPerIntake(value) {
     setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FrequencyPerDay: value } }));
   }
@@ -23,8 +27,23 @@ export default function AddMedicationDetails({ props, navigation, route }) {
     }
     return true;
   }
-  return (
+  const handleCapture = (photo) => {
+    // Handle the captured photo
+    setShowCamera(false);
+  };
+
+  const handleCancel = () => {
+    setShowCamera(false);
+  };
+  return showCamera ? (
+    <View style={{ width: "100%", height: "100%" }}>
+      <CameraComponent onCapture={handleCapture} onCancel={handleCancel} />
+    </View>
+  ) : (
     <SafeAreaView style={styles.container}>
+      <TouchableOpacity style={{ position: "absolute", top: 60, right: 40 }} onPress={() => setShowCamera(true)}>
+        <Entypo name="camera" size={24} color="black" />
+      </TouchableOpacity>
       <BackNavBar navigation={navigation} title="Add Medication" />
       <View style={styles.nameSection}>
         <Text style={styles.textHeader}>Name of Medication</Text>
@@ -161,5 +180,14 @@ const styles = StyleSheet.create({
   },
   nextSection: {
     flex: 1,
+  },
+  cameraContainer: {
+    flex: 1,
+    backgroundColor: "black",
+    justifyContent: "center",
+  },
+  camera: {
+    flex: 1,
+    borderRadius: 20,
   },
 });
