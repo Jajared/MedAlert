@@ -1,4 +1,4 @@
-const API_KEY = "AIzaSyAvy8ikpc2akbouCPBu2UuxEnOdzWKvau0";
+const API_KEY = "";
 const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}`;
 
 // Also try DOCUMENT_TEXT_DETECTION instead of TEXT_DETECTION as per https://cloud.google.com/vision/docs/ocr

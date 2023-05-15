@@ -4,12 +4,14 @@ import { Camera } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 import callGoogleVisionAsync from "./GoogleVision";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
 
-const CameraComponent = ({ onCapture, onCancel }) => {
+const CameraComponent = ({ onCancel }) => {
   const [image, setImage] = useState(null);
+  const [imageData, setImageData] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
   const cameraRef = useRef(null);
 
   useEffect(() => {
@@ -23,8 +25,9 @@ const CameraComponent = ({ onCapture, onCancel }) => {
   const handleCapture = async () => {
     if (cameraRef) {
       try {
-        const photo = await cameraRef.current.takePictureAsync();
+        const photo = await cameraRef.current.takePictureAsync({ base64: true });
         setImage(photo.uri);
+        setImageData(photo.base64);
       } catch (e) {
         console.log(e);
       }
@@ -37,15 +40,16 @@ const CameraComponent = ({ onCapture, onCancel }) => {
       base64: true,
     });
     setImage(result.assets[0].uri);
-    callGoogleVisionAsync(result.assets[0].base64);
+    setImageData(result.assets[0].base64);
   };
 
-  const saveImage = async () => {
-    if (image) {
+  const handleUseImage = async () => {
+    if (imageData) {
       try {
-        await MediaLibrary.createAssetAsync(image);
-        alert("Image saved to gallery");
+        callGoogleVisionAsync(imageData);
         setImage(null);
+        alert("Processing image...");
+        onCancel();
       } catch (e) {
         console.log(e);
       }
@@ -62,11 +66,14 @@ const CameraComponent = ({ onCapture, onCancel }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topBar}>
+        <TouchableOpacity style={styles.button} onPress={() => setFlashMode(flashMode === Camera.Constants.FlashMode.off ? Camera.Constants.FlashMode.on : Camera.Constants.FlashMode.off)}>
+          <Entypo name="flash" size={30} color={flashMode === Camera.Constants.FlashMode.off ? "white" : "yellow"} />
+        </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={() => setType(type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back)}>
-          <Entypo name="flash" size={30} color="white" />
+          <MaterialIcons name="flip-camera-android" size={30} color="white" />
         </TouchableOpacity>
       </View>
-      {!image ? <Camera style={{ flex: 4 }} type={type} ref={cameraRef} /> : <Image source={{ uri: image }} style={{ flex: 4 }}></Image>}
+      {!image ? <Camera style={{ flex: 4 }} type={type} ref={cameraRef} flashMode={flashMode} /> : <Image source={{ uri: image }} style={{ flex: 4 }}></Image>}
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.button} onPress={handleCapture}>
           <Entypo name="camera" size={24} color="white" />
@@ -75,19 +82,19 @@ const CameraComponent = ({ onCapture, onCancel }) => {
         {!image ? (
           <View style={{ flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
             <TouchableOpacity style={{ flex: 1, marginLeft: 30 }} onPress={onCancel}>
-              <Text style={{ fontSize: 18, color: "white", alignSelf: "flex-start" }}> Cancel </Text>
+              <Text style={[styles.text, { alignSelf: "flex-start" }]}> Cancel </Text>
             </TouchableOpacity>
             <TouchableOpacity style={{ flex: 1, marginRight: 30 }} onPress={handlePickImage}>
-              <Text style={{ fontSize: 18, color: "white", alignSelf: "flex-end" }}> Select </Text>
+              <Text style={[styles.text, { alignSelf: "flex-end" }]}> Select </Text>
             </TouchableOpacity>
           </View>
         ) : (
           <View style={{ flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
             <TouchableOpacity style={{ flex: 1, marginLeft: 30 }} onPress={() => setImage(null)}>
-              <Text style={{ fontSize: 18, color: "white", alignSelf: "flex-start" }}> Re-take </Text>
+              <Text style={[styles.text, { alignSelf: "flex-start" }]}> Re-take </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ flex: 1, marginRight: 30 }} onPress={saveImage}>
-              <Text style={{ fontSize: 18, color: "white", alignSelf: "flex-end" }}> Save </Text>
+            <TouchableOpacity style={{ flex: 1, marginRight: 30 }} onPress={handleUseImage}>
+              <Text style={[styles.text, { alignSelf: "flex-end" }]}> Use this photo </Text>
             </TouchableOpacity>
           </View>
         )}
@@ -113,12 +120,12 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
-    marginLeft: 10,
-    color: "#f1f1f1",
+    color: "white",
     fontWeight: "bold",
   },
   topBar: {
     flex: 0.5,
+    flexDirection: "row",
   },
   bottomBar: {
     flex: 1,

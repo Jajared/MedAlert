@@ -27,17 +27,13 @@ export default function AddMedicationDetails({ props, navigation, route }) {
     }
     return true;
   }
-  const handleCapture = (photo) => {
-    // Handle the captured photo
-    setShowCamera(false);
-  };
 
   const handleCancel = () => {
     setShowCamera(false);
   };
   return showCamera ? (
     <View style={{ width: "100%", height: "100%" }}>
-      <CameraComponent onCapture={handleCapture} onCancel={handleCancel} />
+      <CameraComponent onCancel={handleCancel} />
     </View>
   ) : (
     <SafeAreaView style={styles.container}>
