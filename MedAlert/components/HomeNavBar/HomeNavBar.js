@@ -5,8 +5,8 @@ export default function HomeNavBar({ props, navigation }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate("Add Medication Type")} style={styles.addButton}>
-        <AntDesign name="plus" size={40} color="black" />
-      </TouchableOpacity>
+        <AntDesign name="plus" size={25} color="black" />
+      </TouchableOpacity> 
       <Text style={styles.userSection}>Hey Jane!</Text>
       <Text style={styles.daySection}>{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(new Date())}</Text>
       <Text style={styles.upcomingRemindersSection}>Upcoming Reminders </Text>
