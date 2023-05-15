@@ -25,22 +25,36 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSFaceIDUsageDescription": "Face ID is used to authenticate the user.",
+        "NSFaceIDUsageDescription": "Allow app to use Face ID.",
         "NSCameraUsageDescription": "Camera is used to scan medication labels."
-      }
+      },
+      "bundleIdentifier": "com.jajabonks.MedAlert"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0985f029-1a7b-4fc7-93df-7dbc96491463"
+      }
     }
   }
 }
