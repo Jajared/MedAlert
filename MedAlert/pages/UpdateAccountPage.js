@@ -87,19 +87,10 @@ export default function UpdateAccountPage({ navigation, userInformation, setUser
         <Button
           title="Update"
           onPress={() => {
-<<<<<<< HEAD
-            setUserInformation(state)
-            navigation.goBack()
-          }
-          }
-          />
-=======
-            if (handleSubmit() == true) {
-              navigation.navigate("Add Medication Schedule", { state });
-            }
+            setUserInformation(state);
+            navigation.goBack();
           }}
         />
->>>>>>> ce6b1a9 (Added Jamal.)
       </View>
       <View style={styles.emptySection}></View>
     </SafeAreaView>
