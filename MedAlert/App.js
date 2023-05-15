@@ -16,6 +16,7 @@ export default function App() {
   ]);
 
   const scheduledItems = []
+  const scheduledItemsInOrder = []
   for (let i = 0; i < allMedicationItems.length; i++) {
     const timeInterval = 24 / allMedicationItems[i].Instructions.FrequencyPerDay
     for (let j = 0; j < allMedicationItems[i].Instructions.FrequencyPerDay; j++) {
@@ -27,9 +28,31 @@ export default function App() {
           TabletsPerIntake: allMedicationItems[i].Instructions.TabletsPerIntake,
           FrequencyPerDay: allMedicationItems[i].Instructions.FrequencyPerDay,
           Specifications: allMedicationItems[i].Instructions.Specifications, 
-          FirstDosageTiming: allMedicationItems[i].Instructions.FirstDosageTiming + ((timeInterval * 60) * j)
+          FirstDosageTiming: allMedicationItems[i].Instructions.FirstDosageTiming + ((timeInterval * 60) * j) > 24 * 60 
+            ? allMedicationItems[i].Instructions.FirstDosageTiming + ((timeInterval * 60) * j) - (24 * 60)
+            : allMedicationItems[i].Instructions.FirstDosageTiming + ((timeInterval * 60) * j)
         }
       })
+    }
+  }
+  
+  var lowestTime = 24 * 60
+  var prevLowest = -1
+  while (scheduledItems.length != scheduledItemsInOrder.length) {
+    for (let i = 0; i < scheduledItems.length; i++) {
+      if (scheduledItems[i].Instructions.FirstDosageTiming < lowestTime && scheduledItems[i].Instructions.FirstDosageTiming > prevLowest) {
+        lowestTime = scheduledItems[i].Instructions.FirstDosageTiming
+      }
+
+      if (i == scheduledItems.length - 1) {
+        prevLowest = lowestTime
+        for (let j = 0; j < scheduledItems.length; j++) {
+          if (scheduledItems[j].Instructions.FirstDosageTiming == lowestTime) {
+            scheduledItemsInOrder.push(scheduledItems[j])
+          }
+        }
+        lowestTime = 24 * 60
+      }
     }
   }
 
@@ -46,7 +69,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" options={{ headerShown: false }}>
-          {(props) => <HomeScreen {...props} props={{ allMedicationItems: scheduledItems }} />}
+          {(props) => <HomeScreen {...props} props={{ allMedicationItems: scheduledItemsInOrder }} />}
         </Stack.Screen>
         <Stack.Screen name="Add Medication Type" options={{ headerShown: false }}>
           {(props) => <AddMedicationType {...props} />}

@@ -20,7 +20,9 @@ export default function HomeScreen({ props, navigation }) {
         <HomeNavBar navigation={navigation} />
       </View>
       <View style={styles.medicationSection}>{allMedicationItems && <FlatList data={allMedicationItems} renderItem={(data) => <MedicationItem title={data.Name} props={data} navigation={navigation} deleteMedicationItem={deleteMedicationItem} />} keyExtractor={(item) => item.Name + item.Instructions.FirstDosageTiming} />}</View>
-      <View style={styles.bottomNavBar}></View>
+      <View style={styles.bottomNavBar}>
+        <BottomNavBar navigation={navigation}/>
+      </View>
     </SafeAreaView>
   );
 }
