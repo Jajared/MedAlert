@@ -2,6 +2,7 @@ import { StyleSheet, Text, SafeAreaView, Image, View } from "react-native";
 import MedicationItem from "../components/MedicationItem/MedicationItem";
 import { FlatList } from "react-native";
 import HomeNavBar from "../components/HomeNavBar/HomeNavBar";
+import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
 
 export default function HomeScreen({ props, navigation }) {
   const allMedicationItems = props.allMedicationItems;
@@ -11,7 +12,9 @@ export default function HomeScreen({ props, navigation }) {
         <HomeNavBar navigation={navigation} />
       </View>
       <View style={styles.medicationSection}>{allMedicationItems && <FlatList data={allMedicationItems} renderItem={(data) => <MedicationItem title={data.Name} props={data} navigation={navigation} />} keyExtractor={(item) => item.Name} />}</View>
-      <View style={styles.bottomNavBar}></View>
+      <View style={styles.bottomNavBar}>
+        <BottomNavBar navigation={navigation} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -25,13 +28,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   topNavBar: {
-    flex: 1,
+    flex: 2,
   },
   bottomNavBar: {
     flex: 1,
   },
   medicationSection: {
-    flex: 4,
+    flex: 7,
     width: "100%",
   },
 });

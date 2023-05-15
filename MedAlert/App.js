@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AddMedicationType from "./pages/AddMedicationType";
 import AddMedicationDetails from "./pages/AddMedicationDetails";
 import AddMedicationSchedule from "./pages/AddMedicationSchedule";
+import ProfilePage from "./pages/ProfilePage";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -30,6 +31,9 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen name="Add Medication Schedule" options={{ headerShown: false }}>
           {(props) => <AddMedicationSchedule {...props} addMedication={addMedication} />}
+        </Stack.Screen>
+        <Stack.Screen name="Profile Page" options={{ headerShown: false }}>
+          {(props) => <ProfilePage {...props} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

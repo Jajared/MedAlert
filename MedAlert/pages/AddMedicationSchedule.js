@@ -13,6 +13,7 @@ export default function AddMedicationSchedule({ props, navigation, route, addMed
     setFirstDosageTiming(currentDate);
   };
   function setFirstDosageTiming(date) {
+    console.log(convertTimeStringtoInteger(date));
     setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FirstDosageTiming: convertTimeStringtoInteger(date) } }));
   }
   function convertTimeStringtoInteger(date) {
