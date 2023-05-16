@@ -34,7 +34,7 @@ export default function UpdateAccountPage({ navigation, userInformation, setUser
             <Text style={styles.text}> Name: </Text>
           </View>
           <View style={styles.editBox}>
-            <TextInput value={state.Username} onChangeText={(text) => setState({ ...state, Username: text })}></TextInput>
+            <TextInput value={state.Name} onChangeText={(text) => setState({ ...state, Username: text })}></TextInput>
           </View>
         </View>
 

@@ -8,16 +8,70 @@ import AddMedicationDetails from "./pages/AddMedicationDetails";
 import AddMedicationSchedule from "./pages/AddMedicationSchedule";
 import ProfilePage from "./pages/ProfilePage";
 import UpdateAccountPage from "./pages/UpdateAccountPage";
+import { initializeApp } from "firebase/app";
+import { addDoc, collection, getFirestore, query, doc, getDoc, getDocs } from "firebase/firestore";
 
 const Stack = createNativeStackNavigator();
-export default function App() {
-  const [userInformation, setUserInformation] = useState({ Username: "Jane", Gender: "Male", DateOfBirth: "29/05/2001", EmailAddress: "test@gmail.com", PhoneNumber: "9123456", ProfileImage: require("./assets/jamal.png"), Preferences: {} });
-  const [allMedicationItems, setAllMedicationItems] = useState([
-    { Name: "Paracetamol", Type: "Pill", Purpose: "Fever", Instructions: { TabletsPerIntake: 2, FrequencyPerDay: 2, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
-    { Name: "Metophan", Type: "Liquid", Purpose: "Cough", Instructions: { TabletsPerIntake: 4, FrequencyPerDay: 2, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
-  ]);
 
+const firebaseConfig = {
+  apiKey: "AIzaSyA630mEkGs-Zq9cMkIVWs9rfrLEZGOIKic",
+  authDomain: "medalert-386812.firebaseapp.com",
+  projectId: "medalert-386812",
+  storageBucket: "medalert-386812.appspot.com",
+  messagingSenderId: "435459398641",
+  appId: "1:435459398641:web:c640e32a44f0e4cb598250",
+  measurementId: "G-ZL35VZP8EM",
+};
+
+const app = initializeApp(firebaseConfig);
+const firestore = getFirestore(app);
+
+export default function App() {
+  const [userInformation, setUserInformation] = useState({});
+  const [allMedicationItems, setAllMedicationItems] = useState([]);
+  const [data, setData] = useState([]);
   const [scheduledItems, setScheduledItems] = useState([...getScheduledItems()]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(firestore, "Users"));
+        const documents = querySnapshot.docs.map((doc) => doc.data());
+        setUserInformation(documents[0].UserInfo);
+        setAllMedicationItems(documents[0].MedicationItems);
+        setScheduledItems([...getScheduledItems()]);
+        setData(documents);
+      } catch (error) {}
+    };
+
+    fetchData();
+  }, []);
+
+  // initialiseData();
+  function initialiseData() {
+    const userData = {
+      UserInfo: {
+        Name: "Jane",
+        Gender: "Male",
+        DateOfBirth: "29/05/2001",
+        EmailAddress: "test@gmail.com",
+        PhoneNumber: "9123456",
+      },
+      MedicationItems: [
+        { Name: "Paracetamol", Type: "Pill", Purpose: "Fever", Instructions: { TabletsPerIntake: 2, FrequencyPerDay: 2, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
+        { Name: "Metophan", Type: "Liquid", Purpose: "Cough", Instructions: { TabletsPerIntake: 4, FrequencyPerDay: 2, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
+      ],
+    };
+
+    const usersRef = collection(firestore, "Users");
+    addDoc(usersRef, userData)
+      .then((docRef) => {
+        console.log("Data pushed successfully. Document ID:", docRef.id);
+      })
+      .catch((error) => {
+        console.error("Error pushing data:", error);
+      });
+  }
+
   function setAcknowledged(id) {
     var temp = [...scheduledItems];
     for (let i = 0; i < temp.length; i++) {
