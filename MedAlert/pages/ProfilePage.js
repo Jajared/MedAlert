@@ -4,7 +4,7 @@ import SlideButton from "rn-slide-button";
 import * as LocalAuthentication from "expo-local-authentication";
 import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons, Feather } from "@expo/vector-icons";
 
-export default function ProfilePage({ props, navigation, userInformation }) {
+export default function ProfilePage({ navigation, userInformation }) {
   const onFaceId = async () => {
     try {
       // Checking if device is compatible

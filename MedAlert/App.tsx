@@ -26,20 +26,44 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const firestore = getFirestore(app);
 
+interface UserInformation {
+  Name: string;
+  Gender: string;
+  DateOfBirth: string;
+  EmailAddress: string;
+  PhoneNumber: string;
+}
+
+interface ScheduledItem extends MedicationItem {
+  Acknowledged: boolean;
+  id: number;
+}
+
+interface MedicationItem {
+  Name: string;
+  Type: string;
+  Purpose: string;
+  Instructions: {
+    TabletsPerIntake: number;
+    FrequencyPerDay: number;
+    Specifications: string;
+    FirstDosageTiming: number;
+  };
+}
+
 export default function App() {
-  const [userInformation, setUserInformation] = useState({});
-  const [allMedicationItems, setAllMedicationItems] = useState([]);
-  const [data, setData] = useState([]);
-  const [scheduledItems, setScheduledItems] = useState([...getScheduledItems()]);
+  const [userInformation, setUserInformation] = useState<UserInformation>();
+  const [allMedicationItems, setAllMedicationItems] = useState<MedicationItem[]>([]);
+  const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (): Promise<void> => {
       try {
         const querySnapshot = await getDocs(collection(firestore, "Users"));
         const documents = querySnapshot.docs.map((doc) => doc.data());
         setUserInformation(documents[0].UserInfo);
         setAllMedicationItems(documents[0].MedicationItems);
-        setScheduledItems([...getScheduledItems()]);
-        setData(documents);
+        setScheduledItems(Array.from(getScheduledItems()));
+        console.log("Data fetched successfully");
       } catch (error) {}
     };
 
@@ -72,7 +96,7 @@ export default function App() {
       });
   }
 
-  function setAcknowledged(id) {
+  function setAcknowledged(id: number) {
     var temp = [...scheduledItems];
     for (let i = 0; i < temp.length; i++) {
       if (temp[i].id === id) {
@@ -103,7 +127,7 @@ export default function App() {
     return result;
   }
 
-  function getNewScheduledItems(medicationData) {
+  function getNewScheduledItems(medicationData: MedicationItem) {
     var count = scheduledItems.length + 1;
     var temp = [];
     const timeInterval = 24 / medicationData.Instructions.FrequencyPerDay;
@@ -121,7 +145,7 @@ export default function App() {
     }
     return temp;
   }
-  function sortScheduledItems(data) {
+  function sortScheduledItems(data: ScheduledItem[]) {
     var scheduledItemsInOrder = [];
     var lowestTime = 24 * 60;
     var prevLowest = -1;
@@ -145,11 +169,12 @@ export default function App() {
     return scheduledItemsInOrder;
   }
 
-  function addMedication(medicationData) {
+  function addMedication(medicationData: MedicationItem) {
     setScheduledItems(sortScheduledItems([...scheduledItems, ...JSON.parse(JSON.stringify(getNewScheduledItems(medicationData)))]));
     setAllMedicationItems((prevState) => [...prevState, medicationData]);
   }
 
+  // Function wrong
   function deleteMedication(medicationData) {
     setAllMedicationItems((prevState) => prevState.filter(medicationData));
   }

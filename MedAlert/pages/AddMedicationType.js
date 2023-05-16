@@ -1,7 +1,7 @@
 import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity } from "react-native";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 
-export default function AddMedicationType({ props, navigation }) {
+export default function AddMedicationType({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <BackNavBar navigation={navigation} title="Select type of medication" />
