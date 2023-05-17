@@ -3,12 +3,14 @@ import { useState } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import CalendarPicker from "react-native-calendar-picker";
 import Modal from "react-native-modal";
+import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 
-export default function UpdateAccountPage({ navigation, userInformation, updateUserInformation }) {
+export default function UpdateAccountPage({ navigation, userInformation, updateUserInformation, updateProfilePicture }) {
   const [state, setState] = useState({ ...userInformation });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedDOB, setSelectedDOB] = useState(null);
+  const [profilePicture, setProfilePicture] = useState(userInformation.ProfilePicture);
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
   function onDateChange(date) {
     var newDate = (date.dates() < 10 ? "0" + date.dates() : date.dates()) + "/" + (date.months() < 10 ? "0" + date.months() : date.months()) + "/" + date.year();
@@ -16,15 +18,35 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
     setState({ ...state, DateOfBirth: newDate });
   }
 
+  const handleProfilePictureChange = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+    if (!pickerResult.canceled) {
+      setProfilePicture(pickerResult.assets[0].uri);
+      console.log(pickerResult.assets[0].uri);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <BackNavBar navigation={navigation} title="Update Account" />
       {/* <Text>Update Account Page</Text> */}
       <View style={styles.profileSection}>
         <View style={styles.profileImage}>
-          <Image source={{ uri: userInformation.ProfilePicture }} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
+          <Image source={{ uri: profilePicture }} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
         </View>
-        <Button title="Update Profile Picture" />
+        <Button title="Edit" onPress={handleProfilePictureChange} />
         {/* //Create touchable opacity to change profile picture */}
       </View>
 
@@ -53,7 +75,7 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
             <Text style={styles.text}> Phone Number: </Text>
           </View>
           <View style={styles.editBox}>
-            <TextInput value={state.PhoneNumber} onChangeText={(text) => setState({ ...state, PhoneNumber: text })}></TextInput>
+            <TextInput value={state.PhoneNumber} onChangeText={(text) => setState({ ...state, PhoneNumber: text })} keyboardType="numeric"></TextInput>
           </View>
         </View>
 

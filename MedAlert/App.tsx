@@ -15,7 +15,7 @@ import { signUp } from "./Auth";
 import { userDataConverter } from "./converters/userDataConverter";
 import { medDataConverter } from "./converters/medDataConverter";
 import { storage } from "./firebaseConfig";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const Stack = createNativeStackNavigator();
 const testID = "cLNeJdkRJkfEzLMugJipcamAWwb2";
@@ -91,34 +91,57 @@ export default function App() {
       });
   }
 
+  function filePathToBlob(filePath) {
+    return fetch(filePath)
+      .then((response) => response.blob())
+      .then((blob) => blob);
+  }
+
   const uploadProfilePicture = async (userId, filePath) => {
-    function filePathToBlob(filePath) {
-      return fetch(filePath)
-        .then((response) => response.blob())
-        .then((blob) => blob);
-    }
     const storageRef = ref(storage, `profilePictures/${userId}`);
 
     try {
       const file = await filePathToBlob(filePath);
-      // Upload the file to Firebase Storage
       await uploadBytes(storageRef, file);
-
-      // Get the download URL for the uploaded file
       const downloadURL = await getDownloadURL(storageRef);
-      console.log(downloadURL);
-      // 3. Storing the Download URL in Firestore
-      // const userDocRef = doc(firestore, "users", userId);
-      // await setDoc(userDocRef, { profilePictureURL: downloadURL }, { merge: true });
-
+      await setDoc(userInfoRef, { ProfilePicture: downloadURL }, { merge: true });
       console.log("Profile picture uploaded successfully.");
     } catch (error) {
       console.error("Error uploading profile picture:", error);
     }
   };
 
-  // uploadProfilePicture(testID, "/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/jamal.png");
+  // Not working
+  const updateProfilePicture = async (filePath) => {
+    const storageRef = ref(storage, `profilePictures/${testID}`);
+    try {
+      // First delete
+      await deleteObject(storageRef)
+        .then(() => {
+          console.log("Profile picture deleted successfully.");
+        })
+        .catch((error) => {
+          console.error("Error deleting profile picture:", error);
+        });
+      // Then reupload
+      const file = await filePathToBlob(filePath);
+      await uploadBytes(storageRef, file)
+        .then(() => {
+          console.log("New Profile picture uploaded successfully.");
+        })
+        .catch((error) => {
+          console.error("Error uploading new profile picture:", error);
+        });
+      const downloadURL = await getDownloadURL(storageRef);
+      await updateDoc(userInfoRef, { ProfilePicture: downloadURL });
+      console.log("Profile picture changed successfully.");
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+    }
+  };
 
+  // uploadProfilePicture(testID, "/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/jamal.png");
+  // updateProfilePicture("/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/pill-icon.png");
   const updateUserInformation = async (updatedUserData: UserInformation) => {
     try {
       setUserInformation(updatedUserData);
@@ -254,7 +277,7 @@ export default function App() {
           {(props) => <ProfilePage {...props} userInformation={userInformation} />}
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
-          {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} />}
+          {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} updateProfilePicture={updateProfilePicture} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
