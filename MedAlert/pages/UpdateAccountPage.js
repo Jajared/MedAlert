@@ -5,9 +5,9 @@ import CalendarPicker from "react-native-calendar-picker";
 import Modal from "react-native-modal";
 import * as React from "react";
 
-export default function UpdateAccountPage({ navigation, userInformation, setUserInformation }) {
+export default function UpdateAccountPage({ navigation, userInformation, updateUserInformation }) {
   const [state, setState] = useState({ ...userInformation });
-  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedDOB, setSelectedDOB] = useState(null);
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
   function onDateChange(date) {
@@ -22,7 +22,7 @@ export default function UpdateAccountPage({ navigation, userInformation, setUser
       {/* <Text>Update Account Page</Text> */}
       <View style={styles.profileSection}>
         <View style={styles.profileImage}>
-          <Image source={userInformation.ProfileImage} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
+          <Image source={{ uri: userInformation.ProfilePicture }} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
         </View>
         <Button title="Update Profile Picture" />
         {/* //Create touchable opacity to change profile picture */}
@@ -34,7 +34,7 @@ export default function UpdateAccountPage({ navigation, userInformation, setUser
             <Text style={styles.text}> Name: </Text>
           </View>
           <View style={styles.editBox}>
-            <TextInput value={state.Username} onChangeText={(text) => setState({ ...state, Username: text })}></TextInput>
+            <TextInput value={state.Name} onChangeText={(text) => setState({ ...state, Name: text })}></TextInput>
           </View>
         </View>
 
@@ -87,7 +87,7 @@ export default function UpdateAccountPage({ navigation, userInformation, setUser
         <Button
           title="Update"
           onPress={() => {
-            setUserInformation(state);
+            updateUserInformation(state);
             navigation.goBack();
           }}
         />

@@ -4,7 +4,7 @@ import BackNavBar from "../components/BackNavBar/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
-export default function AddMedicationSchedule({ props, navigation, route, addMedication }) {
+export default function AddMedicationSchedule({ navigation, route, addMedication }) {
   const [state, setState] = useState({ ...route.params.state });
   const [date, setDate] = useState(new Date(2023, 1, 1, 8, 0, 0));
   const onChange = (event, selectedDate) => {
@@ -13,7 +13,6 @@ export default function AddMedicationSchedule({ props, navigation, route, addMed
     setFirstDosageTiming(currentDate);
   };
   function setFirstDosageTiming(date) {
-    console.log(convertTimeStringtoInteger(date));
     setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FirstDosageTiming: convertTimeStringtoInteger(date) } }));
   }
   function convertTimeStringtoInteger(date) {

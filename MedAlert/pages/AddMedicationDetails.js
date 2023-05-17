@@ -5,7 +5,7 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Entypo } from "@expo/vector-icons";
 import CameraComponent from "../components/CameraComponent/CameraComponent";
 
-export default function AddMedicationDetails({ props, navigation, route }) {
+export default function AddMedicationDetails({ navigation, route }) {
   const [state, setState] = useState({ Name: "", Type: route.params.Type, Purpose: "", Instructions: { TabletsPerIntake: 1, FrequencyPerDay: 0, Specifications: "", FirstDosageTiming: 540 } });
   const [showCamera, setShowCamera] = useState(false);
 

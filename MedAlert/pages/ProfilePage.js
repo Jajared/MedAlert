@@ -4,7 +4,7 @@ import SlideButton from "rn-slide-button";
 import * as LocalAuthentication from "expo-local-authentication";
 import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons, Feather } from "@expo/vector-icons";
 
-export default function ProfilePage({ props, navigation, userInformation }) {
+export default function ProfilePage({ navigation, userInformation }) {
   const onFaceId = async () => {
     try {
       // Checking if device is compatible
@@ -33,7 +33,7 @@ export default function ProfilePage({ props, navigation, userInformation }) {
       <BackNavBar navigation={navigation} title="Profile" />
       <View style={styles.profileSection}>
         <View style={styles.profileImage}>
-          <Image source={userInformation.ProfileImage} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
+          <Image source={{ uri: userInformation.ProfilePicture }} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
         </View>
         <Text style={styles.profileName}>{userInformation.Username}</Text>
       </View>
