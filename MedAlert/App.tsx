@@ -8,48 +8,15 @@ import AddMedicationDetails from "./pages/AddMedicationDetails";
 import AddMedicationSchedule from "./pages/AddMedicationSchedule";
 import ProfilePage from "./pages/ProfilePage";
 import UpdateAccountPage from "./pages/UpdateAccountPage";
-import { initializeApp } from "firebase/app";
-import { addDoc, collection, getFirestore, query, doc, getDoc, getDocs } from "firebase/firestore";
+import { UserInformation, MedicationItem, ScheduledItem } from "./utils/types";
+import { collection, addDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import { firestore } from "./firebaseConfig";
+import { signUp } from "./Auth";
+import { userDataConverter } from "./converters/userDataConverter";
+import { medDataConverter } from "./converters/medDataConverter";
 
 const Stack = createNativeStackNavigator();
-
-const firebaseConfig = {
-  apiKey: "AIzaSyA630mEkGs-Zq9cMkIVWs9rfrLEZGOIKic",
-  authDomain: "medalert-386812.firebaseapp.com",
-  projectId: "medalert-386812",
-  storageBucket: "medalert-386812.appspot.com",
-  messagingSenderId: "435459398641",
-  appId: "1:435459398641:web:c640e32a44f0e4cb598250",
-  measurementId: "G-ZL35VZP8EM",
-};
-
-const app = initializeApp(firebaseConfig);
-const firestore = getFirestore(app);
-
-interface UserInformation {
-  Name: string;
-  Gender: string;
-  DateOfBirth: string;
-  EmailAddress: string;
-  PhoneNumber: string;
-}
-
-interface ScheduledItem extends MedicationItem {
-  Acknowledged: boolean;
-  id: number;
-}
-
-interface MedicationItem {
-  Name: string;
-  Type: string;
-  Purpose: string;
-  Instructions: {
-    TabletsPerIntake: number;
-    FrequencyPerDay: number;
-    Specifications: string;
-    FirstDosageTiming: number;
-  };
-}
+const testID = "cLNeJdkRJkfEzLMugJipcamAWwb2";
 
 export default function App() {
   const [userInformation, setUserInformation] = useState<UserInformation>();
@@ -58,13 +25,22 @@ export default function App() {
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       try {
-        const querySnapshot = await getDocs(collection(firestore, "Users"));
-        const documents = querySnapshot.docs.map((doc) => doc.data());
-        setUserInformation(documents[0].UserInfo);
-        setAllMedicationItems(documents[0].MedicationItems);
-        setScheduledItems(Array.from(getScheduledItems()));
+        const medInfoRef = doc(firestore, "MedicationInformation", testID);
+        const userInfoRef = doc(firestore, "UsersData", testID);
+        const medInfoQuerySnapshot = await getDoc(medInfoRef.withConverter(medDataConverter));
+        const userQuerySnapshot = await getDoc(userInfoRef.withConverter(userDataConverter));
+        const medInfoData = medInfoQuerySnapshot.data();
+        const userInfoData = userQuerySnapshot.data();
+        setUserInformation(userInfoData);
+        setAllMedicationItems(medInfoData.MedicationItems);
+        setScheduledItems(medInfoData.ScheduledItems);
+        console.log(userInformation);
+        console.log(allMedicationItems);
+        console.log(scheduledItems);
         console.log("Data fetched successfully");
-      } catch (error) {}
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
     };
 
     fetchData();
@@ -72,24 +48,42 @@ export default function App() {
 
   // initialiseData();
   function initialiseData() {
+    const userLoginCredentials = {
+      email: "test@gmail.com",
+      password: "JaJaWong1",
+    };
+    // signUp(userLoginCredentials.email, userLoginCredentials.password);
     const userData = {
-      UserInfo: {
-        Name: "Jane",
-        Gender: "Male",
-        DateOfBirth: "29/05/2001",
-        EmailAddress: "test@gmail.com",
-        PhoneNumber: "9123456",
-      },
+      Name: "Jane",
+      Gender: "Male",
+      DateOfBirth: "29/05/2001",
+      EmailAddress: "test@gmail.com",
+      PhoneNumber: "9123456",
+    };
+    const usersDataRef = doc(collection(firestore, "UsersData"), testID);
+    setDoc(usersDataRef, userData)
+      .then((docRef) => {
+        console.log("Data pushed successfully.");
+      })
+      .catch((error) => {
+        console.error("Error pushing data:", error);
+      });
+    const medicationInformation = {
       MedicationItems: [
         { Name: "Paracetamol", Type: "Pill", Purpose: "Fever", Instructions: { TabletsPerIntake: 2, FrequencyPerDay: 2, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
         { Name: "Metophan", Type: "Liquid", Purpose: "Cough", Instructions: { TabletsPerIntake: 4, FrequencyPerDay: 2, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
       ],
+      ScheduledItems: [
+        { Acknowledged: false, Instructions: { FirstDosageTiming: 540, FrequencyPerDay: 2, Specifications: "No specific instructions", TabletsPerIntake: 2 }, Name: "Paracetamol", Purpose: "Fever", Type: "Pill", id: 1 },
+        { Acknowledged: false, Instructions: { FirstDosageTiming: 540, FrequencyPerDay: 2, Specifications: "No specific instructions", TabletsPerIntake: 4 }, Name: "Metophan", Purpose: "Cough", Type: "Liquid", id: 3 },
+        { Acknowledged: false, Instructions: { FirstDosageTiming: 1260, FrequencyPerDay: 2, Specifications: "No specific instructions", TabletsPerIntake: 2 }, Name: "Paracetamol", Purpose: "Fever", Type: "Pill", id: 2 },
+        { Acknowledged: false, Instructions: { FirstDosageTiming: 1260, FrequencyPerDay: 2, Specifications: "No specific instructions", TabletsPerIntake: 4 }, Name: "Metophan", Purpose: "Cough", Type: "Liquid", id: 4 },
+      ],
     };
-
-    const usersRef = collection(firestore, "Users");
-    addDoc(usersRef, userData)
+    const medInfoRef = doc(collection(firestore, "MedicationInformation"), testID);
+    setDoc(medInfoRef, medicationInformation)
       .then((docRef) => {
-        console.log("Data pushed successfully. Document ID:", docRef.id);
+        console.log("Data pushed successfully.");
       })
       .catch((error) => {
         console.error("Error pushing data:", error);
