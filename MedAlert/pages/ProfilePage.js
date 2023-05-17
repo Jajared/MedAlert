@@ -33,7 +33,7 @@ export default function ProfilePage({ navigation, userInformation }) {
       <BackNavBar navigation={navigation} title="Profile" />
       <View style={styles.profileSection}>
         <View style={styles.profileImage}>
-          <Image source={userInformation.ProfileImage} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
+          <Image source={{ uri: userInformation.ProfilePicture }} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
         </View>
         <Text style={styles.profileName}>{userInformation.Username}</Text>
       </View>

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import { useState, useEffect } from "react";
 import HomeScreen from "./pages/HomeScreen";
 import { NavigationContainer } from "@react-navigation/native";
@@ -9,11 +9,13 @@ import AddMedicationSchedule from "./pages/AddMedicationSchedule";
 import ProfilePage from "./pages/ProfilePage";
 import UpdateAccountPage from "./pages/UpdateAccountPage";
 import { UserInformation, MedicationItem, ScheduledItem } from "./utils/types";
-import { collection, addDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import { collection, addDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { firestore } from "./firebaseConfig";
 import { signUp } from "./Auth";
 import { userDataConverter } from "./converters/userDataConverter";
 import { medDataConverter } from "./converters/medDataConverter";
+import { storage } from "./firebaseConfig";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const Stack = createNativeStackNavigator();
 const testID = "cLNeJdkRJkfEzLMugJipcamAWwb2";
@@ -22,11 +24,12 @@ export default function App() {
   const [userInformation, setUserInformation] = useState<UserInformation>();
   const [allMedicationItems, setAllMedicationItems] = useState<MedicationItem[]>([]);
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const medInfoRef = doc(firestore, "MedicationInformation", testID);
+  const userInfoRef = doc(firestore, "UsersData", testID);
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
       try {
-        const medInfoRef = doc(firestore, "MedicationInformation", testID);
-        const userInfoRef = doc(firestore, "UsersData", testID);
         const medInfoQuerySnapshot = await getDoc(medInfoRef.withConverter(medDataConverter));
         const userQuerySnapshot = await getDoc(userInfoRef.withConverter(userDataConverter));
         const medInfoData = medInfoQuerySnapshot.data();
@@ -34,9 +37,7 @@ export default function App() {
         setUserInformation(userInfoData);
         setAllMedicationItems(medInfoData.MedicationItems);
         setScheduledItems(medInfoData.ScheduledItems);
-        console.log(userInformation);
-        console.log(allMedicationItems);
-        console.log(scheduledItems);
+        setIsLoading(false);
         console.log("Data fetched successfully");
       } catch (error) {
         console.log("Error fetching data:", error);
@@ -90,15 +91,56 @@ export default function App() {
       });
   }
 
+  const uploadProfilePicture = async (userId, filePath) => {
+    function filePathToBlob(filePath) {
+      return fetch(filePath)
+        .then((response) => response.blob())
+        .then((blob) => blob);
+    }
+    const storageRef = ref(storage, `profilePictures/${userId}`);
+
+    try {
+      const file = await filePathToBlob(filePath);
+      // Upload the file to Firebase Storage
+      await uploadBytes(storageRef, file);
+
+      // Get the download URL for the uploaded file
+      const downloadURL = await getDownloadURL(storageRef);
+      console.log(downloadURL);
+      // 3. Storing the Download URL in Firestore
+      // const userDocRef = doc(firestore, "users", userId);
+      // await setDoc(userDocRef, { profilePictureURL: downloadURL }, { merge: true });
+
+      console.log("Profile picture uploaded successfully.");
+    } catch (error) {
+      console.error("Error uploading profile picture:", error);
+    }
+  };
+
+  // uploadProfilePicture(testID, "/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/jamal.png");
+
+  const updateUserInformation = async (updatedUserData: UserInformation) => {
+    try {
+      setUserInformation(updatedUserData);
+      await updateDoc(userInfoRef, { ...updatedUserData });
+      console.log("User information updated to Firestore successfully");
+    } catch (error) {
+      console.error("Error adding user information to Firestore:", error);
+    }
+  };
+
   function setAcknowledged(id: number) {
-    var temp = [...scheduledItems];
-    for (let i = 0; i < temp.length; i++) {
-      if (temp[i].id === id) {
-        temp[i].Acknowledged = true;
+    var newScheduledItems = [...scheduledItems];
+    for (let i = 0; i < newScheduledItems.length; i++) {
+      if (newScheduledItems[i].id === id) {
+        newScheduledItems[i].Acknowledged = true;
       }
     }
-    setScheduledItems(temp);
+    setScheduledItems(newScheduledItems);
+    // Update firebase
+    updateDoc(medInfoRef, { ScheduledItems: newScheduledItems });
   }
+
   function getScheduledItems() {
     var temp = [];
     var count = 1;
@@ -163,21 +205,41 @@ export default function App() {
     return scheduledItemsInOrder;
   }
 
-  function addMedication(medicationData: MedicationItem) {
-    setScheduledItems(sortScheduledItems([...scheduledItems, ...JSON.parse(JSON.stringify(getNewScheduledItems(medicationData)))]));
-    setAllMedicationItems((prevState) => [...prevState, medicationData]);
-  }
+  const addMedication = async (medicationData: MedicationItem) => {
+    try {
+      const newScheduledItems = sortScheduledItems([...scheduledItems, ...JSON.parse(JSON.stringify(getNewScheduledItems(medicationData)))]);
+      const newMedicationItems = [...allMedicationItems, medicationData];
+      setScheduledItems(newScheduledItems);
+      setAllMedicationItems(newMedicationItems);
+      // Update firebase
+      await updateDoc(medInfoRef, {
+        MedicationItems: newMedicationItems,
+        ScheduledItems: newScheduledItems,
+      });
+      console.log("Medication added successfully.");
+    } catch (error) {
+      console.error("Error adding medication:", error);
+    }
+  };
 
   // Function wrong
   function deleteMedication(medicationData) {
     setAllMedicationItems((prevState) => prevState.filter(medicationData));
   }
 
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" options={{ headerShown: false }}>
-          {(props) => <HomeScreen {...props} props={{ allMedicationItems: scheduledItems }} setAcknowledged={setAcknowledged} />}
+          {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} />}
         </Stack.Screen>
         <Stack.Screen name="Add Medication Type" options={{ headerShown: false }}>
           {(props) => <AddMedicationType {...props} />}
@@ -192,7 +254,7 @@ export default function App() {
           {(props) => <ProfilePage {...props} userInformation={userInformation} />}
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
-          {(props) => <UpdateAccountPage {...props} userInformation={userInformation} setUserInformation={setUserInformation} />}
+          {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

@@ -4,9 +4,8 @@ import { FlatList } from "react-native";
 import HomeNavBar from "../components/HomeNavBar/HomeNavBar";
 import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
 
-export default function HomeScreen({ props, navigation, setAcknowledged }) {
-  const allMedicationItems = props.allMedicationItems;
-
+export default function HomeScreen({ scheduledItems, navigation, setAcknowledged, userName }) {
+  const allMedicationItems = scheduledItems;
   function deleteMedication(medicationData) {
     setAllMedicationItems((prevState) => prevState.filter(medicationData));
   }
@@ -17,7 +16,7 @@ export default function HomeScreen({ props, navigation, setAcknowledged }) {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topNavBar}>
-        <HomeNavBar navigation={navigation} />
+        <HomeNavBar navigation={navigation} userName={userName} />
       </View>
       <View style={styles.medicationSection}>{allMedicationItems && <FlatList data={allMedicationItems.filter((data) => data.Acknowledged === false)} renderItem={(data) => <MedicationItem title={data.Name} props={data} navigation={navigation} deleteMedicationItem={deleteMedicationItem} setAcknowledged={setAcknowledged} />} keyExtractor={(item) => item.id} />}</View>
       <View style={styles.bottomNavBar}>

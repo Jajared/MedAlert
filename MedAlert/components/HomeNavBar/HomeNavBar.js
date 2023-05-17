@@ -1,13 +1,13 @@
 import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-export default function HomeNavBar({ props, navigation }) {
+export default function HomeNavBar({ props, navigation, userName }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate("Add Medication Type")} style={styles.addButton}>
         <AntDesign name="plus" size={25} color="black" />
-      </TouchableOpacity> 
-      <Text style={styles.userSection}>Hey Jane!</Text>
+      </TouchableOpacity>
+      <Text style={styles.userSection}>Hey {userName}!</Text>
       <Text style={styles.daySection}>{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(new Date())}</Text>
       <Text style={styles.upcomingRemindersSection}>Upcoming Reminders </Text>
     </View>
