@@ -1,13 +1,14 @@
-import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button } from "react-native";
+import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button, Modal } from "react-native";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import { useState } from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { set } from "react-native-reanimated";
 
-export default function EditMedicationDetails({ navigation, allMedicationItems, deleteMedicationItem, route }) {
+export default function EditMedicationDetails({ navigation, allMedicationItems, deleteMedicationFromList, route }) {
   const [medicationItems, setMedicationItems] = useState(allMedicationItems);
-  const {medicationName} = route.params
-  const [medicationItem, setMedicationItem] = useState(medicationItems.filter(item => item.Name === medicationName)[0]);
-
+  const { medicationName } = route.params;
+  const [medicationItem, setMedicationItem] = useState(medicationItems.filter((item) => item.Name === medicationName)[0]);
+  const [isDeletionPopUpVisible, setIsDeletionPopUpVisible] = useState(false);
   function setFrequencyPerIntake(value) {
     setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FrequencyPerDay: value } }));
   }
@@ -32,7 +33,7 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
       <BackNavBar navigation={navigation} title="Edit Medication Details" />
       <View style={styles.nameSection}>
         <Text style={styles.textHeader}>Name of Medication</Text>
-        <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Name: text.trim() })} value={medicationItem.name} placeholder={medicationItem.Name}  />
+        <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Name: text.trim() })} value={medicationItem.name} placeholder={medicationItem.Name} />
       </View>
       <View style={styles.purposeSection}>
         <Text style={styles.textHeader}>Purpose of Medication</Text>
@@ -103,23 +104,52 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
         </View>
       </View>
       <View style={styles.nextSection}>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={() => {
-            if (handleSubmit()) { 
+            if (handleSubmit()) {
               navigation.navigate("Edit Medication Schedule", { medicationItem });
-            }}}>
+            }
+          }}
+        >
           <Text style={styles.nextPage}>CONTINUE EDITING</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.nextSection}>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Confirm Deletion",  { medicationItem });
-          }}>
-          <Text style={styles.deleteBox}>DELETE MEDICATION</Text> 
+            setIsDeletionPopUpVisible(true);
+          }}
+        >
+          <Text style={styles.deleteBox}>DELETE MEDICATION</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.bottomNavBar} />
+      <Modal visible={isDeletionPopUpVisible}>
+        <SafeAreaView style={styles.popUpContainer}>
+          <Text style={styles.header}>Are you sure that you want to delete </Text>
+          <Text style={{ fontWeight: "bold", fontSize: 20 }}> {medicationItem.Name}</Text>
+          <Text style={styles.header}>from your medication list?</Text>
+          <Text></Text>
+          <View style={styles.buttons}>
+            <TouchableOpacity
+              onPress={() => {
+                deleteMedicationFromList(medicationItem);
+                setIsDeletionPopUpVisible(false);
+                navigation.navigate("Home");
+              }}
+            >
+              <Text style={{ color: "darkgreen", fontWeight: "bold", paddingRight: 40 }}>YES</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setIsDeletionPopUpVisible(false);
+              }}
+            >
+              <Text style={{ color: "darkred", fontWeight: "bold", paddingLeft: 40 }}>NO</Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -171,25 +201,25 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   deleteBox: {
-    height: 40, 
+    height: 40,
     borderWidth: 1,
     borderRadius: 8,
     marginTop: 5,
     paddingHorizontal: 10,
     paddingTop: 10,
     borderColor: "red",
-    color: "red"
+    color: "red",
   },
   nextPage: {
-    height: 40, 
+    height: 40,
     borderWidth: 1,
     borderRadius: 8,
     marginTop: 5,
     paddingHorizontal: 10,
     paddingTop: 10,
     borderColor: "black",
-    color: "black"
-  }, 
+    color: "black",
+  },
   nextSection: {
     flex: 1,
   },
@@ -202,5 +232,17 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 20,
   },
+  popUpContainer: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttons: {
+    flexDirection: "row",
+  },
+  header: {
+    fontSize: 16,
+  },
 });
-

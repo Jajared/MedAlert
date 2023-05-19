@@ -19,7 +19,6 @@ import { deleteObject, getDownloadURL, ref, uploadBytes, uploadString } from "fi
 import { decode } from "base-64";
 import EditMedicationDetails from "./pages/EditMedicationDetails";
 import EditMedicationSchedule from "./pages/EditMedicationSchedule";
-import ConfirmDeletion from "./pages/ConfirmDeletion";
 import LoginPage from "./pages/LoginPage";
 import SignUpDetailsPage from "./pages/SignUpDetailsPage";
 
@@ -169,7 +168,7 @@ export default function App() {
         console.error("Error pushing data:", error);
       });
     fetchData();
-  }; 
+  };
 
   function setAcknowledged(id: number) {
     var newScheduledItems = [...scheduledItems];
@@ -264,11 +263,6 @@ export default function App() {
     }
   };
 
-  // Function wrong
-  function deleteMedicationItem(medicationData) {
-    setAllMedicationItems((prevState) => prevState.filter(medicationData));
-  }
-
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -299,13 +293,10 @@ export default function App() {
           {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} updateProfilePicture={updateProfilePicture} />}
         </Stack.Screen>
         <Stack.Screen name="Edit Medication Details" options={{ headerShown: false }}>
-          {(props) => <EditMedicationDetails {...props} allMedicationItems={allMedicationItems} deleteMedicationItem={deleteMedicationItem} />}
+          {(props) => <EditMedicationDetails {...props} allMedicationItems={allMedicationItems} deleteMedicationFromList={deleteMedicationFromList} />}
         </Stack.Screen>
         <Stack.Screen name="Edit Medication Schedule" options={{ headerShown: false }}>
           {(props) => <EditMedicationSchedule {...props} allMedicationItems={allMedicationItems} setEdit={setEdit} />}
-        </Stack.Screen>
-        <Stack.Screen name="Confirm Deletion" options={{ headerShown: false }}>
-          {(props) => <ConfirmDeletion {...props} deleteMedicationFromList = {deleteMedicationFromList} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

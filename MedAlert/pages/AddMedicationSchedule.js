@@ -6,7 +6,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function AddMedicationSchedule({ navigation, route, addMedication }) {
   const [state, setState] = useState({ ...route.params.state });
-  const [date, setDate] = useState(new Date(2023, 1, 1, 8, 0, 0));
+  const [date, setDate] = useState(new Date(2023, 1, 1, 9, 0, 0));
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setDate(currentDate);

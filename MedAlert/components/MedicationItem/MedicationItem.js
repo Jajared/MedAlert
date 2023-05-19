@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Animated } from "react-native";
-import { Swipeable } from "react-native-gesture-handler";
+import { Swipeable, RectButton } from "react-native-gesture-handler";
 
 export default function MedicationItem({ props, navigation, deleteMedicationItem, setAcknowledged }) {
   const medicationData = props.item;
@@ -36,24 +36,21 @@ export default function MedicationItem({ props, navigation, deleteMedicationItem
   }
 
   return (
-      <SafeAreaView style={styles.container}>
-        <TouchableOpacity onPress={() => navigation.navigate("Edit Medication Details", { medicationName: medicationData.Name})}>
-          <Swipeable renderRightActions={rightActions}>
-            <View style={styles.itemContainer}>
-              <Text style={styles.timeSection}>{getTime()}</Text>
-              <View style={styles.textContainer}>
-                <Image source={getIcon()} style={styles.icon} />
-                <View style={styles.medicationInfo}>
-                  <Text style={{ fontWeight: "bold", fontSize: 20 }}>{medicationData.Name}</Text>
-                  <Text>{medicationData.Purpose}</Text>
-                  <Text>{medicationData.Instructions.TabletsPerIntake} tablets per intake</Text>
-                </View>
-              </View>
+    <SafeAreaView style={styles.container}>
+      <Swipeable renderRightActions={rightActions}>
+        <RectButton onPress={() => navigation.navigate("Edit Medication Details", { medicationName: medicationData.Name })} style={styles.itemContainer}>
+          <Text style={styles.timeSection}>{getTime()}</Text>
+          <View style={styles.textContainer}>
+            <Image source={getIcon()} style={styles.icon} />
+            <View style={styles.medicationInfo}>
+              <Text style={{ fontWeight: "bold", fontSize: 20 }}>{medicationData.Name}</Text>
+              <Text>{medicationData.Purpose}</Text>
+              <Text>{medicationData.Instructions.TabletsPerIntake} tablets per intake</Text>
             </View>
-          </Swipeable>
-        </TouchableOpacity>
-      </SafeAreaView>
-    
+          </View>
+        </RectButton>
+      </Swipeable>
+    </SafeAreaView>
   );
 }
 
