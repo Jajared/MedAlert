@@ -1,4 +1,5 @@
-import { StyleSheet, Text, SafeAreaView, Image, View, useState } from "react-native";
+import { StyleSheet, Text, SafeAreaView, Image, View } from "react-native";
+import { useState, useEffect } from "react";
 import MedicationItem from "../components/MedicationItem/MedicationItem";
 import { FlatList } from "react-native";
 import HomeNavBar from "../components/HomeNavBar/HomeNavBar";
@@ -6,6 +7,8 @@ import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
 
 export default function HomeScreen({ scheduledItems, navigation, setAcknowledged, userName }) {
   const allMedicationItems = scheduledItems;
+  console.log(scheduledItems);
+
   function deleteMedication(medicationData) {
     setAllMedicationItems((prevState) => prevState.filter(medicationData));
   }

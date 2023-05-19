@@ -15,7 +15,12 @@ import { signUp } from "./Auth";
 import { userDataConverter } from "./converters/userDataConverter";
 import { medDataConverter } from "./converters/medDataConverter";
 import { storage } from "./firebaseConfig";
-import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes, uploadString } from "firebase/storage";
+import { decode } from "base-64";
+
+if (typeof atob === "undefined") {
+  global.atob = decode;
+}
 
 const Stack = createNativeStackNavigator();
 const testID = "cLNeJdkRJkfEzLMugJipcamAWwb2";
@@ -97,12 +102,10 @@ export default function App() {
       .then((blob) => blob);
   }
 
-  const uploadProfilePicture = async (userId, filePath) => {
-    const storageRef = ref(storage, `profilePictures/${userId}`);
-
+  const updateProfilePicture = async (fileBase64) => {
+    const storageRef = ref(storage, `profilePictures/${testID}`);
     try {
-      const file = await filePathToBlob(filePath);
-      await uploadBytes(storageRef, file);
+      await uploadString(storageRef, fileBase64, "data_url");
       const downloadURL = await getDownloadURL(storageRef);
       await setDoc(userInfoRef, { ProfilePicture: downloadURL }, { merge: true });
       console.log("Profile picture uploaded successfully.");
@@ -111,37 +114,6 @@ export default function App() {
     }
   };
 
-  // Not working
-  const updateProfilePicture = async (filePath) => {
-    const storageRef = ref(storage, `profilePictures/${testID}`);
-    try {
-      // First delete
-      await deleteObject(storageRef)
-        .then(() => {
-          console.log("Profile picture deleted successfully.");
-        })
-        .catch((error) => {
-          console.error("Error deleting profile picture:", error);
-        });
-      // Then reupload
-      const file = await filePathToBlob(filePath);
-      await uploadBytes(storageRef, file)
-        .then(() => {
-          console.log("New Profile picture uploaded successfully.");
-        })
-        .catch((error) => {
-          console.error("Error uploading new profile picture:", error);
-        });
-      const downloadURL = await getDownloadURL(storageRef);
-      await updateDoc(userInfoRef, { ProfilePicture: downloadURL });
-      console.log("Profile picture changed successfully.");
-    } catch (error) {
-      console.error("Error uploading profile picture:", error);
-    }
-  };
-
-  // uploadProfilePicture(testID, "/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/jamal.png");
-  // updateProfilePicture("/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/pill-icon.png");
   const updateUserInformation = async (updatedUserData: UserInformation) => {
     try {
       setUserInformation(updatedUserData);

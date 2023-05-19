@@ -30,11 +30,13 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
-      quality: 1,
+      quality: 0,
+      base64: true,
     });
     if (!pickerResult.canceled) {
-      setProfilePicture(pickerResult.assets[0].uri);
-      console.log(pickerResult.assets[0].uri);
+      const base64Image = "data:image/png;base64," + pickerResult.assets[0].base64;
+      setProfilePicture(`data:image/png;base64,${base64Image}`);
+      updateProfilePicture(base64Image);
     }
   };
 
