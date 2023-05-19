@@ -3,14 +3,30 @@ import { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { signIn } from "../Auth";
 
-export default function LoginPage() {
+export default function LoginPage({ navigation, onLogin }) {
   const [email, setEmail] = useState("Email");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
+  };
+
+  const handleLogin = async () => {
+    try {
+      const [success, id] = await signIn(email, password);
+      if (success) {
+        console.log("Login successful");
+        onLogin(id);
+        navigation.navigate("Home", { id: id });
+      } else {
+        alert("Login failed");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -19,20 +35,20 @@ export default function LoginPage() {
         <Text style={styles.inputTitle}>Email</Text>
         <View style={styles.inputBox}>
           <AntDesign name="mail" size={20} color="black" style={styles.inputIcon} />
-          <TextInput style={styles.inputText} value={"Email"}></TextInput>
+          <TextInput style={styles.inputText} value={email} onChangeText={(text) => setEmail(text)}></TextInput>
         </View>
       </View>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Password</Text>
         <View style={styles.inputBox}>
           <AntDesign name="lock" size={26} color="black" style={styles.inputIcon} />
-          <TextInput style={{ flex: 8 }} value={""} secureTextEntry={!showPassword}></TextInput>
+          <TextInput style={{ flex: 8 }} value={password} secureTextEntry={!showPassword} onChangeText={(text) => setPassword(text)}></TextInput>
           <TouchableOpacity style={styles.showButton} onPress={togglePasswordVisibility}>
             <Feather name={showPassword ? "eye-off" : "eye"} size={20} color="gray" />
           </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity onPress={() => alert("Button pressed")} style={styles.buttonContainer}>
+      <TouchableOpacity onPress={handleLogin} style={styles.buttonContainer}>
         <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
           <Text style={styles.buttonText}>Sign In</Text>
         </LinearGradient>
@@ -43,7 +59,7 @@ export default function LoginPage() {
         <View style={styles.line}></View>
       </View>
 
-      <TouchableOpacity onPress={() => alert("Button pressed")} style={styles.buttonContainer}>
+      <TouchableOpacity onPress={() => alert("Button Pressed")} style={styles.buttonContainer}>
         <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </LinearGradient>

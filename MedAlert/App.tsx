@@ -35,8 +35,10 @@ export default function App() {
   const [allMedicationItems, setAllMedicationItems] = useState<MedicationItem[]>([]);
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const medInfoRef = doc(firestore, "MedicationInformation", testID);
-  const userInfoRef = doc(firestore, "UsersData", testID);
+  const [userId, setUserId] = useState("");
+  const medInfoRef = doc(firestore, "MedicationInformation", userId);
+  const userInfoRef = doc(firestore, "UsersData", userId);
+
   const fetchData = async (): Promise<void> => {
     try {
       const medInfoQuerySnapshot = await getDoc(medInfoRef.withConverter(medDataConverter));
@@ -54,7 +56,11 @@ export default function App() {
   };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [userId]);
+
+  const handleLogin = (userId) => {
+    setUserId(userId);
+  };
 
   const addPicture = async () => {
     const reference = ref(storage, `profilePictures/${testID}`);
@@ -275,6 +281,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen name="Login" options={{ headerShown: false }}>
+          {(props) => <LoginPage {...props} onLogin={handleLogin} />}
+        </Stack.Screen>
         <Stack.Screen name="Home" options={{ headerShown: false }}>
           {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} />}
         </Stack.Screen>
