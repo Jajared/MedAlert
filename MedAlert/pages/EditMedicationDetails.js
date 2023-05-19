@@ -103,14 +103,21 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
         </View>
       </View>
       <View style={styles.nextSection}>
-        <Button
-          title="next"
+        <TouchableOpacity 
           onPress={() => {
-            if (handleSubmit() == true) {
+            if (handleSubmit()) { 
               navigation.navigate("Edit Medication Schedule", { medicationItem });
-            }
-          }}
-        />
+            }}}>
+          <Text style={styles.nextPage}>CONTINUE EDITING</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.nextSection}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Confirm Deletion",  { medicationItem });
+          }}>
+          <Text style={styles.deleteBox}>DELETE MEDICATION</Text> 
+        </TouchableOpacity>
       </View>
       <View style={styles.bottomNavBar} />
     </SafeAreaView>
@@ -163,6 +170,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginTop: 5,
   },
+  deleteBox: {
+    height: 40, 
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 5,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    borderColor: "red",
+    color: "red"
+  },
+  nextPage: {
+    height: 40, 
+    borderWidth: 1,
+    borderRadius: 8,
+    marginTop: 5,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+    borderColor: "black",
+    color: "black"
+  }, 
   nextSection: {
     flex: 1,
   },

@@ -19,6 +19,7 @@ import { deleteObject, getDownloadURL, ref, uploadBytes, uploadString } from "fi
 import { decode } from "base-64";
 import EditMedicationDetails from "./pages/EditMedicationDetails";
 import EditMedicationSchedule from "./pages/EditMedicationSchedule";
+import ConfirmDeletion from "./pages/ConfirmDeletion";
 import LoginPage from "./pages/LoginPage";
 import SignUpDetailsPage from "./pages/SignUpDetailsPage";
 
@@ -153,6 +154,23 @@ export default function App() {
     fetchData();
   };
 
+  const deleteMedicationFromList = async (medicationItem) => {
+    var newAllMedicationItems = [...allMedicationItems];
+    for (var i = 0; i < newAllMedicationItems.length; i++) {
+      if (newAllMedicationItems[i].Name == medicationItem.Name) {
+        newAllMedicationItems.splice(i, 1);
+      }
+    }
+    await updateDoc(medInfoRef, { MedicationItems: newAllMedicationItems, ScheduledItems: getScheduledItems(newAllMedicationItems) })
+      .then((docRef) => {
+        console.log("Data changed successfully.");
+      })
+      .catch((error) => {
+        console.error("Error pushing data:", error);
+      });
+    fetchData();
+  }; 
+
   function setAcknowledged(id: number) {
     var newScheduledItems = [...scheduledItems];
     for (let i = 0; i < newScheduledItems.length; i++) {
@@ -285,6 +303,9 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen name="Edit Medication Schedule" options={{ headerShown: false }}>
           {(props) => <EditMedicationSchedule {...props} allMedicationItems={allMedicationItems} setEdit={setEdit} />}
+        </Stack.Screen>
+        <Stack.Screen name="Confirm Deletion" options={{ headerShown: false }}>
+          {(props) => <ConfirmDeletion {...props} deleteMedicationFromList = {deleteMedicationFromList} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
