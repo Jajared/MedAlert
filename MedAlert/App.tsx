@@ -19,6 +19,8 @@ import { deleteObject, getDownloadURL, ref, uploadBytes, uploadString } from "fi
 import { decode } from "base-64";
 import EditMedicationDetails from "./pages/EditMedicationDetails";
 import EditMedicationSchedule from "./pages/EditMedicationSchedule";
+import LoginPage from "./pages/LoginPage";
+import SignUpDetailsPage from "./pages/SignUpDetailsPage";
 
 if (typeof atob === "undefined") {
   global.atob = decode;
@@ -53,6 +55,14 @@ export default function App() {
     fetchData();
   }, []);
 
+  const addPicture = async () => {
+    const reference = ref(storage, `profilePictures/${testID}`);
+    uploadBytes(reference, await filePathToBlob("/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/jamal.png")).then((snapshot) => {
+      console.log("Uploaded a blob or file!");
+      console.log(getDownloadURL(snapshot.ref).then((url) => console.log(url)));
+    });
+  };
+
   // initialiseData();
   function initialiseData() {
     const userLoginCredentials = {
@@ -66,7 +76,7 @@ export default function App() {
       DateOfBirth: "29/05/2001",
       EmailAddress: "test@gmail.com",
       PhoneNumber: "9123456",
-      
+      ProfilePicture: "https://firebasestorage.googleapis.com/v0/b/medalert-386812.appspot.com/o/profilePictures%2FcLNeJdkRJkfEzLMugJipcamAWwb2?alt=media&token=e2ea4d15-ec26-410e-b584-3aac020bfe15",
     };
     const usersDataRef = doc(collection(firestore, "UsersData"), testID);
     setDoc(usersDataRef, userData)
@@ -133,14 +143,15 @@ export default function App() {
         newAllMedicationItems[i] = medicationItem;
       }
     }
-    await updateDoc(medInfoRef, {MedicationItems: newAllMedicationItems, ScheduledItems: getScheduledItems(newAllMedicationItems)}).then((docRef) => {
-      console.log("Data changed successfully.");
-    })
-    .catch((error) => {
-      console.error("Error pushing data:", error);
-    });;
+    await updateDoc(medInfoRef, { MedicationItems: newAllMedicationItems, ScheduledItems: getScheduledItems(newAllMedicationItems) })
+      .then((docRef) => {
+        console.log("Data changed successfully.");
+      })
+      .catch((error) => {
+        console.error("Error pushing data:", error);
+      });
     fetchData();
-  }
+  };
 
   function setAcknowledged(id: number) {
     var newScheduledItems = [...scheduledItems];

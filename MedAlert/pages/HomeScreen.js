@@ -7,7 +7,6 @@ import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
 
 export default function HomeScreen({ scheduledItems, navigation, setAcknowledged, userName }) {
   const allMedicationItems = scheduledItems;
-  /* console.log(scheduledItems); */
 
   function deleteMedication(medicationData) {
     setAllMedicationItems((prevState) => prevState.filter(medicationData));

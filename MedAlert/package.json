@@ -38,7 +38,8 @@
     "react-native-screens": "^3.20.0",
     "react-native-text-recognition": "^1.0.0",
     "rn-slide-button": "^1.0.3",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "expo-linear-gradient": "~12.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
