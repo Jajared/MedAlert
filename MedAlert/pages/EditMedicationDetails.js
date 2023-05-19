@@ -1,68 +1,57 @@
 import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button } from "react-native";
-import { useState, useRef } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
+import { useState } from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { Entypo } from "@expo/vector-icons";
-import CameraComponent from "../components/CameraComponent/CameraComponent";
 
-export default function AddMedicationDetails({ navigation, route }) {
-  const [state, setState] = useState({ Name: "", Type: route.params.Type, Purpose: "", Instructions: { TabletsPerIntake: 1, FrequencyPerDay: 0, Specifications: "", FirstDosageTiming: 540 } });
-  const [showCamera, setShowCamera] = useState(false);
+export default function EditMedicationDetails({ navigation, allMedicationItems, deleteMedicationItem, route }) {
+  const [medicationItems, setMedicationItems] = useState(allMedicationItems);
+  const {medicationName} = route.params
+  const [medicationItem, setMedicationItem] = useState(medicationItems.filter(item => item.Name === medicationName)[0]);
 
   function setFrequencyPerIntake(value) {
-    setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FrequencyPerDay: value } }));
+    setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FrequencyPerDay: value } }));
   }
+
   function handleSubmit() {
-    if (state.Name.trim() === "") {
+    if (medicationItem.Name.trim() === "") {
       alert("Please enter name of medication");
       return false;
     }
-    if (state.Purpose.trim() === "") {
+    if (medicationItem.Purpose.trim() === "") {
       alert("Please enter purpose of medication");
       return false;
     }
-    if (state.Instructions.FrequencyPerDay == 0) {
+    if (medicationItem.Instructions.FrequencyPerDay == 0) {
       alert("Please select frequency");
       return false;
     }
     return true;
   }
-
-  const handleCancel = () => {
-    setShowCamera(false);
-  };
-  return showCamera ? (
-    <View style={{ width: "100%", height: "100%" }}>
-      <CameraComponent onCancel={handleCancel} />
-    </View>
-  ) : (
+  return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity style={{ position: "absolute", top: 60, right: 40 }} onPress={() => setShowCamera(true)}>
-        <Entypo name="camera" size={24} color="black" />
-      </TouchableOpacity>
-      <BackNavBar navigation={navigation} title="Add Medication" />
+      <BackNavBar navigation={navigation} title="Edit Medication Details" />
       <View style={styles.nameSection}>
         <Text style={styles.textHeader}>Name of Medication</Text>
-        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Name: text.trim() })} value={state.name} placeholder="Name" />
+        <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Name: text.trim() })} value={medicationItem.name} placeholder={medicationItem.Name}  />
       </View>
       <View style={styles.purposeSection}>
         <Text style={styles.textHeader}>Purpose of Medication</Text>
-        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Purpose: text.trim() })} value={state.purpose} placeholder="Purpose" />
+        <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Purpose: text.trim() })} value={medicationItem.purpose} placeholder={medicationItem.Purpose} />
       </View>
       <View style={styles.intakeSection}>
         <Text style={styles.textHeader}>Tablets per Intake</Text>
         <Button
           title="-"
           onPress={() => {
-            if (state.TabletsPerIntake > 1) {
-              setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake - 1 } }));
+            if (medicationItem.Instructions.TabletsPerIntake > 1) {
+              setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake - 1 } }));
             } else {
               alert("Cannot be less than 1");
             }
           }}
         />
-        <Text style={styles.text}>{state.Instructions.TabletsPerIntake}</Text>
-        <Button title="+" onPress={() => setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake + 1 } }))} />
+        <Text style={styles.text}>{medicationItem.Instructions.TabletsPerIntake}</Text>
+        <Button title="+" onPress={() => setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake + 1 } }))} />
       </View>
       <View style={styles.frequencySection}>
         <Text style={styles.textHeader}>Take this medication:</Text>
@@ -74,7 +63,7 @@ export default function AddMedicationDetails({ navigation, route }) {
                 textDecorationLine: "none",
               }}
               style={styles.frequencyItem}
-              isChecked={state.Instructions.FrequencyPerDay === 1}
+              isChecked={medicationItem.Instructions.FrequencyPerDay === 1}
               onPress={() => setFrequencyPerIntake(1)}
               disableBuiltInState={true}
             />
@@ -84,7 +73,7 @@ export default function AddMedicationDetails({ navigation, route }) {
                 textDecorationLine: "none",
               }}
               style={styles.frequencyItem}
-              isChecked={state.Instructions.FrequencyPerDay === 2}
+              isChecked={medicationItem.Instructions.FrequencyPerDay === 2}
               onPress={() => setFrequencyPerIntake(2)}
               disableBuiltInState={true}
             />
@@ -96,7 +85,7 @@ export default function AddMedicationDetails({ navigation, route }) {
                 textDecorationLine: "none",
               }}
               style={styles.frequencyItem}
-              isChecked={state.Instructions.FrequencyPerDay === 3}
+              isChecked={medicationItem.Instructions.FrequencyPerDay === 3}
               onPress={() => setFrequencyPerIntake(3)}
               disableBuiltInState={true}
             />
@@ -106,7 +95,7 @@ export default function AddMedicationDetails({ navigation, route }) {
                 textDecorationLine: "none",
               }}
               style={styles.frequencyItem}
-              isChecked={state.Instructions.FrequencyPerDay === 4}
+              isChecked={medicationItem.Instructions.FrequencyPerDay === 4}
               onPress={() => setFrequencyPerIntake(4)}
               disableBuiltInState={true}
             />
@@ -118,7 +107,7 @@ export default function AddMedicationDetails({ navigation, route }) {
           title="next"
           onPress={() => {
             if (handleSubmit() == true) {
-              navigation.navigate("Add Medication Schedule", { state });
+              navigation.navigate("Edit Medication Schedule", { medicationItem });
             }
           }}
         />
@@ -187,3 +176,4 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 });
+

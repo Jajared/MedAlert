@@ -36,21 +36,24 @@ export default function MedicationItem({ props, navigation, deleteMedicationItem
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Swipeable renderRightActions={rightActions}>
-        <View style={styles.itemContainer}>
-          <Text style={styles.timeSection}>{getTime()}</Text>
-          <View style={styles.textContainer}>
-            <Image source={getIcon()} style={styles.icon} />
-            <View style={styles.medicationInfo}>
-              <Text style={{ fontWeight: "bold", fontSize: 20 }}>{medicationData.Name}</Text>
-              <Text>{medicationData.Purpose}</Text>
-              <Text>{medicationData.Instructions.TabletsPerIntake} tablets per intake</Text>
+      <SafeAreaView style={styles.container}>
+        <TouchableOpacity onPress={() => navigation.navigate("Edit Medication Details", { medicationName: medicationData.Name})}>
+          <Swipeable renderRightActions={rightActions}>
+            <View style={styles.itemContainer}>
+              <Text style={styles.timeSection}>{getTime()}</Text>
+              <View style={styles.textContainer}>
+                <Image source={getIcon()} style={styles.icon} />
+                <View style={styles.medicationInfo}>
+                  <Text style={{ fontWeight: "bold", fontSize: 20 }}>{medicationData.Name}</Text>
+                  <Text>{medicationData.Purpose}</Text>
+                  <Text>{medicationData.Instructions.TabletsPerIntake} tablets per intake</Text>
+                </View>
+              </View>
             </View>
-          </View>
-        </View>
-      </Swipeable>
-    </SafeAreaView>
+          </Swipeable>
+        </TouchableOpacity>
+      </SafeAreaView>
+    
   );
 }
 

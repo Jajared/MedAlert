@@ -17,6 +17,8 @@ import { medDataConverter } from "./converters/medDataConverter";
 import { storage } from "./firebaseConfig";
 import { deleteObject, getDownloadURL, ref, uploadBytes, uploadString } from "firebase/storage";
 import { decode } from "base-64";
+import EditMedicationDetails from "./pages/EditMedicationDetails";
+import EditMedicationSchedule from "./pages/EditMedicationSchedule";
 
 if (typeof atob === "undefined") {
   global.atob = decode;
@@ -32,23 +34,22 @@ export default function App() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const medInfoRef = doc(firestore, "MedicationInformation", testID);
   const userInfoRef = doc(firestore, "UsersData", testID);
+  const fetchData = async (): Promise<void> => {
+    try {
+      const medInfoQuerySnapshot = await getDoc(medInfoRef.withConverter(medDataConverter));
+      const userQuerySnapshot = await getDoc(userInfoRef.withConverter(userDataConverter));
+      const medInfoData = medInfoQuerySnapshot.data();
+      const userInfoData = userQuerySnapshot.data();
+      setUserInformation(userInfoData);
+      setAllMedicationItems(medInfoData.MedicationItems);
+      setScheduledItems(medInfoData.ScheduledItems);
+      setIsLoading(false);
+      console.log("Data fetched successfully");
+    } catch (error) {
+      console.log("Error fetching data:", error);
+    }
+  };
   useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      try {
-        const medInfoQuerySnapshot = await getDoc(medInfoRef.withConverter(medDataConverter));
-        const userQuerySnapshot = await getDoc(userInfoRef.withConverter(userDataConverter));
-        const medInfoData = medInfoQuerySnapshot.data();
-        const userInfoData = userQuerySnapshot.data();
-        setUserInformation(userInfoData);
-        setAllMedicationItems(medInfoData.MedicationItems);
-        setScheduledItems(medInfoData.ScheduledItems);
-        setIsLoading(false);
-        console.log("Data fetched successfully");
-      } catch (error) {
-        console.log("Error fetching data:", error);
-      }
-    };
-
     fetchData();
   }, []);
 
@@ -65,6 +66,7 @@ export default function App() {
       DateOfBirth: "29/05/2001",
       EmailAddress: "test@gmail.com",
       PhoneNumber: "9123456",
+      
     };
     const usersDataRef = doc(collection(firestore, "UsersData"), testID);
     setDoc(usersDataRef, userData)
@@ -124,6 +126,22 @@ export default function App() {
     }
   };
 
+  const setEdit = async (medicationItem) => {
+    var newAllMedicationItems = [...allMedicationItems];
+    for (var i = 0; i < newAllMedicationItems.length; i++) {
+      if (newAllMedicationItems[i].Name == medicationItem.Name) {
+        newAllMedicationItems[i] = medicationItem;
+      }
+    }
+    await updateDoc(medInfoRef, {MedicationItems: newAllMedicationItems, ScheduledItems: getScheduledItems(newAllMedicationItems)}).then((docRef) => {
+      console.log("Data changed successfully.");
+    })
+    .catch((error) => {
+      console.error("Error pushing data:", error);
+    });;
+    fetchData();
+  }
+
   function setAcknowledged(id: number) {
     var newScheduledItems = [...scheduledItems];
     for (let i = 0; i < newScheduledItems.length; i++) {
@@ -136,7 +154,7 @@ export default function App() {
     updateDoc(medInfoRef, { ScheduledItems: newScheduledItems });
   }
 
-  function getScheduledItems() {
+  function getScheduledItems(allMedicationItems) {
     var temp = [];
     var count = 1;
     for (let i = 0; i < allMedicationItems.length; i++) {
@@ -218,7 +236,7 @@ export default function App() {
   };
 
   // Function wrong
-  function deleteMedication(medicationData) {
+  function deleteMedicationItem(medicationData) {
     setAllMedicationItems((prevState) => prevState.filter(medicationData));
   }
 
@@ -250,6 +268,12 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
           {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} updateProfilePicture={updateProfilePicture} />}
+        </Stack.Screen>
+        <Stack.Screen name="Edit Medication Details" options={{ headerShown: false }}>
+          {(props) => <EditMedicationDetails {...props} allMedicationItems={allMedicationItems} deleteMedicationItem={deleteMedicationItem} />}
+        </Stack.Screen>
+        <Stack.Screen name="Edit Medication Schedule" options={{ headerShown: false }}>
+          {(props) => <EditMedicationSchedule {...props} allMedicationItems={allMedicationItems} setEdit={setEdit} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
