@@ -1,14 +1,13 @@
 import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons, FontAwesome5, Entypo } from "@expo/vector-icons";
 
 export default function BottomNavBar({ title, props, navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.iconSection}>
-        <TouchableOpacity onPress={() => alert("Pressed")}>
+        <TouchableOpacity onPress={() => navigation.navigate("View All Medications")}>
           <FontAwesome5 name="pills" size={30} color="black" style={styles.icon} />
-          <Text style={styles.text}>Medication</Text>
+          <Text style={styles.text}>Medications</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.iconSection}>
@@ -19,8 +18,8 @@ export default function BottomNavBar({ title, props, navigation }) {
       </View>
       <View style={styles.iconSection}>
         <TouchableOpacity onPress={() => navigation.navigate("Profile Page")}>
-          <MaterialCommunityIcons name="face-man-profile" size={30} color="black" style={styles.icon} />
-          <Text style={styles.text}>Profile</Text>
+          <Entypo name="menu" size={34} color="black" />
+          <Text style={styles.text}>Menu</Text>
         </TouchableOpacity>
       </View>
     </View>

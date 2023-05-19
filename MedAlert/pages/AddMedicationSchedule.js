@@ -3,6 +3,7 @@ import { useState } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import CustomButton from "../components/Buttons/CustomButton";
 
 export default function AddMedicationSchedule({ navigation, route, addMedication }) {
   const [state, setState] = useState({ ...route.params.state });
@@ -89,7 +90,7 @@ export default function AddMedicationSchedule({ navigation, route, addMedication
       </View>
       <View style={{ flex: 3 }} />
       <View style={styles.nextSection}>
-        <Button
+        <CustomButton
           title="next"
           onPress={() => {
             if (handleSubmit() == true) {
@@ -97,6 +98,7 @@ export default function AddMedicationSchedule({ navigation, route, addMedication
               navigation.navigate("Home");
             }
           }}
+          style={styles.nextSection}
         />
       </View>
       <View style={styles.bottomNavBar}></View>

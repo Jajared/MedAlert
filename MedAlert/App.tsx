@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AddMedicationType from "./pages/AddMedicationType";
 import AddMedicationDetails from "./pages/AddMedicationDetails";
 import AddMedicationSchedule from "./pages/AddMedicationSchedule";
-import ProfilePage from "./pages/ProfilePage";
+import MenuPage from "./pages/MenuPage";
 import UpdateAccountPage from "./pages/UpdateAccountPage";
 import { UserInformation, MedicationItem, ScheduledItem } from "./utils/types";
 import { collection, addDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
@@ -21,6 +21,7 @@ import EditMedicationDetails from "./pages/EditMedicationDetails";
 import EditMedicationSchedule from "./pages/EditMedicationSchedule";
 import LoginPage from "./pages/LoginPage";
 import SignUpDetailsPage from "./pages/SignUpDetailsPage";
+import ViewMedicationPage from "./pages/ViewMedicationPage";
 
 if (typeof atob === "undefined") {
   global.atob = decode;
@@ -287,7 +288,7 @@ export default function App() {
           {(props) => <AddMedicationSchedule {...props} addMedication={addMedication} />}
         </Stack.Screen>
         <Stack.Screen name="Profile Page" options={{ headerShown: false }}>
-          {(props) => <ProfilePage {...props} userInformation={userInformation} />}
+          {(props) => <MenuPage {...props} userInformation={userInformation} />}
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
           {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} updateProfilePicture={updateProfilePicture} />}
@@ -297,6 +298,9 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen name="Edit Medication Schedule" options={{ headerShown: false }}>
           {(props) => <EditMedicationSchedule {...props} allMedicationItems={allMedicationItems} setEdit={setEdit} />}
+        </Stack.Screen>
+        <Stack.Screen name="View All Medications" options={{ headerShown: false }}>
+          {(props) => <ViewMedicationPage {...props} allMedicationItems={allMedicationItems} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>

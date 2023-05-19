@@ -4,6 +4,7 @@ import BackNavBar from "../components/BackNavBar/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Entypo } from "@expo/vector-icons";
 import CameraComponent from "../components/CameraComponent/CameraComponent";
+import CustomButton from "../components/Buttons/CustomButton";
 
 export default function AddMedicationDetails({ navigation, route }) {
   const [state, setState] = useState({ Name: "", Type: route.params.Type, Purpose: "", Instructions: { TabletsPerIntake: 1, FrequencyPerDay: 0, Specifications: "", FirstDosageTiming: 540 } });
@@ -114,8 +115,8 @@ export default function AddMedicationDetails({ navigation, route }) {
         </View>
       </View>
       <View style={styles.nextSection}>
-        <Button
-          title="next"
+        <CustomButton
+          title="Next"
           onPress={() => {
             if (handleSubmit() == true) {
               navigation.navigate("Add Medication Schedule", { state });

@@ -5,6 +5,7 @@ import CalendarPicker from "react-native-calendar-picker";
 import Modal from "react-native-modal";
 import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
+import CustomButton from "../components/Buttons/CustomButton";
 
 export default function UpdateAccountPage({ navigation, userInformation, updateUserInformation, updateProfilePicture }) {
   const [state, setState] = useState({ ...userInformation });
@@ -18,7 +19,15 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
     setState({ ...state, DateOfBirth: newDate });
   }
 
-  const handleProfilePictureChange = async () => {
+  const validateEmail = (email) => {
+    // Regular expression for email validation
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    return emailRegex.test(email);
+  };
+
+  const isEmailValid = validateEmail(state.EmailAddress);
+
+  /** const handleProfilePictureChange = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
     if (permissionResult.granted === false) {
@@ -38,18 +47,15 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
       setProfilePicture(`data:image/png;base64,${base64Image}`);
       updateProfilePicture(base64Image);
     }
-  };
+  }; */
 
   return (
     <SafeAreaView style={styles.container}>
       <BackNavBar navigation={navigation} title="Update Account" />
-      {/* <Text>Update Account Page</Text> */}
       <View style={styles.profileSection}>
         <View style={styles.profileImage}>
           <Image source={{ uri: profilePicture }} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
         </View>
-        <Button title="Edit" onPress={handleProfilePictureChange} />
-        {/* //Create touchable opacity to change profile picture */}
       </View>
 
       <View style={styles.mainSection}>
@@ -69,6 +75,7 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
           </View>
           <View style={styles.editBox}>
             <TextInput value={state.EmailAddress} onChangeText={(text) => setState({ ...state, EmailAddress: text })}></TextInput>
+            {!isEmailValid && <Text style={{ color: "red" }}>Invalid email address</Text>}
           </View>
         </View>
 
@@ -101,21 +108,19 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
           <Modal isVisible={isModalVisible}>
             <View style={{ backgroundColor: "white", width: "100%" }}>
               <CalendarPicker onDateChange={onDateChange} />
-              <Button title="Hide modal" onPress={handleModal} />
+              <Button title="Hide calendar" onPress={handleModal} />
             </View>
           </Modal>
         </View>
       </View>
 
-      <View>
-        <Button
-          title="Update"
-          onPress={() => {
-            updateUserInformation(state);
-            navigation.goBack();
-          }}
-        />
-      </View>
+      <CustomButton
+        title="Update"
+        onPress={() => {
+          updateUserInformation(state);
+          navigation.goBack();
+        }}
+      />
       <View style={styles.emptySection}></View>
     </SafeAreaView>
   );

@@ -3,6 +3,7 @@ import BackNavBar from "../components/BackNavBar/BackNavBar";
 import { useState } from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { set } from "react-native-reanimated";
+import CustomButton from "../components/Buttons/CustomButton";
 
 export default function EditMedicationDetails({ navigation, allMedicationItems, deleteMedicationFromList, route }) {
   const [medicationItems, setMedicationItems] = useState(allMedicationItems);
@@ -104,15 +105,14 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
         </View>
       </View>
       <View style={styles.nextSection}>
-        <TouchableOpacity
+        <CustomButton
+          title="Continue Editing"
           onPress={() => {
             if (handleSubmit()) {
               navigation.navigate("Edit Medication Schedule", { medicationItem });
             }
           }}
-        >
-          <Text style={styles.nextPage}>CONTINUE EDITING</Text>
-        </TouchableOpacity>
+        />
       </View>
       <View style={styles.nextSection}>
         <TouchableOpacity
@@ -130,22 +130,24 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
           <Text style={{ fontWeight: "bold", fontSize: 20 }}> {medicationItem.Name}</Text>
           <Text style={styles.header}>from your medication list?</Text>
           <Text></Text>
-          <View style={styles.buttons}>
+          <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={() => {
                 deleteMedicationFromList(medicationItem);
                 setIsDeletionPopUpVisible(false);
                 navigation.navigate("Home");
               }}
+              style={[styles.button, { backgroundColor: "green" }]}
             >
-              <Text style={{ color: "darkgreen", fontWeight: "bold", paddingRight: 40 }}>YES</Text>
+              <Text>YES</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 setIsDeletionPopUpVisible(false);
               }}
+              style={[styles.button, { backgroundColor: "red" }]}
             >
-              <Text style={{ color: "darkred", fontWeight: "bold", paddingLeft: 40 }}>NO</Text>
+              <Text>NO</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
@@ -239,10 +241,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  buttons: {
+  buttonContainer: {
     flexDirection: "row",
   },
   header: {
     fontSize: 16,
+  },
+  button: {
+    color: "black",
+    fontWeight: "bold",
+    borderWidth: 1,
+    borderColor: "black",
+    width: 80,
+    alignItems: "center",
+    marginHorizontal: 10,
+    padding: 10,
+    fontSize: 18,
+    borderRadius: 40,
   },
 });

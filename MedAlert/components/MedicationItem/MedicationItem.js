@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Animated } from "react-native";
 import { Swipeable, RectButton } from "react-native-gesture-handler";
 
-export default function MedicationItem({ props, navigation, deleteMedicationItem, setAcknowledged }) {
+export default function MedicationItem({ props, navigation, setAcknowledged }) {
   const medicationData = props.item;
   const pillIcon = require("../../assets/pill-icon.png");
   const syrupIcon = require("../../assets/syrup-icon.png");
@@ -38,7 +38,7 @@ export default function MedicationItem({ props, navigation, deleteMedicationItem
   return (
     <SafeAreaView style={styles.container}>
       <Swipeable renderRightActions={rightActions}>
-        <RectButton onPress={() => navigation.navigate("Edit Medication Details", { medicationName: medicationData.Name })} style={styles.itemContainer}>
+        <View style={styles.itemContainer}>
           <Text style={styles.timeSection}>{getTime()}</Text>
           <View style={styles.textContainer}>
             <Image source={getIcon()} style={styles.icon} />
@@ -48,7 +48,7 @@ export default function MedicationItem({ props, navigation, deleteMedicationItem
               <Text>{medicationData.Instructions.TabletsPerIntake} tablets per intake</Text>
             </View>
           </View>
-        </RectButton>
+        </View>
       </Swipeable>
     </SafeAreaView>
   );

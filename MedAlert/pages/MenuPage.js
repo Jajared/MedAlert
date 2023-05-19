@@ -30,7 +30,7 @@ export default function ProfilePage({ navigation, userInformation }) {
   };
   return (
     <SafeAreaView style={styles.container}>
-      <BackNavBar navigation={navigation} title="Profile" />
+      <BackNavBar navigation={navigation} title="Menu" />
       <View style={styles.profileSection}>
         <View style={styles.profileImage}>
           <Image source={{ uri: userInformation.ProfilePicture }} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
