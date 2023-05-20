@@ -18,7 +18,7 @@ export default function SignUpHomePage({ navigation, onSignUp }) {
         const [success, userId] = await signUp(email, password);
         if (success) {
           await onSignUp(userId);
-          navigation.navigate("Sign Up Details", { userId: userId, EmailAddress: email });
+          navigation.replace("Sign Up Details", { userId: userId, EmailAddress: email });
         } else {
           alert("Sign up failed. Please try again.");
         }

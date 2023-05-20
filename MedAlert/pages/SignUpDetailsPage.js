@@ -2,8 +2,10 @@ import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, Butt
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 import { useState } from "react";
+import { doc, collection, setDoc } from "firebase/firestore";
+import { firestorage } from "../firebaseConfig";
 
-export default function SignUpDetailsPage({ navigation, route }) {
+export default function SignUpDetailsPage({ navigation, route, setIsSignUpComplete }) {
   const userId = route.params.userId;
   const [personalDetails, setPersonalDetails] = useState({
     Name: "",
@@ -11,8 +13,22 @@ export default function SignUpDetailsPage({ navigation, route }) {
     DateOfBirth: "",
     EmailAddress: route.params.EmailAddress,
     PhoneNumber: "",
-    ProfilePicture: "",
+    ProfilePicture: "https://firebasestorage.googleapis.com/v0/b/medalert-386812.appspot.com/o/profilePictures%2FcLNeJdkRJkfEzLMugJipcamAWwb2?alt=media&token=e2ea4d15-ec26-410e-b584-3aac020bfe15",
   });
+
+  const addPicture = async () => {
+    const reference = ref(storage, `profilePictures/${userId}`);
+    uploadBytes(reference, await filePathToBlob("/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/jamal.png")).then((snapshot) => {
+      console.log("Uploaded a blob or file!");
+      console.log(getDownloadURL(snapshot.ref).then((url) => console.log(url)));
+    });
+  };
+
+  function filePathToBlob(filePath) {
+    return fetch(filePath)
+      .then((response) => response.blob())
+      .then((blob) => blob);
+  }
 
   const handleFormSubmit = async () => {
     const userInfoRef = doc(collection(firestorage, "UsersData"), userId);
@@ -33,6 +49,7 @@ export default function SignUpDetailsPage({ navigation, route }) {
       .catch((error) => {
         console.error("Error pushing data:", error);
       });
+    await setIsSignUpComplete(true);
     navigation.navigate("Home");
   };
 
@@ -47,22 +64,22 @@ export default function SignUpDetailsPage({ navigation, route }) {
       </View>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Name</Text>
-        <TextInput style={styles.inputBox} value={"Name"}></TextInput>
+        <TextInput style={styles.inputBox} value={personalDetails.Name} placeholder="Name" onChangeText={(text) => setPersonalDetails({ ...personalDetails, Name: text })}></TextInput>
       </View>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Date of Birth</Text>
-        <TextInput style={styles.inputBox} value={"Date of Birth"}></TextInput>
+        <TextInput style={styles.inputBox} value={personalDetails.DateOfBirth} placeholder="Date of Birth" onChangeText={(text) => setPersonalDetails({ ...personalDetails, DateOfBirth: text })}></TextInput>
       </View>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Phone Number</Text>
-        <TextInput style={styles.inputBox} value={"Phone Number"} keyboardType="numeric"></TextInput>
+        <TextInput style={styles.inputBox} value={personalDetails.PhoneNumber} placeholder="Phone Number" keyboardType="numeric" onChangeText={(text) => setPersonalDetails({ ...personalDetails, PhoneNumber: text })}></TextInput>
       </View>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Gender</Text>
-        <TextInput style={styles.inputBox} value={"Gender"}></TextInput>
+        <TextInput style={styles.inputBox} value={personalDetails.Gender} placeholder="Gender" onChangeText={(text) => setPersonalDetails({ ...personalDetails, Gender: text })}></TextInput>
       </View>
       <View style={styles.emptySection}></View>
-      <TouchableOpacity onPress={() => alert("Button pressed")} style={styles.buttonContainer}>
+      <TouchableOpacity onPress={() => handleFormSubmit()} style={styles.buttonContainer}>
         <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
           <Text style={styles.buttonText}>Confirm</Text>
         </LinearGradient>

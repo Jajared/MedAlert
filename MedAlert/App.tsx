@@ -108,20 +108,6 @@ export default function App() {
     setUserId(userId);
   };
 
-  const addPicture = async () => {
-    const reference = ref(storage, `profilePictures/${testID}`);
-    uploadBytes(reference, await filePathToBlob("/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/jamal.png")).then((snapshot) => {
-      console.log("Uploaded a blob or file!");
-      console.log(getDownloadURL(snapshot.ref).then((url) => console.log(url)));
-    });
-  };
-
-  function filePathToBlob(filePath) {
-    return fetch(filePath)
-      .then((response) => response.blob())
-      .then((blob) => blob);
-  }
-
   const updateUserInformation = async (updatedUserData: UserInformation) => {
     try {
       setUserInformation(updatedUserData);
@@ -278,7 +264,7 @@ export default function App() {
             {(props) => <SignUpHomePage {...props} onSignUp={handleSignUp} />}
           </Stack.Screen>
           <Stack.Screen name="Sign Up Details" options={{ headerShown: false }}>
-            {(props) => <SignUpDetailsPage {...props} />}
+            {(props) => <SignUpDetailsPage {...props} setIsSignUpComplete={setIsSignUpComplete} />}
           </Stack.Screen>
           <Stack.Screen name="Home" options={{ headerShown: false }}>
             {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} />}
@@ -297,7 +283,7 @@ export default function App() {
           {(props) => <SignUpHomePage {...props} onSignUp={handleSignUp} />}
         </Stack.Screen>
         <Stack.Screen name="Sign Up Details" options={{ headerShown: false }}>
-          {(props) => <SignUpDetailsPage {...props} />}
+          {(props) => <SignUpDetailsPage {...props} setIsSignUpComplete={setIsSignUpComplete} />}
         </Stack.Screen>
         <Stack.Screen name="Home" options={{ headerShown: false }}>
           {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} />}
