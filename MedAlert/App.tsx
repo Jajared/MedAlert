@@ -33,15 +33,12 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "You've got mail! 📬",
-      body: "Here is the notification body",
-      data: { data: "goes here" },
-    },
-    trigger: { seconds: 2 },
-  });
+interface NotificationItem {
+  content: {
+    title: string;
+    body: string;
+  };
+  trigger: { seconds: number };
 }
 
 async function registerForPushNotificationsAsync() {
@@ -156,9 +153,8 @@ export default function App() {
       responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
         console.log(response);
       });
-
-      schedulePushNotification();
-
+      Notifications.cancelAllScheduledNotificationsAsync();
+      scheduleNotifications();
       return () => {
         Notifications.removeNotificationSubscription(notificationListener.current);
         Notifications.removeNotificationSubscription(responseListener.current);
@@ -219,6 +215,26 @@ export default function App() {
       });
     fetchData();
   };
+
+  async function scheduleNotifications() {
+    console.log("Setting notifications");
+    const currentDate = new Date();
+    const currentTimePastMidnight = currentDate.getHours() * 60 * 60 + currentDate.getMinutes() * 60 + currentDate.getSeconds();
+    for (let i = 0; i < scheduledItems.length; i++) {
+      if (scheduledItems[i].Acknowledged === false) {
+        const triggerTime = scheduledItems[i].Instructions.FirstDosageTiming * 60 - currentTimePastMidnight;
+        if (triggerTime > 0) {
+          await Notifications.scheduleNotificationAsync({
+            content: {
+              title: "Medication Reminder",
+              body: "Please take " + scheduledItems[i].Name,
+            },
+            trigger: { seconds: triggerTime },
+          });
+        }
+      }
+    }
+  }
 
   function setAcknowledged(id: number) {
     var newScheduledItems = [...scheduledItems];
