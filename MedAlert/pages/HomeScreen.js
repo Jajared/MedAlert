@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, Image, View } from "react-native";
+import { StyleSheet, Text, SafeAreaView, Image, View, StatusBar } from "react-native";
 import { useState, useEffect } from "react";
 import MedicationItem from "../components/MedicationItem/MedicationItem";
 import { FlatList } from "react-native";
@@ -18,6 +18,7 @@ export default function HomeScreen({ navigation, scheduledItems, setAcknowledged
   }
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <View style={styles.topNavBar}>
         <HomeNavBar navigation={navigation} userName={userName} />
       </View>

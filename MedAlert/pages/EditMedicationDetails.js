@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button, Modal } from "react-native";
+import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button, Modal, StatusBar } from "react-native";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import { useState } from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -31,6 +31,7 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
   }
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="Edit Medication Details" />
       <View style={styles.nameSection}>
         <Text style={styles.textHeader}>Name of Medication</Text>

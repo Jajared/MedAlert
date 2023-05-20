@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, TextInput, TouchableOpacity, StatusBar } from "react-native";
 import { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -40,6 +40,7 @@ export default function LoginPage({ navigation, onLogin }) {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <Text style={styles.title}>Welcome!</Text>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Email</Text>

@@ -1,4 +1,4 @@
-import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
+import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, StatusBar } from "react-native";
 import { useState } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -42,6 +42,7 @@ export default function SignUpHomePage({ navigation, onSignUp }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <Text style={styles.title}>Sign Up</Text>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Email</Text>

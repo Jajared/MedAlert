@@ -1,4 +1,4 @@
-import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacity, Button } from "react-native";
+import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacity, Button, StatusBar } from "react-native";
 import { useState } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import CalendarPicker from "react-native-calendar-picker";
@@ -51,6 +51,7 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="Update Account" />
       <View style={styles.profileSection}>
         <View style={styles.profileImage}>

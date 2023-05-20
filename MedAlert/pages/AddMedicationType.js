@@ -1,9 +1,10 @@
-import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity, StatusBar } from "react-native";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 
 export default function AddMedicationType({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="Select type of medication" />
       <TouchableOpacity style={styles.typeContainer} onPress={() => navigation.navigate("Add Medication Details", { Type: "Pill" })}>
         <Image source={require("../assets/pill-icon.png")} style={styles.icon} />

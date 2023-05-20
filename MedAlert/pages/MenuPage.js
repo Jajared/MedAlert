@@ -1,4 +1,4 @@
-import { Text, SafeAreaView, StyleSheet, View, TouchableOpacity, Image, Alert } from "react-native";
+import { Text, SafeAreaView, StyleSheet, View, TouchableOpacity, Image, Alert, StatusBar } from "react-native";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import SlideButton from "rn-slide-button";
 import * as LocalAuthentication from "expo-local-authentication";
@@ -30,6 +30,7 @@ export default function ProfilePage({ navigation, userInformation }) {
   };
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="Menu" />
       <View style={styles.profileSection}>
         <View style={styles.profileImage}>

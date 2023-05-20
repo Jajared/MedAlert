@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button } from "react-native";
+import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button, StatusBar } from "react-native";
 import { useState, useRef } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -38,6 +38,7 @@ export default function AddMedicationDetails({ navigation, route }) {
     </View>
   ) : (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <TouchableOpacity style={{ position: "absolute", top: 60, right: 40 }} onPress={() => setShowCamera(true)}>
         <Entypo name="camera" size={24} color="black" />
       </TouchableOpacity>

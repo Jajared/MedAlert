@@ -1,13 +1,13 @@
-import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button } from "react-native";
+import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button, StatusBar } from "react-native";
 import { useState } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 export default function EditMedicationSchedule({ navigation, route, allMedicationItems, setEdit }) {
-  const medicationItems = allMedicationItems
-  const [medicationItem, setMedicationItem] = useState({...route.params.medicationItem})
-  const [date, setDate] = useState(new Date(2023, 1, 1, medicationItem.Instructions.FirstDosageTiming / 60, medicationItem.Instructions.FirstDosageTiming - (medicationItem.Instructions.FirstDosageTiming / 60 * 60), 0))
+  const medicationItems = allMedicationItems;
+  const [medicationItem, setMedicationItem] = useState({ ...route.params.medicationItem });
+  const [date, setDate] = useState(new Date(2023, 1, 1, medicationItem.Instructions.FirstDosageTiming / 60, medicationItem.Instructions.FirstDosageTiming - (medicationItem.Instructions.FirstDosageTiming / 60) * 60, 0));
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     setDate(currentDate);
@@ -32,9 +32,10 @@ export default function EditMedicationSchedule({ navigation, route, allMedicatio
     }
     return true;
   }
-  
+
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="Edit Medication Schedule" />
       <View style={styles.optionsSection}>
         <Text style={styles.textHeader}>Medication Instructions</Text>

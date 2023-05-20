@@ -1,4 +1,4 @@
-import { Text, SafeAreaView, View, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { Text, SafeAreaView, View, StyleSheet, Image, TouchableOpacity, StatusBar } from "react-native";
 import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import { FlatList } from "react-native";
@@ -17,6 +17,7 @@ export default function ViewMedicationPage({ navigation, allMedicationItems }) {
   }
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="View Medications" style={{ flex: 1 }} />
       <View style={styles.medicationSection}>
         {allMedicationItems && (

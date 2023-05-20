@@ -112,7 +112,7 @@ export default function App() {
     }
   };
 
-  /** useEffect(() => {
+  useEffect(() => {
     signOutAllUsers();
   }, []);
 
@@ -137,7 +137,7 @@ export default function App() {
       .catch((error) => {
         console.log("Error signing out:", error);
       });
-  }; */
+  };
 
   useEffect(() => {
     if (userId && isSignUpComplete) {

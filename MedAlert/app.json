@@ -30,7 +30,8 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSFaceIDUsageDescription": "Allow app to use Face ID.",
-        "NSCameraUsageDescription": "Camera is used to scan medication labels."
+        "NSCameraUsageDescription": "Camera is used to scan medication labels.",
+        "UIBackgroundModes": ["remote-notification"]
       },
       "bundleIdentifier": "com.jajabonks.MedAlert"
     },
