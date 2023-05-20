@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, Platform } from "react-native";
 import { useState, useEffect, useRef } from "react";
 import HomeScreen from "./pages/HomeScreen";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
@@ -14,9 +14,6 @@ import { firestorage } from "./firebaseConfig";
 import { auth, signUp } from "./Auth";
 import { userDataConverter } from "./converters/userDataConverter";
 import { medDataConverter } from "./converters/medDataConverter";
-import { storage } from "./firebaseConfig";
-import { deleteObject, getDownloadURL, ref, uploadBytes, uploadString } from "firebase/storage";
-import { decode } from "base-64";
 import EditMedicationDetails from "./pages/EditMedicationDetails";
 import EditMedicationSchedule from "./pages/EditMedicationSchedule";
 import LoginPage from "./pages/LoginPage";
@@ -24,9 +21,60 @@ import SignUpHomePage from "./pages/SignUpHomePage";
 import SignUpDetailsPage from "./pages/SignUpDetailsPage";
 import ViewMedicationPage from "./pages/ViewMedicationPage";
 import { DocumentReference } from "firebase/firestore";
+import * as Device from "expo-device";
+import * as Notifications from "expo-notifications";
+import { Subscription } from "expo-modules-core";
 
 const Stack = createNativeStackNavigator();
-const testID = "cLNeJdkRJkfEzLMugJipcamAWwb2";
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+async function schedulePushNotification() {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "You've got mail! 📬",
+      body: "Here is the notification body",
+      data: { data: "goes here" },
+    },
+    trigger: { seconds: 2 },
+  });
+}
+
+async function registerForPushNotificationsAsync() {
+  let token;
+
+  if (Platform.OS === "android") {
+    await Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  return token;
+}
 
 export default function App() {
   const [userInformation, setUserInformation] = useState<UserInformation>({
@@ -44,6 +92,10 @@ export default function App() {
   const [isSignUpComplete, setIsSignUpComplete] = useState(false);
   const medInfoRef = useRef<DocumentReference>();
   const userInfoRef = useRef<DocumentReference>();
+  const [expoPushToken, setExpoPushToken] = useState("");
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef<Subscription>();
+  const responseListener = useRef<Subscription>();
 
   const fetchData = async (): Promise<void> => {
     try {
@@ -63,7 +115,7 @@ export default function App() {
     }
   };
 
-  useEffect(() => {
+  /** useEffect(() => {
     signOutAllUsers();
   }, []);
 
@@ -88,13 +140,29 @@ export default function App() {
       .catch((error) => {
         console.log("Error signing out:", error);
       });
-  };
+  }; */
 
   useEffect(() => {
     if (userId && isSignUpComplete) {
       medInfoRef.current = doc(firestorage, "MedicationInformation", userId);
       userInfoRef.current = doc(firestorage, "UsersData", userId);
       fetchData();
+      registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
+
+      notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
+        setNotification(true);
+      });
+
+      responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+
+      schedulePushNotification();
+
+      return () => {
+        Notifications.removeNotificationSubscription(notificationListener.current);
+        Notifications.removeNotificationSubscription(responseListener.current);
+      };
     }
   }, [userId, isSignUpComplete]);
 

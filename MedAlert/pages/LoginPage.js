@@ -29,6 +29,7 @@ export default function LoginPage({ navigation, onLogin }) {
     try {
       const [success, id] = await signIn(email, password);
       if (success) {
+        onLogin(id);
         navigation.navigate("Home");
       } else {
         alert("Login failed");
