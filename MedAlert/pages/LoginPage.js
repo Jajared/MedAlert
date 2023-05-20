@@ -1,26 +1,38 @@
 import { SafeAreaView, Text, StyleSheet, View, TextInput, TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { signIn } from "../Auth";
+import { signIn, auth } from "../Auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function LoginPage({ navigation, onLogin }) {
   const [email, setEmail] = useState("Email");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in
+        onLogin(user.uid);
+        navigation.navigate("Home");
+      }
+    });
+
+    return () => unsubscribe(); // Clean up the auth state listener
+  }, []);
 
   const handleLogin = async () => {
     try {
       const [success, id] = await signIn(email, password);
       if (success) {
         console.log("Login successful");
-        onLogin(id);
-        navigation.navigate("Home", { id: id });
+        await onLogin(id);
+        navigation.navigate("Home");
       } else {
         alert("Login failed");
       }
@@ -48,7 +60,7 @@ export default function LoginPage({ navigation, onLogin }) {
           </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity onPress={handleLogin} style={styles.buttonContainer}>
+      <TouchableOpacity onPress={() => handleLogin()} style={styles.buttonContainer}>
         <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
           <Text style={styles.buttonText}>Sign In</Text>
         </LinearGradient>

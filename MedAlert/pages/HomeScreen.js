@@ -4,8 +4,9 @@ import MedicationItem from "../components/MedicationItem/MedicationItem";
 import { FlatList } from "react-native";
 import HomeNavBar from "../components/HomeNavBar/HomeNavBar";
 import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
+import { useNavigation } from "@react-navigation/native";
 
-export default function HomeScreen({ scheduledItems, navigation, setAcknowledged, userName }) {
+export default function HomeScreen({ navigation, scheduledItems, setAcknowledged, userName }) {
   const allMedicationItems = scheduledItems;
 
   function deleteMedication(medicationData) {

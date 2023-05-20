@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "flex-starts",
+    justifyContent: "flex-start",
   },
   bottomNavBar: {
     flex: 1,

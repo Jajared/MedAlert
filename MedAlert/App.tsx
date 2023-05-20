@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import HomeScreen from "./pages/HomeScreen";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AddMedicationType from "./pages/AddMedicationType";
 import AddMedicationDetails from "./pages/AddMedicationDetails";
@@ -10,7 +10,7 @@ import MenuPage from "./pages/MenuPage";
 import UpdateAccountPage from "./pages/UpdateAccountPage";
 import { UserInformation, MedicationItem, ScheduledItem } from "./utils/types";
 import { collection, addDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { firestore } from "./firebaseConfig";
+import { firestorage } from "./firebaseConfig";
 import { signUp } from "./Auth";
 import { userDataConverter } from "./converters/userDataConverter";
 import { medDataConverter } from "./converters/medDataConverter";
@@ -22,10 +22,7 @@ import EditMedicationSchedule from "./pages/EditMedicationSchedule";
 import LoginPage from "./pages/LoginPage";
 import SignUpDetailsPage from "./pages/SignUpDetailsPage";
 import ViewMedicationPage from "./pages/ViewMedicationPage";
-
-if (typeof atob === "undefined") {
-  global.atob = decode;
-}
+import { DocumentReference } from "firebase/firestore";
 
 const Stack = createNativeStackNavigator();
 const testID = "cLNeJdkRJkfEzLMugJipcamAWwb2";
@@ -34,28 +31,34 @@ export default function App() {
   const [userInformation, setUserInformation] = useState<UserInformation>();
   const [allMedicationItems, setAllMedicationItems] = useState<MedicationItem[]>([]);
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userId, setUserId] = useState("");
-  const medInfoRef = doc(firestore, "MedicationInformation", userId);
-  const userInfoRef = doc(firestore, "UsersData", userId);
+  const medInfoRef = useRef<DocumentReference>();
+  const userInfoRef = useRef<DocumentReference>();
 
   const fetchData = async (): Promise<void> => {
     try {
-      const medInfoQuerySnapshot = await getDoc(medInfoRef.withConverter(medDataConverter));
-      const userQuerySnapshot = await getDoc(userInfoRef.withConverter(userDataConverter));
+      setIsLoading(true);
+      const medInfoQuerySnapshot = await getDoc(medInfoRef.current.withConverter(medDataConverter));
+      const userQuerySnapshot = await getDoc(userInfoRef.current.withConverter(userDataConverter));
       const medInfoData = medInfoQuerySnapshot.data();
       const userInfoData = userQuerySnapshot.data();
       setUserInformation(userInfoData);
       setAllMedicationItems(medInfoData.MedicationItems);
       setScheduledItems(medInfoData.ScheduledItems);
-      setIsLoading(false);
       console.log("Data fetched successfully");
     } catch (error) {
       console.log("Error fetching data:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
   useEffect(() => {
-    fetchData();
+    if (userId) {
+      medInfoRef.current = doc(firestorage, "MedicationInformation", userId);
+      userInfoRef.current = doc(firestorage, "UsersData", userId);
+      fetchData();
+    }
   }, [userId]);
 
   const handleLogin = (userId) => {
@@ -85,7 +88,7 @@ export default function App() {
       PhoneNumber: "9123456",
       ProfilePicture: "https://firebasestorage.googleapis.com/v0/b/medalert-386812.appspot.com/o/profilePictures%2FcLNeJdkRJkfEzLMugJipcamAWwb2?alt=media&token=e2ea4d15-ec26-410e-b584-3aac020bfe15",
     };
-    const usersDataRef = doc(collection(firestore, "UsersData"), testID);
+    const usersDataRef = doc(collection(firestorage, "UsersData"), testID);
     setDoc(usersDataRef, userData)
       .then((docRef) => {
         console.log("Data pushed successfully.");
@@ -105,7 +108,7 @@ export default function App() {
         { Acknowledged: false, Instructions: { FirstDosageTiming: 1260, FrequencyPerDay: 2, Specifications: "No specific instructions", TabletsPerIntake: 4 }, Name: "Metophan", Purpose: "Cough", Type: "Liquid", id: 4 },
       ],
     };
-    const medInfoRef = doc(collection(firestore, "MedicationInformation"), testID);
+    const medInfoRef = doc(collection(firestorage, "MedicationInformation"), testID);
     setDoc(medInfoRef, medicationInformation)
       .then((docRef) => {
         console.log("Data pushed successfully.");
@@ -126,7 +129,7 @@ export default function App() {
     try {
       await uploadString(storageRef, fileBase64, "data_url");
       const downloadURL = await getDownloadURL(storageRef);
-      await setDoc(userInfoRef, { ProfilePicture: downloadURL }, { merge: true });
+      await setDoc(userInfoRef.current, { ProfilePicture: downloadURL }, { merge: true });
       console.log("Profile picture uploaded successfully.");
     } catch (error) {
       console.error("Error uploading profile picture:", error);
@@ -136,7 +139,7 @@ export default function App() {
   const updateUserInformation = async (updatedUserData: UserInformation) => {
     try {
       setUserInformation(updatedUserData);
-      await updateDoc(userInfoRef, { ...updatedUserData });
+      await updateDoc(userInfoRef.current, { ...updatedUserData });
       console.log("User information updated to Firestore successfully");
     } catch (error) {
       console.error("Error adding user information to Firestore:", error);
@@ -150,7 +153,7 @@ export default function App() {
         newAllMedicationItems[i] = medicationItem;
       }
     }
-    await updateDoc(medInfoRef, { MedicationItems: newAllMedicationItems, ScheduledItems: getScheduledItems(newAllMedicationItems) })
+    await updateDoc(medInfoRef.current, { MedicationItems: newAllMedicationItems, ScheduledItems: getScheduledItems(newAllMedicationItems) })
       .then((docRef) => {
         console.log("Data changed successfully.");
       })
@@ -167,7 +170,7 @@ export default function App() {
         newAllMedicationItems.splice(i, 1);
       }
     }
-    await updateDoc(medInfoRef, { MedicationItems: newAllMedicationItems, ScheduledItems: getScheduledItems(newAllMedicationItems) })
+    await updateDoc(medInfoRef.current, { MedicationItems: newAllMedicationItems, ScheduledItems: getScheduledItems(newAllMedicationItems) })
       .then((docRef) => {
         console.log("Data changed successfully.");
       })
@@ -186,7 +189,7 @@ export default function App() {
     }
     setScheduledItems(newScheduledItems);
     // Update firebase
-    updateDoc(medInfoRef, { ScheduledItems: newScheduledItems });
+    updateDoc(medInfoRef.current, { ScheduledItems: newScheduledItems });
   }
 
   function getScheduledItems(allMedicationItems) {
@@ -260,7 +263,7 @@ export default function App() {
       setScheduledItems(newScheduledItems);
       setAllMedicationItems(newMedicationItems);
       // Update firebase
-      await updateDoc(medInfoRef, {
+      await updateDoc(medInfoRef.current, {
         MedicationItems: newMedicationItems,
         ScheduledItems: newScheduledItems,
       });
