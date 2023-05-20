@@ -11,7 +11,7 @@ import UpdateAccountPage from "./pages/UpdateAccountPage";
 import { UserInformation, MedicationItem, ScheduledItem } from "./utils/types";
 import { collection, addDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { firestorage } from "./firebaseConfig";
-import { signUp } from "./Auth";
+import { auth, signUp } from "./Auth";
 import { userDataConverter } from "./converters/userDataConverter";
 import { medDataConverter } from "./converters/medDataConverter";
 import { storage } from "./firebaseConfig";
@@ -29,11 +29,19 @@ const Stack = createNativeStackNavigator();
 const testID = "cLNeJdkRJkfEzLMugJipcamAWwb2";
 
 export default function App() {
-  const [userInformation, setUserInformation] = useState<UserInformation>();
+  const [userInformation, setUserInformation] = useState<UserInformation>({
+    Name: "",
+    Gender: "",
+    DateOfBirth: "",
+    EmailAddress: "",
+    PhoneNumber: "",
+    ProfilePicture: "",
+  });
   const [allMedicationItems, setAllMedicationItems] = useState<MedicationItem[]>([]);
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userId, setUserId] = useState("");
+  const [isSignUpComplete, setIsSignUpComplete] = useState(false);
   const medInfoRef = useRef<DocumentReference>();
   const userInfoRef = useRef<DocumentReference>();
 
@@ -54,15 +62,49 @@ export default function App() {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
-    if (userId) {
+    signOutAllUsers();
+  }, []);
+
+  const signOutAllUsers = () => {
+    auth
+      .signOut()
+      .then(() => {
+        setUserId("");
+        setIsSignUpComplete(false);
+        setUserInformation({
+          Name: "",
+          Gender: "",
+          DateOfBirth: "",
+          EmailAddress: "",
+          PhoneNumber: "",
+          ProfilePicture: "",
+        });
+        setAllMedicationItems([]);
+        setScheduledItems([]);
+        console.log("Successfully signed out");
+      })
+      .catch((error) => {
+        console.log("Error signing out:", error);
+      });
+  };
+
+  useEffect(() => {
+    if (userId && isSignUpComplete) {
       medInfoRef.current = doc(firestorage, "MedicationInformation", userId);
       userInfoRef.current = doc(firestorage, "UsersData", userId);
       fetchData();
     }
-  }, [userId]);
+  }, [userId, isSignUpComplete]);
 
   const handleLogin = (userId) => {
+    setUserId(userId);
+    setIsSignUpComplete(true);
+    console.log("changing");
+  };
+
+  const handleSignUp = (userId) => {
     setUserId(userId);
   };
 
@@ -74,68 +116,11 @@ export default function App() {
     });
   };
 
-  // initialiseData();
-  function initialiseData() {
-    const userLoginCredentials = {
-      email: "test@gmail.com",
-      password: "JaJaWong1",
-    };
-    // signUp(userLoginCredentials.email, userLoginCredentials.password);
-    const userData = {
-      Name: "Jane",
-      Gender: "Male",
-      DateOfBirth: "29/05/2001",
-      EmailAddress: "test@gmail.com",
-      PhoneNumber: "9123456",
-      ProfilePicture: "https://firebasestorage.googleapis.com/v0/b/medalert-386812.appspot.com/o/profilePictures%2FcLNeJdkRJkfEzLMugJipcamAWwb2?alt=media&token=e2ea4d15-ec26-410e-b584-3aac020bfe15",
-    };
-    const usersDataRef = doc(collection(firestorage, "UsersData"), testID);
-    setDoc(usersDataRef, userData)
-      .then((docRef) => {
-        console.log("Data pushed successfully.");
-      })
-      .catch((error) => {
-        console.error("Error pushing data:", error);
-      });
-    const medicationInformation = {
-      MedicationItems: [
-        { Name: "Paracetamol", Type: "Pill", Purpose: "Fever", Instructions: { TabletsPerIntake: 2, FrequencyPerDay: 2, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
-        { Name: "Metophan", Type: "Liquid", Purpose: "Cough", Instructions: { TabletsPerIntake: 4, FrequencyPerDay: 2, Specifications: "No specific instructions", FirstDosageTiming: 540 } },
-      ],
-      ScheduledItems: [
-        { Acknowledged: false, Instructions: { FirstDosageTiming: 540, FrequencyPerDay: 2, Specifications: "No specific instructions", TabletsPerIntake: 2 }, Name: "Paracetamol", Purpose: "Fever", Type: "Pill", id: 1 },
-        { Acknowledged: false, Instructions: { FirstDosageTiming: 540, FrequencyPerDay: 2, Specifications: "No specific instructions", TabletsPerIntake: 4 }, Name: "Metophan", Purpose: "Cough", Type: "Liquid", id: 3 },
-        { Acknowledged: false, Instructions: { FirstDosageTiming: 1260, FrequencyPerDay: 2, Specifications: "No specific instructions", TabletsPerIntake: 2 }, Name: "Paracetamol", Purpose: "Fever", Type: "Pill", id: 2 },
-        { Acknowledged: false, Instructions: { FirstDosageTiming: 1260, FrequencyPerDay: 2, Specifications: "No specific instructions", TabletsPerIntake: 4 }, Name: "Metophan", Purpose: "Cough", Type: "Liquid", id: 4 },
-      ],
-    };
-    const medInfoRef = doc(collection(firestorage, "MedicationInformation"), testID);
-    setDoc(medInfoRef, medicationInformation)
-      .then((docRef) => {
-        console.log("Data pushed successfully.");
-      })
-      .catch((error) => {
-        console.error("Error pushing data:", error);
-      });
-  }
-
   function filePathToBlob(filePath) {
     return fetch(filePath)
       .then((response) => response.blob())
       .then((blob) => blob);
   }
-
-  const updateProfilePicture = async (fileBase64) => {
-    const storageRef = ref(storage, `profilePictures/${testID}`);
-    try {
-      await uploadString(storageRef, fileBase64, "data_url");
-      const downloadURL = await getDownloadURL(storageRef);
-      await setDoc(userInfoRef.current, { ProfilePicture: downloadURL }, { merge: true });
-      console.log("Profile picture uploaded successfully.");
-    } catch (error) {
-      console.error("Error uploading profile picture:", error);
-    }
-  };
 
   const updateUserInformation = async (updatedUserData: UserInformation) => {
     try {
@@ -282,6 +267,26 @@ export default function App() {
     );
   }
 
+  if (!isSignUpComplete) {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Login" options={{ headerShown: false }}>
+            {(props) => <LoginPage {...props} onLogin={handleLogin} />}
+          </Stack.Screen>
+          <Stack.Screen name="Sign Up Home" options={{ headerShown: false }}>
+            {(props) => <SignUpHomePage {...props} onSignUp={handleSignUp} />}
+          </Stack.Screen>
+          <Stack.Screen name="Sign Up Details" options={{ headerShown: false }}>
+            {(props) => <SignUpDetailsPage {...props} />}
+          </Stack.Screen>
+          <Stack.Screen name="Home" options={{ headerShown: false }}>
+            {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} />}
+          </Stack.Screen>
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
   return (
     <NavigationContainer>
       <Stack.Navigator>
@@ -289,7 +294,7 @@ export default function App() {
           {(props) => <LoginPage {...props} onLogin={handleLogin} />}
         </Stack.Screen>
         <Stack.Screen name="Sign Up Home" options={{ headerShown: false }}>
-          {(props) => <SignUpHomePage {...props} />}
+          {(props) => <SignUpHomePage {...props} onSignUp={handleSignUp} />}
         </Stack.Screen>
         <Stack.Screen name="Sign Up Details" options={{ headerShown: false }}>
           {(props) => <SignUpDetailsPage {...props} />}
@@ -310,7 +315,7 @@ export default function App() {
           {(props) => <MenuPage {...props} userInformation={userInformation} />}
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
-          {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} updateProfilePicture={updateProfilePicture} />}
+          {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} />}
         </Stack.Screen>
         <Stack.Screen name="Edit Medication Details" options={{ headerShown: false }}>
           {(props) => <EditMedicationDetails {...props} allMedicationItems={allMedicationItems} deleteMedicationFromList={deleteMedicationFromList} />}

@@ -18,7 +18,6 @@ export default function LoginPage({ navigation, onLogin }) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in
-        onLogin(user.uid);
         navigation.navigate("Home");
       }
     });
@@ -30,8 +29,6 @@ export default function LoginPage({ navigation, onLogin }) {
     try {
       const [success, id] = await signIn(email, password);
       if (success) {
-        console.log("Login successful");
-        await onLogin(id);
         navigation.navigate("Home");
       } else {
         alert("Login failed");

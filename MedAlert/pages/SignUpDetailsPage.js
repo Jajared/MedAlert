@@ -1,8 +1,41 @@
 import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, Button } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
+import { useState } from "react";
 
-export default function SignUpPage({ navigation }) {
+export default function SignUpDetailsPage({ navigation, route }) {
+  const userId = route.params.userId;
+  const [personalDetails, setPersonalDetails] = useState({
+    Name: "",
+    Gender: "",
+    DateOfBirth: "",
+    EmailAddress: route.params.EmailAddress,
+    PhoneNumber: "",
+    ProfilePicture: "",
+  });
+
+  const handleFormSubmit = async () => {
+    const userInfoRef = doc(collection(firestorage, "UsersData"), userId);
+    // Update user information in Firestore
+    await setDoc(userInfoRef, { ...personalDetails })
+      .then((docRef) => {
+        console.log("Data pushed successfully.");
+      })
+      .catch((error) => {
+        console.error("Error pushing data:", error);
+      });
+    // Update medication information in Firestore
+    const medInfoRef = doc(collection(firestorage, "MedicationInformation"), userId);
+    setDoc(medInfoRef, { MedicationItems: [], ScheduledItems: [] })
+      .then((docRef) => {
+        console.log("Data pushed successfully.");
+      })
+      .catch((error) => {
+        console.error("Error pushing data:", error);
+      });
+    navigation.navigate("Home");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>

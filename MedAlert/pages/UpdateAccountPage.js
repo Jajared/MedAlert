@@ -7,7 +7,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import CustomButton from "../components/Buttons/CustomButton";
 
-export default function UpdateAccountPage({ navigation, userInformation, updateUserInformation, updateProfilePicture }) {
+export default function UpdateAccountPage({ navigation, userInformation, updateUserInformation }) {
   const [state, setState] = useState({ ...userInformation });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedDOB, setSelectedDOB] = useState(null);

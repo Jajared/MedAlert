@@ -4,7 +4,7 @@ import { AntDesign, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { signUp } from "../Auth";
 
-export default function SignUpHomePage({ navigation }) {
+export default function SignUpHomePage({ navigation, onSignUp }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -15,9 +15,13 @@ export default function SignUpHomePage({ navigation }) {
   const handleSignUp = async () => {
     try {
       if (isValidEmail() && isValidPassword()) {
-        await signUp(email, password);
-        console.log("Sign up successful");
-        navigation.navigate("Sign Up Details");
+        const [success, userId] = await signUp(email, password);
+        if (success) {
+          await onSignUp(userId);
+          navigation.navigate("Sign Up Details", { userId: userId, EmailAddress: email });
+        } else {
+          alert("Sign up failed. Please try again.");
+        }
       } else {
         alert("Invalid email or password");
       }
