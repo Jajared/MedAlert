@@ -7,7 +7,7 @@ import { signIn, auth } from "../Auth";
 import { onAuthStateChanged } from "firebase/auth";
 
 export default function LoginPage({ navigation, onLogin }) {
-  const [email, setEmail] = useState("Email");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
@@ -47,14 +47,14 @@ export default function LoginPage({ navigation, onLogin }) {
         <Text style={styles.inputTitle}>Email</Text>
         <View style={styles.inputBox}>
           <AntDesign name="mail" size={20} color="black" style={styles.inputIcon} />
-          <TextInput style={styles.inputText} value={email} onChangeText={(text) => setEmail(text)}></TextInput>
+          <TextInput style={styles.inputText} value={email} placeholder="Email" onChangeText={(text) => setEmail(text)}></TextInput>
         </View>
       </View>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Password</Text>
         <View style={styles.inputBox}>
           <AntDesign name="lock" size={26} color="black" style={styles.inputIcon} />
-          <TextInput style={{ flex: 8 }} value={password} secureTextEntry={!showPassword} onChangeText={(text) => setPassword(text)}></TextInput>
+          <TextInput style={{ flex: 8 }} value={password} secureTextEntry={!showPassword} placeholder="Password" onChangeText={(text) => setPassword(text)}></TextInput>
           <TouchableOpacity style={styles.showButton} onPress={togglePasswordVisibility}>
             <Feather name={showPassword ? "eye-off" : "eye"} size={20} color="gray" />
           </TouchableOpacity>
@@ -71,7 +71,7 @@ export default function LoginPage({ navigation, onLogin }) {
         <View style={styles.line}></View>
       </View>
 
-      <TouchableOpacity onPress={() => alert("Button Pressed")} style={styles.buttonContainer}>
+      <TouchableOpacity onPress={() => navigation.navigate("Sign Up Home")} style={styles.buttonContainer}>
         <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </LinearGradient>

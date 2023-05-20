@@ -55,7 +55,7 @@ export default function AddMedicationDetails({ navigation, route }) {
         <Button
           title="-"
           onPress={() => {
-            if (state.TabletsPerIntake > 1) {
+            if (state.Instructions.TabletsPerIntake > 1) {
               setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake - 1 } }));
             } else {
               alert("Cannot be less than 1");

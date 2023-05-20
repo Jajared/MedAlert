@@ -2,7 +2,7 @@ import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, Butt
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 
-export default function SignUpPage() {
+export default function SignUpPage({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>

@@ -20,6 +20,7 @@ import { decode } from "base-64";
 import EditMedicationDetails from "./pages/EditMedicationDetails";
 import EditMedicationSchedule from "./pages/EditMedicationSchedule";
 import LoginPage from "./pages/LoginPage";
+import SignUpHomePage from "./pages/SignUpHomePage";
 import SignUpDetailsPage from "./pages/SignUpDetailsPage";
 import ViewMedicationPage from "./pages/ViewMedicationPage";
 import { DocumentReference } from "firebase/firestore";
@@ -286,6 +287,12 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Login" options={{ headerShown: false }}>
           {(props) => <LoginPage {...props} onLogin={handleLogin} />}
+        </Stack.Screen>
+        <Stack.Screen name="Sign Up Home" options={{ headerShown: false }}>
+          {(props) => <SignUpHomePage {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="Sign Up Details" options={{ headerShown: false }}>
+          {(props) => <SignUpDetailsPage {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Home" options={{ headerShown: false }}>
           {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} />}
