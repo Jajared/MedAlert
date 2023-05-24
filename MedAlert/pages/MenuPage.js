@@ -4,7 +4,7 @@ import SlideButton from "rn-slide-button";
 import * as LocalAuthentication from "expo-local-authentication";
 import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons, Feather } from "@expo/vector-icons";
 
-export default function ProfilePage({ navigation, userInformation, resetScheduledItems, setIsNotificationReset }) {
+export default function ProfilePage({ navigation, userInformation, resetScheduledItems, setIsNotificationReset, onSignOut }) {
   const onFaceId = async () => {
     try {
       // Checking if device is compatible
@@ -72,7 +72,9 @@ export default function ProfilePage({ navigation, userInformation, resetSchedule
         <TouchableOpacity
           style={styles.settingsItem}
           onPress={() => {
-            navigation.navigate("Login");
+            onSignOut().then(() => {
+              navigation.navigate("Login");
+            });
           }}
         >
           <Ionicons name="exit-outline" size={30} color="black" style={{ flex: 1 }} />

@@ -26,7 +26,7 @@ import * as Notifications from "expo-notifications";
 import { Subscription } from "expo-modules-core";
 import * as BackgroundFetch from "expo-background-fetch";
 import * as TaskManager from "expo-task-manager";
-import { set } from "react-native-reanimated";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Stack = createNativeStackNavigator();
 
@@ -62,23 +62,26 @@ async function registerForPushNotificationsAsync() {
   return token;
 }
 
-const BACKGROUND_TASK_NAME = "resetAcknowledgedTask";
+const RESET_SCHEDULE_TASK = "RESET_SCHEDULE_TASK";
 
-/** TaskManager.defineTask(BACKGROUND_TASK_NAME, async () => {
+TaskManager.defineTask(RESET_SCHEDULE_TASK, async () => {
   try {
-    const batch = writeBatch(firestorage);
-    const scheduledItemsRef = doc(firestorage, "MedicationInformation");
-    const querySnapshot = await getDoc(scheduledItemsRef);
-    querySnapshot.get("ScheduledItems").forEach((doc) => {
-      batch.update(doc.ref, { acknowledged: false });
-    });
-
-    await batch.commit();
-    console.log("Acknowledged field reset successfully.");
+    resetScheduledItems();
+    return BackgroundFetch.BackgroundFetchResult.NewData;
   } catch (error) {
     console.log("Error resetting acknowledged field:", error);
   }
-}); */
+});
+
+const scheduleTaskAtMidnight = async () => {
+  const status = await BackgroundFetch.getStatusAsync();
+
+  await BackgroundFetch.registerTaskAsync(RESET_SCHEDULE_TASK, {
+    minimumInterval: 60 * 15, // Run once every 24 hours
+  });
+
+  console.log("Task scheduled at midnight");
+};
 
 async function resetScheduledItems() {
   function getScheduledItems(allMedicationItems) {
@@ -137,6 +140,7 @@ async function resetScheduledItems() {
   console.log("Acknowledged field reset successfully.");
 }
 
+scheduleTaskAtMidnight();
 export default function App() {
   const [userInformation, setUserInformation] = useState<UserInformation>({
     Name: "",
@@ -148,7 +152,7 @@ export default function App() {
   });
   const [allMedicationItems, setAllMedicationItems] = useState<MedicationItem[]>([]);
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userId, setUserId] = useState("");
   const [isSignUpComplete, setIsSignUpComplete] = useState(false);
   const medInfoRef = useRef<DocumentReference>();
@@ -158,6 +162,7 @@ export default function App() {
   const notificationListener = useRef<Subscription>();
   const responseListener = useRef<Subscription>();
   const [isNotificationReset, setIsNotificationReset] = useState(false);
+  const [isUserLoggedIn, setUserLoggedIn] = useState(false);
 
   const fetchData = async (): Promise<void> => {
     try {
@@ -177,14 +182,17 @@ export default function App() {
     }
   };
 
-  useEffect(() => {
-    signOutAllUsers();
-  }, []);
-
-  useEffect(() => {
+  /** useEffect(() => {
     fetchData();
     setIsNotificationReset(false);
-  }, [isNotificationReset]);
+  }, [isNotificationReset]); */
+
+  useEffect(() => {
+    checkUserAuthState();
+  }, []);
+  /** useEffect(() => {
+    signOutAllUsers();
+  }, []);
 
   const signOutAllUsers = () => {
     auth
@@ -207,7 +215,7 @@ export default function App() {
       .catch((error) => {
         console.log("Error signing out:", error);
       });
-  };
+  }; */
 
   useEffect(() => {
     if (userId && isSignUpComplete) {
@@ -239,9 +247,34 @@ export default function App() {
     }
   }, [userId, isSignUpComplete]);
 
-  const handleLogin = (userId: string) => {
+  const handleLogin = async (userId: string) => {
     setUserId(userId);
     setIsSignUpComplete(true);
+    await AsyncStorage.setItem("userToken", userId);
+  };
+
+  const handleSignOut = async () => {
+    await AsyncStorage.removeItem("userToken");
+  };
+
+  const checkUserAuthState = async () => {
+    console.log("Checking if user is logged in...");
+    try {
+      const userToken = await AsyncStorage.getItem("userToken");
+      if (userToken) {
+        setUserId(userToken);
+        setIsSignUpComplete(true);
+        setUserLoggedIn(true);
+        return true;
+      } else {
+        console.log("No user token found");
+        return false;
+      }
+    } catch (error) {
+      console.log("Error checking user auth state:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSignUp = (userId: string) => {
@@ -453,7 +486,7 @@ export default function App() {
     );
   }
 
-  if (!isSignUpComplete) {
+  if (!isUserLoggedIn && !isSignUpComplete) {
     return (
       <NavigationContainer>
         <Stack.Navigator>
@@ -476,15 +509,6 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Login" options={{ headerShown: false }}>
-          {(props) => <LoginPage {...props} onLogin={handleLogin} />}
-        </Stack.Screen>
-        <Stack.Screen name="Sign Up Home" options={{ headerShown: false }}>
-          {(props) => <SignUpHomePage {...props} onSignUp={handleSignUp} />}
-        </Stack.Screen>
-        <Stack.Screen name="Sign Up Details" options={{ headerShown: false }}>
-          {(props) => <SignUpDetailsPage {...props} setIsSignUpComplete={setIsSignUpComplete} />}
-        </Stack.Screen>
         <Stack.Screen name="Home" options={{ headerShown: false }}>
           {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} />}
         </Stack.Screen>
@@ -498,7 +522,7 @@ export default function App() {
           {(props) => <AddMedicationSchedule {...props} addMedication={addMedication} />}
         </Stack.Screen>
         <Stack.Screen name="Profile Page" options={{ headerShown: false }}>
-          {(props) => <MenuPage {...props} userInformation={userInformation} resetScheduledItems={resetScheduledItems} setIsNotificationReset={setIsNotificationReset} />}
+          {(props) => <MenuPage {...props} userInformation={userInformation} resetScheduledItems={resetScheduledItems} setIsNotificationReset={setIsNotificationReset} onSignOut={handleSignOut} />}
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
           {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} />}
@@ -511,6 +535,15 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen name="View All Medications" options={{ headerShown: false }}>
           {(props) => <ViewMedicationPage {...props} allMedicationItems={allMedicationItems} />}
+        </Stack.Screen>
+        <Stack.Screen name="Login" options={{ headerShown: false }}>
+          {(props) => <LoginPage {...props} onLogin={handleLogin} />}
+        </Stack.Screen>
+        <Stack.Screen name="Sign Up Home" options={{ headerShown: false }}>
+          {(props) => <SignUpHomePage {...props} onSignUp={handleSignUp} />}
+        </Stack.Screen>
+        <Stack.Screen name="Sign Up Details" options={{ headerShown: false }}>
+          {(props) => <SignUpDetailsPage {...props} setIsSignUpComplete={setIsSignUpComplete} />}
         </Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
