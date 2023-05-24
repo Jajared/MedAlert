@@ -4,7 +4,7 @@ import SlideButton from "rn-slide-button";
 import * as LocalAuthentication from "expo-local-authentication";
 import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons, Feather } from "@expo/vector-icons";
 
-export default function ProfilePage({ navigation, userInformation }) {
+export default function ProfilePage({ navigation, userInformation, resetScheduledItems, setIsNotificationReset }) {
   const onFaceId = async () => {
     try {
       // Checking if device is compatible
@@ -47,7 +47,13 @@ export default function ProfilePage({ navigation, userInformation }) {
           </View>
           <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.settingsItem}>
+        <TouchableOpacity
+          style={styles.settingsItem}
+          onPress={() => {
+            resetScheduledItems();
+            setIsNotificationReset(true);
+          }}
+        >
           <MaterialIcons name="supervisor-account" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Saved Guardian</Text>

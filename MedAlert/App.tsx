@@ -8,8 +8,8 @@ import AddMedicationDetails from "./pages/AddMedicationDetails";
 import AddMedicationSchedule from "./pages/AddMedicationSchedule";
 import MenuPage from "./pages/MenuPage";
 import UpdateAccountPage from "./pages/UpdateAccountPage";
-import { UserInformation, MedicationItem, ScheduledItem } from "./utils/types";
-import { collection, addDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { UserInformation, MedicationItem, ScheduledItem, NotificationItem } from "./utils/types";
+import { collection, addDoc, doc, getDoc, setDoc, updateDoc, writeBatch, getDocs } from "firebase/firestore";
 import { firestorage } from "./firebaseConfig";
 import { auth, signUp } from "./Auth";
 import { userDataConverter } from "./converters/userDataConverter";
@@ -24,22 +24,11 @@ import { DocumentReference } from "firebase/firestore";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Subscription } from "expo-modules-core";
+import * as BackgroundFetch from "expo-background-fetch";
+import * as TaskManager from "expo-task-manager";
+import { set } from "react-native-reanimated";
 
 const Stack = createNativeStackNavigator();
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
-interface NotificationItem {
-  content: {
-    title: string;
-    body: string;
-  };
-  trigger: { hour: number; minute: number; repeats: boolean };
-}
 
 async function registerForPushNotificationsAsync() {
   let token;
@@ -73,6 +62,81 @@ async function registerForPushNotificationsAsync() {
   return token;
 }
 
+const BACKGROUND_TASK_NAME = "resetAcknowledgedTask";
+
+/** TaskManager.defineTask(BACKGROUND_TASK_NAME, async () => {
+  try {
+    const batch = writeBatch(firestorage);
+    const scheduledItemsRef = doc(firestorage, "MedicationInformation");
+    const querySnapshot = await getDoc(scheduledItemsRef);
+    querySnapshot.get("ScheduledItems").forEach((doc) => {
+      batch.update(doc.ref, { acknowledged: false });
+    });
+
+    await batch.commit();
+    console.log("Acknowledged field reset successfully.");
+  } catch (error) {
+    console.log("Error resetting acknowledged field:", error);
+  }
+}); */
+
+async function resetScheduledItems() {
+  function getScheduledItems(allMedicationItems) {
+    var temp = [];
+    var count = 1;
+    for (let i = 0; i < allMedicationItems.length; i++) {
+      const timeInterval = 24 / allMedicationItems[i].Instructions.FrequencyPerDay;
+      for (let j = 0; j < allMedicationItems[i].Instructions.FrequencyPerDay; j++) {
+        temp.push({
+          ...allMedicationItems[i],
+          Acknowledged: false,
+          id: count,
+          Instructions: {
+            ...allMedicationItems[i].Instructions,
+            FirstDosageTiming: allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j > 24 * 60 ? allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j - 24 * 60 : allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j,
+          },
+        });
+        count++;
+      }
+    }
+    var result = sortScheduledItems(temp);
+    return result;
+  }
+  // Sort scheduled items in order of time
+  function sortScheduledItems(data: ScheduledItem[]) {
+    var scheduledItemsInOrder = [];
+    var lowestTime = 24 * 60;
+    var prevLowest = -1;
+    while (data.length != scheduledItemsInOrder.length) {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].Instructions.FirstDosageTiming < lowestTime && data[i].Instructions.FirstDosageTiming > prevLowest) {
+          lowestTime = data[i].Instructions.FirstDosageTiming;
+        }
+
+        if (i == data.length - 1) {
+          prevLowest = lowestTime;
+          for (let j = 0; j < data.length; j++) {
+            if (data[j].Instructions.FirstDosageTiming == lowestTime) {
+              scheduledItemsInOrder.push(data[j]);
+            }
+          }
+          lowestTime = 24 * 60;
+        }
+      }
+    }
+    return scheduledItemsInOrder;
+  }
+  const scheduledItemsRef = collection(firestorage, "MedicationInformation");
+  const querySnapshot = await getDocs(scheduledItemsRef);
+
+  querySnapshot.forEach((doc) => {
+    const medicationItems = doc.data().MedicationItems;
+    updateDoc(doc.ref, { ScheduledItems: getScheduledItems(medicationItems) });
+  });
+
+  console.log("Acknowledged field reset successfully.");
+}
+
 export default function App() {
   const [userInformation, setUserInformation] = useState<UserInformation>({
     Name: "",
@@ -93,6 +157,7 @@ export default function App() {
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef<Subscription>();
   const responseListener = useRef<Subscription>();
+  const [isNotificationReset, setIsNotificationReset] = useState(false);
 
   const fetchData = async (): Promise<void> => {
     try {
@@ -115,6 +180,11 @@ export default function App() {
   useEffect(() => {
     signOutAllUsers();
   }, []);
+
+  useEffect(() => {
+    fetchData();
+    setIsNotificationReset(false);
+  }, [isNotificationReset]);
 
   const signOutAllUsers = () => {
     auth
@@ -143,7 +213,6 @@ export default function App() {
     if (userId && isSignUpComplete) {
       medInfoRef.current = doc(firestorage, "MedicationInformation", userId);
       userInfoRef.current = doc(firestorage, "UsersData", userId);
-      fetchData();
       registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
 
       // Foreground notification
@@ -155,11 +224,14 @@ export default function App() {
       responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
         console.log(response);
       });
-      // Resets all notifications
-      Notifications.cancelAllScheduledNotificationsAsync().then((response) => {
-        console.log("Resetting all notifications");
-        scheduleAllNotifications();
+      fetchData().then(() => {
+        // Resets all notifications
+        Notifications.cancelAllScheduledNotificationsAsync().then((response) => {
+          console.log("Resetting all notifications");
+          scheduleAllNotifications(scheduledItems);
+        });
       });
+
       return () => {
         Notifications.removeNotificationSubscription(notificationListener.current);
         Notifications.removeNotificationSubscription(responseListener.current);
@@ -195,7 +267,8 @@ export default function App() {
         newAllMedicationItems[i] = medicationItem;
       }
     }
-    await updateDoc(medInfoRef.current, { MedicationItems: newAllMedicationItems, ScheduledItems: await editScheduledItems(newAllMedicationItems) })
+    const newScheduledItems = await editScheduledItems(newAllMedicationItems);
+    await updateDoc(medInfoRef.current, { MedicationItems: newAllMedicationItems, ScheduledItems: newScheduledItems })
       .then((docRef) => {
         console.log("Data changed successfully.");
       })
@@ -213,7 +286,8 @@ export default function App() {
         newAllMedicationItems.splice(i, 1);
       }
     }
-    await updateDoc(medInfoRef.current, { MedicationItems: newAllMedicationItems, ScheduledItems: await editScheduledItems(newAllMedicationItems) })
+    const newScheduledItems = await editScheduledItems(newAllMedicationItems);
+    await updateDoc(medInfoRef.current, { MedicationItems: newAllMedicationItems, ScheduledItems: newScheduledItems })
       .then((docRef) => {
         console.log("Data changed successfully.");
       })
@@ -253,7 +327,7 @@ export default function App() {
   }
 
   // Schedules all notifications on system
-  async function scheduleAllNotifications() {
+  async function scheduleAllNotifications(scheduledItems: ScheduledItem[]) {
     console.log("Setting all notifications");
     for (let i = 0; i < scheduledItems.length; i++) {
       var hours = Math.floor(scheduledItems[i].Instructions.FirstDosageTiming / 60);
@@ -261,13 +335,14 @@ export default function App() {
         hours = 0;
       }
       const minutes = scheduledItems[i].Instructions.FirstDosageTiming % 60;
-      const notificationId = await Notifications.scheduleNotificationAsync({
+      const newNotificationItem: NotificationItem = {
         content: {
           title: "Medication Reminder",
           body: "Please take " + scheduledItems[i].Name,
         },
         trigger: { hour: hours, minute: minutes, repeats: true },
-      });
+      };
+      const notificationId = await Notifications.scheduleNotificationAsync(newNotificationItem);
       scheduledItems[i].notificationId = notificationId;
     }
   }
@@ -280,13 +355,14 @@ export default function App() {
       hours = 0;
     }
     const minutes = scheduledItem.Instructions.FirstDosageTiming % 60;
-    const notificationId = await Notifications.scheduleNotificationAsync({
+    const newNotificationItem: NotificationItem = {
       content: {
         title: "Medication Reminder",
         body: "Please take " + scheduledItem.Name,
       },
       trigger: { hour: hours, minute: minutes, repeats: true },
-    });
+    };
+    const notificationId = await Notifications.scheduleNotificationAsync(newNotificationItem);
     scheduledItem.notificationId = notificationId;
     return scheduledItem;
   }
@@ -422,7 +498,7 @@ export default function App() {
           {(props) => <AddMedicationSchedule {...props} addMedication={addMedication} />}
         </Stack.Screen>
         <Stack.Screen name="Profile Page" options={{ headerShown: false }}>
-          {(props) => <MenuPage {...props} userInformation={userInformation} />}
+          {(props) => <MenuPage {...props} userInformation={userInformation} resetScheduledItems={resetScheduledItems} setIsNotificationReset={setIsNotificationReset} />}
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
           {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} />}

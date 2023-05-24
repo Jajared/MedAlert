@@ -24,3 +24,11 @@ export interface MedicationItem {
     FirstDosageTiming: number;
   };
 }
+
+export interface NotificationItem {
+  content: {
+    title: string;
+    body: string;
+  };
+  trigger: { hour: number; minute: number; repeats: boolean };
+}
