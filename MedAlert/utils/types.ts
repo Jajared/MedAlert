@@ -10,6 +10,7 @@ export interface UserInformation {
 export interface ScheduledItem extends MedicationItem {
   Acknowledged: boolean;
   id: number;
+  notificationId: string;
 }
 
 export interface MedicationItem {

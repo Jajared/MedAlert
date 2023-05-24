@@ -63,7 +63,12 @@ export default function ProfilePage({ navigation, userInformation }) {
           </View>
           <SlideButton width={30} height={30} containerStyle={{ flex: 1 }} onSlideEnd={onFaceId} />
         </View>
-        <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Login")}>
+        <TouchableOpacity
+          style={styles.settingsItem}
+          onPress={() => {
+            navigation.navigate("Login");
+          }}
+        >
           <Ionicons name="exit-outline" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Log Out</Text>

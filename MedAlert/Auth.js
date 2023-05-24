@@ -27,6 +27,7 @@ export const signIn = async (email, password) => {
 export const signOutUser = async () => {
   try {
     await signOut(auth);
+    console.log("Signed out");
     // Additional logic after sign out
   } catch (error) {
     // Handle sign out error

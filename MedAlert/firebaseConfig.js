@@ -7,6 +7,7 @@ import "firebase/auth";
 const firebaseConfig = {
   apiKey: "AIzaSyA630mEkGs-Zq9cMkIVWs9rfrLEZGOIKic",
   authDomain: "medalert-386812.firebaseapp.com",
+  databaseURL: "https://medalert-386812-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "medalert-386812",
   storageBucket: "medalert-386812.appspot.com",
   messagingSenderId: "435459398641",
