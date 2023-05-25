@@ -11,7 +11,7 @@ import UpdateAccountPage from "./pages/UpdateAccountPage";
 import { UserInformation, MedicationItem, ScheduledItem, NotificationItem } from "./utils/types";
 import { collection, addDoc, doc, getDoc, setDoc, updateDoc, writeBatch, getDocs } from "firebase/firestore";
 import { firestorage } from "./firebaseConfig";
-import { auth, signUp } from "./Auth";
+import { auth } from "./firebaseConfig";
 import { userDataConverter } from "./converters/userDataConverter";
 import { medDataConverter } from "./converters/medDataConverter";
 import EditMedicationDetails from "./pages/EditMedicationDetails";
@@ -27,6 +27,7 @@ import { Subscription } from "expo-modules-core";
 import * as BackgroundFetch from "expo-background-fetch";
 import * as TaskManager from "expo-task-manager";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
 const Stack = createNativeStackNavigator();
 
@@ -247,38 +248,59 @@ export default function App() {
     }
   }, [userId, isSignUpComplete]);
 
-  const handleLogin = async (userId: string) => {
+  // Sign up handler
+  const handleSignUpHome = (userId: string) => {
     setUserId(userId);
-    setIsSignUpComplete(true);
-    await AsyncStorage.setItem("userToken", userId);
   };
 
+  // Login handler
+  const handleLogin = async (email: string, password: string) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      setUserId(user.uid);
+      medInfoRef.current = doc(firestorage, "MedicationInformation", user.uid);
+      userInfoRef.current = doc(firestorage, "UsersData", user.uid);
+      await fetchData();
+      setUserLoggedIn(true);
+      console.log("Successfully logged in");
+      return true;
+    } catch (error) {
+      console.log("Error logging in:", error);
+      return false;
+    }
+  };
+
+  // Sign out handler
   const handleSignOut = async () => {
-    await AsyncStorage.removeItem("userToken");
+    try {
+      signOut(auth).then(() => {
+        setUserLoggedIn(false);
+        setUserId("");
+        console.log("Successfully signed out");
+      });
+    } catch (error) {
+      console.log("Error signing out:", error);
+    }
   };
 
   const checkUserAuthState = async () => {
     console.log("Checking if user is logged in...");
     try {
-      const userToken = await AsyncStorage.getItem("userToken");
-      if (userToken) {
-        setUserId(userToken);
-        setIsSignUpComplete(true);
-        setUserLoggedIn(true);
-        return true;
-      } else {
-        console.log("No user token found");
-        return false;
-      }
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          setUserId(user.uid);
+          setUserLoggedIn(true);
+          console.log("User is logged in");
+        } else {
+          console.log("No user token found");
+        }
+      });
     } catch (error) {
       console.log("Error checking user auth state:", error);
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleSignUp = (userId: string) => {
-    setUserId(userId);
   };
 
   // Update user information on database
@@ -494,7 +516,7 @@ export default function App() {
             {(props) => <LoginPage {...props} onLogin={handleLogin} />}
           </Stack.Screen>
           <Stack.Screen name="Sign Up Home" options={{ headerShown: false }}>
-            {(props) => <SignUpHomePage {...props} onSignUp={handleSignUp} />}
+            {(props) => <SignUpHomePage {...props} onSignUpHome={handleSignUpHome} />}
           </Stack.Screen>
           <Stack.Screen name="Sign Up Details" options={{ headerShown: false }}>
             {(props) => <SignUpDetailsPage {...props} setIsSignUpComplete={setIsSignUpComplete} />}
@@ -540,7 +562,7 @@ export default function App() {
           {(props) => <LoginPage {...props} onLogin={handleLogin} />}
         </Stack.Screen>
         <Stack.Screen name="Sign Up Home" options={{ headerShown: false }}>
-          {(props) => <SignUpHomePage {...props} onSignUp={handleSignUp} />}
+          {(props) => <SignUpHomePage {...props} onSignUpHome={handleSignUpHome} />}
         </Stack.Screen>
         <Stack.Screen name="Sign Up Details" options={{ headerShown: false }}>
           {(props) => <SignUpDetailsPage {...props} setIsSignUpComplete={setIsSignUpComplete} />}
