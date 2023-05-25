@@ -7,16 +7,18 @@ export default function SearchItem({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title={item.product_name} style={{ flex: 1 }} />
-      <Text style={styles.subheader}>Product Name:</Text>
-      <Text style={styles.text}>{item.product_name}</Text>
-      <Text style={styles.subheader}>Manufacturer:</Text>
-      <Text style={styles.text}>{item.manufacturer}</Text>
-      <Text style={styles.subheader}>Dosage Form:</Text>
-      <Text style={styles.text}>{item.dosage_form}</Text>
-      <Text style={styles.subheader}>Active Ingredients:</Text>
-      <Text style={styles.text}>{item.active_ingredients}</Text>
-      <Text style={styles.subheader}>Strength:</Text>
-      <Text style={styles.text}>{item.strength}</Text>
+      <View style={styles.item}>
+        <Text style={styles.subheader}>Product Name:</Text>
+        <Text style={styles.text}>{item.product_name}</Text>
+        <Text style={styles.subheader}>Manufacturer:</Text>
+        <Text style={styles.text}>{item.manufacturer}</Text>
+        <Text style={styles.subheader}>Dosage Form:</Text>
+        <Text style={styles.text}>{item.dosage_form}</Text>
+        <Text style={styles.subheader}>Active Ingredients:</Text>
+        <Text style={styles.text}>{item.active_ingredients.replace(/&&/g, ", ")}</Text>
+        <Text style={styles.subheader}>Strength:</Text>
+        <Text style={styles.text}>{item.strength.replace(/&&/g, ", ")}</Text>
+      </View>
     </SafeAreaView>
   );
 }
@@ -28,13 +30,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   item: {
-    backgroundColor: "#fff",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 15,
+    width: "90%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   subheader: {
     fontSize: 20,

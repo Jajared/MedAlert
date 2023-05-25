@@ -2,7 +2,7 @@ import { View, SafeAreaView, StyleSheet, TextInput, FlatList, Text, TouchableOpa
 import { useState } from "react";
 import medicationDb from "../assets/medicationDb.json";
 import filter from "lodash.filter";
-import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 
 const medData = Array.from(Object.values(medicationDb));
@@ -37,11 +37,19 @@ export default function MedicationDatabase({ navigation }) {
     return <AntDesign name="medicinebox" size={24} color="black" />;
   };
 
-  const handleSearch = (query) => {
+  const handleSearchByName = (query) => {
     setSearchQuery(query);
     const formattedQuery = query.toLowerCase();
     const filteredData = filter(fullData, (item) => {
       return contains(item, formattedQuery);
+    });
+    setData(filteredData);
+  };
+
+  const handleSearchByDosageForm = (dosageForm) => {
+    const formattedDosageForm = dosageForm.toLowerCase().replace(/\s/g, "");
+    const filteredData = filter(fullData, (item) => {
+      return item.dosage_form.toLowerCase().includes(formattedDosageForm);
     });
     setData(filteredData);
   };
@@ -59,7 +67,10 @@ export default function MedicationDatabase({ navigation }) {
       <BackNavBar navigation={navigation} title="Medication Database" />
       <View style={styles.searchBar}>
         <MaterialCommunityIcons name="magnify" size={20} color="black" style={{ flex: 1 }} />
-        <TextInput placeholder="Search" clearButtonMode="always" autoCapitalize="none" autoCorrect={false} onChangeText={(query) => handleSearch(query)} style={{ flex: 9 }} />
+        <TextInput placeholder="Search" clearButtonMode="always" autoCapitalize="none" autoCorrect={false} onChangeText={(query) => handleSearchByName(query)} style={{ flex: 8 }} />
+        <TouchableOpacity onPress={() => alert("Button pressed")} style={{ flex: 1 }}>
+          <Feather name="filter" size={20} color="black" />
+        </TouchableOpacity>
       </View>
       <View style={styles.data}>
         <FlatList
@@ -88,10 +99,10 @@ const styles = StyleSheet.create({
   },
   searchBar: {
     flexDirection: "row",
-    alignItems: "center", // Align items vertically in the center
+    alignItems: "center",
     marginTop: 10,
     paddingHorizontal: 20,
-    paddingVertical: 8, // Adjust vertical padding to make it more compact
+    paddingVertical: 8,
     width: "90%",
     borderColor: "grey",
     borderWidth: 1,
