@@ -1,7 +1,7 @@
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import { StyleSheet, TouchableOpacity, Text, View, SafeAreaView, StatusBar } from "react-native";
 
-export default function SearchItem({ route, navigation }) {
+export default function SearchItemPage({ route, navigation }) {
   const item = route.params.medicationDetails;
   return (
     <SafeAreaView style={styles.container}>

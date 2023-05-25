@@ -1,41 +1,20 @@
-import { View, SafeAreaView, StyleSheet, TextInput, FlatList, Text, TouchableOpacity, Image, StatusBar } from "react-native";
-import { useState } from "react";
+import { View, SafeAreaView, StyleSheet, TextInput, FlatList, Text, TouchableOpacity, Image, StatusBar, ScrollView } from "react-native";
+import { useCallback, useState } from "react";
 import medicationDb from "../assets/medicationDb.json";
 import filter from "lodash.filter";
 import { AntDesign, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
+import SearchItem from "../components/SearchItem/SearchItem";
 
 const medData = Array.from(Object.values(medicationDb));
 
 export default function MedicationDatabase({ navigation }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDosageForm, setSelectedDosageForm] = useState("");
   const [data, setData] = useState(medData);
   const [fullData, setFullData] = useState(medData);
 
-  const dosageFormIcons = {
-    Tablet: <Image source={require("../assets/medicationDB/tablet.png")} style={{ width: 24, height: 24 }} />,
-    Injection: <Image source={require("../assets/medicationDB/injection.png")} style={{ width: 24, height: 24 }} />,
-    Capsule: <Image source={require("../assets/medicationDB/capsule.png")} style={{ width: 24, height: 24 }} />,
-    Cream: <Image source={require("../assets/medicationDB/cream.png")} style={{ width: 24, height: 24 }} />,
-    Solution: <Image source={require("../assets/medicationDB/solution.png")} style={{ width: 24, height: 24 }} />,
-    Granule: <Image source={require("../assets/medicationDB/capsule.png")} style={{ width: 24, height: 24 }} />,
-    Syrup: <Image source={require("../assets/medicationDB/syrup.png")} style={{ width: 24, height: 24 }} />,
-    Ointment: <Image source={require("../assets/medicationDB/ointment.png")} style={{ width: 24, height: 24 }} />,
-    Powder: <Image source={require("../assets/medicationDB/powder.png")} style={{ width: 24, height: 24 }} />,
-  };
-
-  const getDosageFormIcon = (dosageForm) => {
-    const formattedDosageForm = dosageForm.toLowerCase().replace(/\s/g, "");
-
-    for (const form in dosageFormIcons) {
-      if (formattedDosageForm.includes(form.toLowerCase())) {
-        return dosageFormIcons[form];
-      }
-    }
-
-    // If no matching dosage form found, return a default icon
-    return <AntDesign name="medicinebox" size={24} color="black" />;
-  };
+  const dosageFormTypes = ["All", "Tablet", "Injection", "Capsule", "Cream", "Solution", "Granule", "Syrup", "Ointment", "Powder"];
 
   const handleSearchByName = (query) => {
     setSearchQuery(query);
@@ -46,13 +25,17 @@ export default function MedicationDatabase({ navigation }) {
     setData(filteredData);
   };
 
-  const handleSearchByDosageForm = (dosageForm) => {
-    const formattedDosageForm = dosageForm.toLowerCase().replace(/\s/g, "");
-    const filteredData = filter(fullData, (item) => {
-      return item.dosage_form.toLowerCase().includes(formattedDosageForm);
-    });
-    setData(filteredData);
-  };
+  const handleSearchByDosageForm = useCallback(
+    (dosageForm) => {
+      if (dosageForm === "All") {
+        setData(fullData);
+      } else {
+        const filteredData = fullData.filter((item) => item.dosage_form.toLowerCase().includes(dosageForm.toLowerCase()));
+        setData(filteredData);
+      }
+    },
+    [fullData, setData]
+  );
 
   const contains = ({ product_name }, query) => {
     if (product_name.toLowerCase().includes(query)) {
@@ -68,24 +51,25 @@ export default function MedicationDatabase({ navigation }) {
       <View style={styles.searchBar}>
         <MaterialCommunityIcons name="magnify" size={20} color="black" style={{ flex: 1 }} />
         <TextInput placeholder="Search" clearButtonMode="always" autoCapitalize="none" autoCorrect={false} onChangeText={(query) => handleSearchByName(query)} style={{ flex: 8 }} />
-        <TouchableOpacity onPress={() => alert("Button pressed")} style={{ flex: 1 }}>
-          <Feather name="filter" size={20} color="black" />
-        </TouchableOpacity>
+      </View>
+      <View style={styles.filterBar}>
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterBar}>
+          {dosageFormTypes.map((dosageForm) => (
+            <TouchableOpacity
+              key={dosageForm}
+              onPress={() => {
+                setSelectedDosageForm(dosageForm);
+                handleSearchByDosageForm(dosageForm);
+              }}
+              style={[styles.filterItem, dosageForm === selectedDosageForm && styles.selectedFilterItem]}
+            >
+              <Text style={[styles.filterText, dosageForm === selectedDosageForm && styles.selectedFilterText]}>{dosageForm}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
       <View style={styles.data}>
-        <FlatList
-          data={data}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => navigation.navigate("Search Medication Item", { medicationDetails: item })} style={styles.searchItem}>
-              <View style={styles.searchItemIcon}>{getDosageFormIcon(item.dosage_form)}</View>
-              <View style={styles.searchItemText}>
-                <Text style={styles.searchItemTitle}>{item.product_name}</Text>
-                <Text style={styles.seachItemInfo}>{item.manufacturer}</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-          keyExtractor={(item) => item.product_name + item.manufacturer}
-        />
+        <FlatList data={data} renderItem={({ item }) => <SearchItem item={item} navigation={navigation} />} keyExtractor={(item) => item.product_name + item.manufacturer} initialNumToRender={10} />
       </View>
     </SafeAreaView>
   );
@@ -108,10 +92,33 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
   },
-
+  filterBar: {
+    marginVertical: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 10,
+  },
+  filterItem: {
+    paddingHorizontal: 15,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginRight: 10,
+    backgroundColor: "#E0E0E0",
+  },
+  selectedFilterItem: {
+    backgroundColor: "#FAF6E0",
+  },
+  filterText: {
+    fontSize: 16,
+    color: "black",
+    fontWeight: "bold",
+  },
+  selectedFilterText: {
+    color: "black",
+    fontWeight: "bold",
+  },
   data: {
     flex: 1,
-    marginTop: 10,
     width: "90%",
   },
   searchItem: {

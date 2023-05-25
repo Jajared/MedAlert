@@ -18,7 +18,7 @@ import EditMedicationDetails from "./pages/EditMedicationDetails";
 import EditMedicationSchedule from "./pages/EditMedicationSchedule";
 import MedicationDatabase from "./pages/MedicationDatabase";
 import LoginPage from "./pages/LoginPage";
-import SearchItem from "./pages/SearchItemPage";
+import SearchItemPage from "./pages/SearchItemPage";
 import SignUpHomePage from "./pages/SignUpHomePage";
 import SignUpDetailsPage from "./pages/SignUpDetailsPage";
 import ViewMedicationPage from "./pages/ViewMedicationPage";
@@ -551,7 +551,7 @@ export default function App() {
           {(props) => <MedicationDatabase {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Search Medication Item" options={{ headerShown: false }}>
-          {(props) => <SearchItem {...props} />}
+          {(props) => <SearchItemPage {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
           {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} />}
