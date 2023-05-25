@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, ActivityIndicator, Platform } from "react-native";
+import { StyleSheet, View, ActivityIndicator, Platform } from "react-native";
 import { useState, useEffect, useRef } from "react";
 import HomeScreen from "./pages/HomeScreen";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AddMedicationType from "./pages/AddMedicationType";
 import AddMedicationDetails from "./pages/AddMedicationDetails";
@@ -9,13 +9,14 @@ import AddMedicationSchedule from "./pages/AddMedicationSchedule";
 import MenuPage from "./pages/MenuPage";
 import UpdateAccountPage from "./pages/UpdateAccountPage";
 import { UserInformation, MedicationItem, ScheduledItem, NotificationItem } from "./utils/types";
-import { collection, addDoc, doc, getDoc, setDoc, updateDoc, writeBatch, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc, getDocs } from "firebase/firestore";
 import { firestorage } from "./firebaseConfig";
 import { auth } from "./firebaseConfig";
 import { userDataConverter } from "./converters/userDataConverter";
 import { medDataConverter } from "./converters/medDataConverter";
 import EditMedicationDetails from "./pages/EditMedicationDetails";
 import EditMedicationSchedule from "./pages/EditMedicationSchedule";
+import MedicationDatabase from "./pages/MedicationDatabase";
 import LoginPage from "./pages/LoginPage";
 import SignUpHomePage from "./pages/SignUpHomePage";
 import SignUpDetailsPage from "./pages/SignUpDetailsPage";
@@ -26,8 +27,7 @@ import * as Notifications from "expo-notifications";
 import { Subscription } from "expo-modules-core";
 import * as BackgroundFetch from "expo-background-fetch";
 import * as TaskManager from "expo-task-manager";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
 const Stack = createNativeStackNavigator();
 
@@ -545,6 +545,9 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen name="Profile Page" options={{ headerShown: false }}>
           {(props) => <MenuPage {...props} userInformation={userInformation} resetScheduledItems={resetScheduledItems} setIsNotificationReset={setIsNotificationReset} onSignOut={handleSignOut} />}
+        </Stack.Screen>
+        <Stack.Screen name="Medication Database" options={{ headerShown: false }}>
+          {(props) => <MedicationDatabase {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
           {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} />}
