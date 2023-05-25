@@ -1,4 +1,3 @@
-import { User } from "firebase/auth";
 import { UserInformation } from "../utils/types";
 
 export const userDataConverter = {

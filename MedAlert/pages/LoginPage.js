@@ -1,5 +1,5 @@
 import { SafeAreaView, Text, StyleSheet, View, TextInput, TouchableOpacity, StatusBar } from "react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";

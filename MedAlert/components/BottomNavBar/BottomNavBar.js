@@ -1,5 +1,5 @@
-import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity } from "react-native";
-import { MaterialCommunityIcons, FontAwesome5, Entypo } from "@expo/vector-icons";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { FontAwesome5, Entypo } from "@expo/vector-icons";
 
 export default function BottomNavBar({ title, props, navigation }) {
   return (

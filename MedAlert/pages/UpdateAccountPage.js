@@ -3,7 +3,6 @@ import { useState } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import CalendarPicker from "react-native-calendar-picker";
 import Modal from "react-native-modal";
-import * as ImagePicker from "expo-image-picker";
 import * as React from "react";
 import CustomButton from "../components/Buttons/CustomButton";
 
