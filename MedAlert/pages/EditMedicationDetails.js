@@ -123,32 +123,33 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
           <Text style={styles.deleteBox}>DELETE MEDICATION</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.bottomNavBar} />
-      <Modal visible={isDeletionPopUpVisible}>
+      <Modal visible={isDeletionPopUpVisible} transparent={true} animationType="slide">
         <SafeAreaView style={styles.popUpContainer}>
-          <Text style={styles.header}>Are you sure that you want to delete </Text>
-          <Text style={{ fontWeight: "bold", fontSize: 20 }}> {medicationItem.Name}</Text>
-          <Text style={styles.header}>from your medication list?</Text>
-          <Text></Text>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => {
-                deleteMedicationFromList(medicationItem);
-                setIsDeletionPopUpVisible(false);
-                navigation.navigate("Home");
-              }}
-              style={[styles.button, { backgroundColor: "green" }]}
-            >
-              <Text>YES</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                setIsDeletionPopUpVisible(false);
-              }}
-              style={[styles.button, { backgroundColor: "red" }]}
-            >
-              <Text>NO</Text>
-            </TouchableOpacity>
+          <View style={styles.popUp}>
+            <Text style={styles.header}>Are you sure that you want to delete </Text>
+            <Text style={{ fontWeight: "bold", fontSize: 20 }}> {medicationItem.Name}</Text>
+            <Text style={styles.header}>from your medication list?</Text>
+            <Text></Text>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  deleteMedicationFromList(medicationItem);
+                  setIsDeletionPopUpVisible(false);
+                  navigation.navigate("Home");
+                }}
+                style={[styles.button, { backgroundColor: "green" }]}
+              >
+                <Text>YES</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setIsDeletionPopUpVisible(false);
+                }}
+                style={[styles.button, { backgroundColor: "red" }]}
+              >
+                <Text>NO</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </SafeAreaView>
       </Modal>
@@ -236,8 +237,17 @@ const styles = StyleSheet.create({
   },
   popUpContainer: {
     flex: 1,
-    flexDirection: "column",
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "black",
+    borderWidth: 1,
+  },
+  popUp: {
+    backgroundColor: "white",
+    width: "80%",
+    height: "30%",
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
   },

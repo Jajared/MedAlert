@@ -19,6 +19,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     height: 50,
     paddingHorizontal: 16,
+    width: "90%",
+    justifyContent: "center",
   },
   backButton: {
     marginLeft: -20,

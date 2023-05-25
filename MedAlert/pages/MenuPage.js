@@ -36,7 +36,7 @@ export default function ProfilePage({ navigation, userInformation, resetSchedule
           </View>
           <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.settingsItem} onPress={() => alert("Button pressed")}>
+        <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Medication Database")}>
           <AntDesign name="database" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Medication Database</Text>
@@ -55,7 +55,7 @@ export default function ProfilePage({ navigation, userInformation, resetSchedule
           <Ionicons name="exit-outline" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Log Out</Text>
-            <Text style={styles.settingsDescription}>Further secure your account for safety</Text>
+            <Text style={styles.settingsDescription}>Log out of your existing account</Text>
           </View>
           <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
         </TouchableOpacity>

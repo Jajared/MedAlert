@@ -4,6 +4,7 @@ import { AntDesign, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { auth } from "../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import BackNavBar from "../components/BackNavBar/BackNavBar";
 
 export default function SignUpHomePage({ navigation, onSignUpHome }) {
   const [email, setEmail] = useState("");
@@ -26,7 +27,7 @@ export default function SignUpHomePage({ navigation, onSignUpHome }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <Text style={styles.title}>Sign Up</Text>
+      <BackNavBar navigation={navigation} title="Sign Up" />
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Email</Text>
         <View style={styles.inputBox}>
@@ -113,6 +114,10 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 2,
     justifyContent: "center",
+  },
+  showButton: {
+    flex: 1,
+    alignSelf: "center",
   },
   gradient: {
     paddingVertical: 15,
