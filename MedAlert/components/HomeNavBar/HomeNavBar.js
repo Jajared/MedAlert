@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
 export default function HomeNavBar({ props, navigation, userName }) {

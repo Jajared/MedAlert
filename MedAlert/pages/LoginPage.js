@@ -1,10 +1,8 @@
 import { SafeAreaView, Text, StyleSheet, View, TextInput, TouchableOpacity, StatusBar } from "react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { signIn, auth } from "../Auth";
-import { onAuthStateChanged } from "firebase/auth";
 
 export default function LoginPage({ navigation, onLogin }) {
   const [email, setEmail] = useState("");
@@ -14,30 +12,6 @@ export default function LoginPage({ navigation, onLogin }) {
     setShowPassword(!showPassword);
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in
-        navigation.navigate("Home");
-      }
-    });
-
-    return () => unsubscribe(); // Clean up the auth state listener
-  }, []);
-
-  const handleLogin = async () => {
-    try {
-      const [success, id] = await signIn(email, password);
-      if (success) {
-        onLogin(id);
-        navigation.navigate("Home");
-      } else {
-        alert("Login failed");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -59,7 +33,21 @@ export default function LoginPage({ navigation, onLogin }) {
           </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity onPress={() => handleLogin()} style={styles.buttonContainer}>
+      <TouchableOpacity
+        onPress={async () => {
+          try {
+            const success = await onLogin(email, password);
+            if (success) {
+              navigation.navigate("Home");
+            } else {
+              alert("Cannot login");
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }}
+        style={styles.buttonContainer}
+      >
         <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
           <Text style={styles.buttonText}>Sign In</Text>
         </LinearGradient>

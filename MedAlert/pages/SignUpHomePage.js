@@ -2,32 +2,15 @@ import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, Stat
 import { useState } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { signUp } from "../Auth";
+import { auth } from "../firebaseConfig";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
-export default function SignUpHomePage({ navigation, onSignUp }) {
+export default function SignUpHomePage({ navigation, onSignUpHome }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
-  };
-
-  const handleSignUp = async () => {
-    try {
-      if (isValidEmail() && isValidPassword()) {
-        const [success, userId] = await signUp(email, password);
-        if (success) {
-          await onSignUp(userId);
-          navigation.replace("Sign Up Details", { userId: userId, EmailAddress: email });
-        } else {
-          alert("Sign up failed. Please try again.");
-        }
-      } else {
-        alert("Invalid email or password");
-      }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const isValidEmail = () => {
@@ -61,7 +44,21 @@ export default function SignUpHomePage({ navigation, onSignUp }) {
           </TouchableOpacity>
         </View>
       </View>
-      <TouchableOpacity onPress={handleSignUp} style={styles.buttonContainer}>
+      <TouchableOpacity
+        onPress={() => {
+          if (isValidEmail() && isValidPassword()) {
+            createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
+              const user = userCredential.user;
+              const userId = user.uid;
+              onSignUpHome(userId);
+              navigation.replace("Sign Up Details", { userId: userId, EmailAddress: email });
+            });
+          } else {
+            alert("Invalid email or password");
+          }
+        }}
+        style={styles.buttonContainer}
+      >
         <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
           <Text style={styles.buttonText}>Sign Up</Text>
         </LinearGradient>

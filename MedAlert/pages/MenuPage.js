@@ -1,33 +1,8 @@
 import { Text, SafeAreaView, StyleSheet, View, TouchableOpacity, Image, Alert, StatusBar } from "react-native";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
-import SlideButton from "rn-slide-button";
-import * as LocalAuthentication from "expo-local-authentication";
 import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons, Feather } from "@expo/vector-icons";
 
-export default function ProfilePage({ navigation, userInformation }) {
-  const onFaceId = async () => {
-    try {
-      // Checking if device is compatible
-      const isCompatible = await LocalAuthentication.hasHardwareAsync();
-      if (!isCompatible) {
-        throw new Error("Your device isn't compatible.");
-      }
-
-      // Checking if device has biometrics records
-      const isEnrolled = await LocalAuthentication.isEnrolledAsync();
-
-      if (!isEnrolled) {
-        throw new Error("No Faces / Fingers found.");
-      }
-
-      // Authenticate user
-      await LocalAuthentication.authenticateAsync();
-
-      Alert.alert("Authenticated", "Welcome back !");
-    } catch (error) {
-      Alert.alert("An error as occured", error?.message);
-    }
-  };
+export default function ProfilePage({ navigation, userInformation, resetScheduledItems, setIsNotificationReset, onSignOut }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -47,7 +22,13 @@ export default function ProfilePage({ navigation, userInformation }) {
           </View>
           <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.settingsItem}>
+        <TouchableOpacity
+          style={styles.settingsItem}
+          onPress={() => {
+            resetScheduledItems();
+            setIsNotificationReset(true);
+          }}
+        >
           <MaterialIcons name="supervisor-account" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Saved Guardian</Text>
@@ -55,15 +36,22 @@ export default function ProfilePage({ navigation, userInformation }) {
           </View>
           <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
         </TouchableOpacity>
-        <View style={styles.settingsItem}>
-          <AntDesign name="lock" size={30} color="black" style={{ flex: 1 }} />
+        <TouchableOpacity style={styles.settingsItem} onPress={() => alert("Button pressed")}>
+          <AntDesign name="database" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
-            <Text style={styles.settingsTitle}>Face ID / Touch ID</Text>
-            <Text style={styles.settingsDescription}>Manage your device security</Text>
+            <Text style={styles.settingsTitle}>Medication Database</Text>
+            <Text style={styles.settingsDescription}>Search through our database for your medication</Text>
           </View>
-          <SlideButton width={30} height={30} containerStyle={{ flex: 1 }} onSlideEnd={onFaceId} />
-        </View>
-        <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Login")}>
+          <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.settingsItem}
+          onPress={() => {
+            onSignOut().then(() => {
+              navigation.navigate("Login");
+            });
+          }}
+        >
           <Ionicons name="exit-outline" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Log Out</Text>

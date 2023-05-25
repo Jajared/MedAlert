@@ -1,28 +1,17 @@
-import { StyleSheet, Text, SafeAreaView, Image, View, StatusBar } from "react-native";
-import { useState, useEffect } from "react";
+import { StyleSheet, SafeAreaView, View, StatusBar } from "react-native";
 import MedicationItem from "../components/MedicationItem/MedicationItem";
 import { FlatList } from "react-native";
 import HomeNavBar from "../components/HomeNavBar/HomeNavBar";
 import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
-import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen({ navigation, scheduledItems, setAcknowledged, userName }) {
-  const allMedicationItems = scheduledItems;
-
-  function deleteMedication(medicationData) {
-    setAllMedicationItems((prevState) => prevState.filter(medicationData));
-  }
-
-  function deleteMedicationItem() {
-    alert("Delete button pressed");
-  }
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.topNavBar}>
         <HomeNavBar navigation={navigation} userName={userName} />
       </View>
-      <View style={styles.medicationSection}>{allMedicationItems && <FlatList data={allMedicationItems.filter((data) => data.Acknowledged === false)} renderItem={(data) => <MedicationItem title={data.Name} props={data} navigation={navigation} deleteMedicationItem={deleteMedicationItem} setAcknowledged={setAcknowledged} />} keyExtractor={(item) => item.id} />}</View>
+      <View style={styles.medicationSection}>{scheduledItems && <FlatList data={scheduledItems.filter((data) => data.Acknowledged === false)} renderItem={(data) => <MedicationItem title={data.Name} props={data} navigation={navigation} setAcknowledged={setAcknowledged} />} keyExtractor={(item) => item.id} />}</View>
       <View style={styles.bottomNavBar}>
         <BottomNavBar navigation={navigation} />
       </View>

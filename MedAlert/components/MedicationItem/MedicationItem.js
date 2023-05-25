@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Animated } from "react-native";
-import { Swipeable, RectButton } from "react-native-gesture-handler";
+import { Swipeable } from "react-native-gesture-handler";
 
 export default function MedicationItem({ props, navigation, setAcknowledged }) {
   const medicationData = props.item;

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button, StatusBar } from "react-native";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Entypo } from "@expo/vector-icons";

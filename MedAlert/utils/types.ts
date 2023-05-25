@@ -10,6 +10,7 @@ export interface UserInformation {
 export interface ScheduledItem extends MedicationItem {
   Acknowledged: boolean;
   id: number;
+  notificationId: string;
 }
 
 export interface MedicationItem {
@@ -22,4 +23,12 @@ export interface MedicationItem {
     Specifications: string;
     FirstDosageTiming: number;
   };
+}
+
+export interface NotificationItem {
+  content: {
+    title: string;
+    body: string;
+  };
+  trigger: { hour: number; minute: number; repeats: boolean };
 }

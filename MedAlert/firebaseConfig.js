@@ -1,12 +1,14 @@
 import { initializeApp } from "firebase/app";
 import { addDoc, collection, getFirestore, query, doc, getDoc, getDocs } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getAuth } from "firebase/auth";
 
 import "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA630mEkGs-Zq9cMkIVWs9rfrLEZGOIKic",
   authDomain: "medalert-386812.firebaseapp.com",
+  databaseURL: "https://medalert-386812-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "medalert-386812",
   storageBucket: "medalert-386812.appspot.com",
   messagingSenderId: "435459398641",
@@ -14,6 +16,7 @@ const firebaseConfig = {
   measurementId: "G-ZL35VZP8EM",
 };
 
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 export const firestorage = getFirestore(app);
 export const storage = getStorage(app);
+export const auth = getAuth(app);
