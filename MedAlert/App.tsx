@@ -18,6 +18,7 @@ import EditMedicationDetails from "./pages/EditMedicationDetails";
 import EditMedicationSchedule from "./pages/EditMedicationSchedule";
 import MedicationDatabase from "./pages/MedicationDatabase";
 import LoginPage from "./pages/LoginPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 import SearchItemPage from "./pages/SearchItemPage";
 import SignUpHomePage from "./pages/SignUpHomePage";
 import SignUpDetailsPage from "./pages/SignUpDetailsPage";
@@ -515,6 +516,9 @@ export default function App() {
         <Stack.Navigator>
           <Stack.Screen name="Login" options={{ headerShown: false }}>
             {(props) => <LoginPage {...props} onLogin={handleLogin} />}
+          </Stack.Screen>
+          <Stack.Screen name="Reset Password" options={{ headerShown: false }}>
+            {(props) => <ResetPasswordPage {...props} />}
           </Stack.Screen>
           <Stack.Screen name="Sign Up Home" options={{ headerShown: false }}>
             {(props) => <SignUpHomePage {...props} onSignUpHome={handleSignUpHome} />}
