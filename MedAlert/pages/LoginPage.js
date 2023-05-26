@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, StyleSheet, View, TextInput, TouchableOpacity, StatusBar } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, TextInput, TouchableOpacity, StatusBar, Image } from "react-native";
 import { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -15,24 +15,25 @@ export default function LoginPage({ navigation, onLogin }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
+      <Image source={require("../assets/medalert_icon.png")} style={styles.logo}></Image>
       <Text style={styles.title}>Welcome!</Text>
-      <View style={styles.inputItem}>
-        <Text style={styles.inputTitle}>Email</Text>
-        <View style={styles.inputBox}>
-          <AntDesign name="mail" size={20} color="black" style={styles.inputIcon} />
-          <TextInput style={styles.inputText} value={email} placeholder="Email" onChangeText={(text) => setEmail(text)}></TextInput>
-        </View>
+      <View style={styles.inputBox}>
+        <AntDesign name="mail" size={20} color="black" style={styles.inputIcon} />
+        <TextInput style={styles.inputText} value={email} placeholder="Email" onChangeText={(text) => setEmail(text)}></TextInput>
       </View>
-      <View style={styles.inputItem}>
-        <Text style={styles.inputTitle}>Password</Text>
-        <View style={styles.inputBox}>
-          <AntDesign name="lock" size={26} color="black" style={styles.inputIcon} />
-          <TextInput style={{ flex: 8 }} value={password} secureTextEntry={!showPassword} placeholder="Password" onChangeText={(text) => setPassword(text)}></TextInput>
-          <TouchableOpacity style={styles.showButton} onPress={togglePasswordVisibility}>
-            <Feather name={showPassword ? "eye-off" : "eye"} size={20} color="gray" />
-          </TouchableOpacity>
-        </View>
+      <View style={styles.inputBox}>
+        <AntDesign name="lock" size={26} color="black" style={styles.inputIcon} />
+        <TextInput style={{ flex: 8 }} value={password} secureTextEntry={!showPassword} placeholder="Password" onChangeText={(text) => setPassword(text)}></TextInput>
+        <TouchableOpacity style={styles.showButton} onPress={togglePasswordVisibility}>
+          <Feather name={showPassword ? "eye-off" : "eye"} size={20} color="gray" />
+        </TouchableOpacity>
       </View>
+      <View style={styles.optionsBar}>
+        <TouchableOpacity onPress={() => navigation.navigate("Reset Password")}>
+          <Text style={{ color: "#FF014E" }}>Forgot Password?</Text>
+        </TouchableOpacity>
+      </View>
+
       <TouchableOpacity
         onPress={async () => {
           try {
@@ -49,21 +50,16 @@ export default function LoginPage({ navigation, onLogin }) {
         style={styles.buttonContainer}
       >
         <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
-          <Text style={styles.buttonText}>Sign In</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-      <View style={{ margin: 5, flexDirection: "row", alignItems: "center", width: "90%" }}>
-        <View style={styles.line}></View>
-        <Text style={{ fontWeight: "bold", fontSize: 15, marginHorizontal: 10 }}>Or</Text>
-        <View style={styles.line}></View>
-      </View>
-
-      <TouchableOpacity onPress={() => navigation.navigate("Sign Up Home")} style={styles.buttonContainer}>
-        <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
-          <Text style={styles.buttonText}>Sign Up</Text>
+          <Text style={styles.buttonText}>Login</Text>
         </LinearGradient>
       </TouchableOpacity>
       <View style={styles.emptySection}></View>
+      <View style={styles.signUpSection}>
+        <Text>Don't have any account?</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Sign Up Home")}>
+          <Text style={{ color: "#FF014E" }}> Sign Up</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
@@ -76,21 +72,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  logo: {
+    height: 100,
+    width: 100,
+    marginVertical: 60,
+  },
   title: {
     flex: 1,
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "bold",
+    alignSelf: "flex-start",
+    marginLeft: 20,
   },
-  inputItem: {
-    flex: 2,
-    width: "90%",
-    flexDirection: "column",
-    margin: 15,
-  },
-  inputTitle: {
+  optionsBar: {
     flex: 1,
-    fontSize: 15,
-    fontWeight: "bold",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    width: "90%",
+    margin: 10,
   },
   inputIcon: {
     flex: 1,
@@ -99,11 +98,12 @@ const styles = StyleSheet.create({
   inputBox: {
     flex: 1,
     flexDirection: "row",
-    borderColor: "grey",
-    borderWidth: 1,
+    borderBottomColor: "grey",
+    borderBottomWidth: 1,
     borderRadius: 10,
     padding: 10,
     color: "grey",
+    margin: 10,
   },
   inputText: {
     flex: 9,
@@ -116,7 +116,8 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flex: 2,
-    justifyContent: "center",
+    margin: 10,
+    width: "90%",
   },
   gradient: {
     paddingVertical: 15,
@@ -127,13 +128,15 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+    alignSelf: "center",
   },
   emptySection: {
-    flex: 10,
+    flex: 4,
   },
-  line: {
+  signUpSection: {
     flex: 1,
-    height: 1,
-    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
   },
 });
