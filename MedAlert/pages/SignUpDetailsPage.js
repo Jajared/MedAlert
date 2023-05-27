@@ -1,17 +1,20 @@
 import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, Button, StatusBar, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { AntDesign } from "@expo/vector-icons";
 import { useState } from "react";
+import Modal from "react-native-modal";
 import { doc, collection, setDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { firestorage, storage } from "../firebaseConfig";
-import * as ImagePicker from "expo-image-picker";
+import DropDownPicker from "react-native-dropdown-picker";
+import CalendarPicker from "react-native-calendar-picker";
 
 /**https://firebasestorage.googleapis.com/v0/b/medalert-386812.appspot.com/o/profilePictures%2FcLNeJdkRJkfEzLMugJipcamAWwb2?alt=media&token=e2ea4d15-ec26-410e-b584-3aac020bfe15 */
 
 export default function SignUpDetailsPage({ navigation, route, setIsSignUpComplete }) {
   const userId = route.params.userId;
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [dropDownOpen, setDropDownOpen] = useState(false);
   const [imageUri, setImageUri] = useState(null);
+  const [selectedDOB, setSelectedDOB] = useState(null);
   const [personalDetails, setPersonalDetails] = useState({
     Name: "",
     Gender: "",
@@ -19,6 +22,13 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
     EmailAddress: route.params.EmailAddress,
     PhoneNumber: "",
   });
+
+  const handleModal = () => setIsModalVisible(() => !isModalVisible);
+  function onDateChange(date) {
+    var newDate = (date.date() < 10 ? "0" + date.dates() : date.dates()) + "/" + (date.month() < 10 ? "0" + date.month() : date.month()) + "/" + date.year();
+    setSelectedDOB(date);
+    setPersonalDetails({ ...personalDetails, DateOfBirth: newDate });
+  }
 
   const handleFormSubmit = async () => {
     const userInfoRef = doc(collection(firestorage, "UsersData"), userId);
@@ -46,14 +56,21 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <Text style={styles.title}>Sign Up</Text>
+      <Text style={styles.title}>Profile</Text>
+      <Text style={styles.header}>More about you!</Text>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Name</Text>
         <TextInput style={styles.inputBox} value={personalDetails.Name} placeholder="Name" onChangeText={(text) => setPersonalDetails({ ...personalDetails, Name: text })}></TextInput>
       </View>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Date of Birth</Text>
-        <TextInput style={styles.inputBox} value={personalDetails.DateOfBirth} placeholder="Date of Birth" onChangeText={(text) => setPersonalDetails({ ...personalDetails, DateOfBirth: text })}></TextInput>
+        <TextInput style={styles.inputBox} value={personalDetails.DateOfBirth} placeholder="Date of Birth" onTouchStart={handleModal} editable={false} />
+        <Modal isVisible={isModalVisible} animationType="slide" transparent={true}>
+          <View style={styles.calendar}>
+            <CalendarPicker onDateChange={onDateChange} />
+            <Button title="Hide calendar" onPress={handleModal} />
+          </View>
+        </Modal>
       </View>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Phone Number</Text>
@@ -61,7 +78,23 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
       </View>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Gender</Text>
-        <TextInput style={styles.inputBox} value={personalDetails.Gender} placeholder="Gender" onChangeText={(text) => setPersonalDetails({ ...personalDetails, Gender: text })}></TextInput>
+        <DropDownPicker
+          placeholder="Select One"
+          open={dropDownOpen}
+          setOpen={setDropDownOpen}
+          items={[
+            { label: "Male", value: "Male" },
+            { label: "Female", value: "Female" },
+            { label: "Prefer not to say", value: "Prefer not to say" },
+          ]}
+          value={personalDetails.Gender}
+          onSelectItem={(item) => {
+            setPersonalDetails({ ...personalDetails, Gender: item.value });
+          }}
+          textStyle={{ color: "grey", fontSize: 15 }}
+          style={[styles.inputBox, { borderWidth: 0, borderRadius: 0 }]}
+          dropDownContainerStyle={{ borderWidth: 0 }}
+        />
       </View>
       <View style={styles.emptySection}></View>
       <TouchableOpacity onPress={() => handleFormSubmit()} style={styles.buttonContainer}>
@@ -82,32 +115,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    flex: 1,
-    fontSize: 30,
+    fontSize: 25,
     fontWeight: "bold",
+    alignSelf: "flex-start",
+    marginLeft: "5%",
+    marginTop: 30,
   },
-  profileSection: {
-    flex: 3,
-    width: "90%",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  profileCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    borderWidth: 1,
-    borderColor: "black",
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-  },
-  profileImage: {
-    width: "100%",
-    height: "100%",
-    alignItems: "center",
-    justifyContent: "center",
+  header: {
+    fontSize: 18,
+    marginLeft: "5%",
+    color: "grey",
+    alignSelf: "flex-start",
+    marginBottom: 30,
   },
   inputItem: {
     flex: 2,
@@ -116,20 +135,20 @@ const styles = StyleSheet.create({
     margin: 15,
   },
   inputTitle: {
-    flex: 1,
     fontSize: 15,
+    marginTop: 10,
     fontWeight: "bold",
   },
   inputBox: {
-    flex: 1,
-    borderColor: "grey",
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
+    borderBottomColor: "grey",
+    borderBottomWidth: 1,
     color: "grey",
+    fontSize: 15,
+    marginVertical: 15,
+    padding: 10,
   },
   emptySection: {
-    flex: 3,
+    flex: 5,
   },
   buttonContainer: {
     flex: 2,
@@ -145,5 +164,10 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  calendar: {
+    width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 10,
   },
 });

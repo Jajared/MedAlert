@@ -14,7 +14,7 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
   const [selectedDOB, setSelectedDOB] = useState(null);
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
   function onDateChange(date) {
-    var newDate = (date.dates() < 10 ? "0" + date.dates() : date.dates()) + "/" + (date.month() < 10 ? "0" + date.month() : date.month()) + "/" + date.year();
+    var newDate = (date.date() < 10 ? "0" + date.date() : date.date()) + "/" + (date.month() < 10 ? "0" + date.month() : date.month()) + "/" + date.year();
     setSelectedDOB(date);
     setState({ ...state, DateOfBirth: newDate });
   }

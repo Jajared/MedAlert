@@ -28,6 +28,8 @@ export default function SignUpHomePage({ navigation, onSignUpHome }) {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="Sign Up" />
+      <Text style={styles.title}>Create an account with us!</Text>
+      <Text style={styles.header}>Start your journey with MedAlert!</Text>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Email</Text>
         <View style={styles.inputBox}>
@@ -82,9 +84,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    flex: 1,
-    fontSize: 30,
+    fontSize: 20,
+    alignSelf: "flex-start",
+    marginLeft: "5%",
     fontWeight: "bold",
+    marginTop: 20,
+  },
+  header: {
+    fontSize: 15,
+    marginLeft: "5%",
+    color: "grey",
+    alignSelf: "flex-start",
+    marginBottom: 20,
   },
   inputItem: {
     flex: 2,

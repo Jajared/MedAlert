@@ -16,7 +16,7 @@ export default function LoginPage({ navigation, onLogin }) {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <Image source={require("../assets/medalert_icon.png")} style={styles.logo}></Image>
-      <Text style={styles.title}>Welcome!</Text>
+      <Text style={styles.title}>Welcome! 👋</Text>
       <View style={styles.inputBox}>
         <AntDesign name="mail" size={20} color="black" style={styles.inputIcon} />
         <TextInput style={styles.inputText} value={email} placeholder="Email" onChangeText={(text) => setEmail(text)}></TextInput>

@@ -39,7 +39,7 @@ export default function AddMedicationDetails({ navigation, route }) {
   ) : (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <TouchableOpacity style={{ position: "absolute", top: 60, right: 40 }} onPress={() => setShowCamera(true)}>
+      <TouchableOpacity style={{ position: "absolute", top: 60, right: 40, zIndex: 1 }} onPress={() => setShowCamera(true)}>
         <Entypo name="camera" size={24} color="black" />
       </TouchableOpacity>
       <BackNavBar navigation={navigation} title="Add Medication" />
