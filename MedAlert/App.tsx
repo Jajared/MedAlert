@@ -151,7 +151,6 @@ export default function App() {
     DateOfBirth: "",
     EmailAddress: "",
     PhoneNumber: "",
-    ProfilePicture: "",
   });
   const [allMedicationItems, setAllMedicationItems] = useState<MedicationItem[]>([]);
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
@@ -510,7 +509,6 @@ export default function App() {
       </View>
     );
   }
-
   if (!isUserLoggedIn && !isSignUpComplete) {
     return (
       <NavigationContainer>

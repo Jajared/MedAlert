@@ -5,14 +5,16 @@ import CalendarPicker from "react-native-calendar-picker";
 import Modal from "react-native-modal";
 import * as React from "react";
 import CustomButton from "../components/Buttons/CustomButton";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default function UpdateAccountPage({ navigation, userInformation, updateUserInformation }) {
   const [state, setState] = useState({ ...userInformation });
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [dropDownOpen, setDropDownOpen] = useState(false);
   const [selectedDOB, setSelectedDOB] = useState(null);
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
   function onDateChange(date) {
-    var newDate = (date.dates() < 10 ? "0" + date.dates() : date.dates()) + "/" + (date.months() < 10 ? "0" + date.months() : date.months()) + "/" + date.year();
+    var newDate = (date.dates() < 10 ? "0" + date.dates() : date.dates()) + "/" + (date.month() < 10 ? "0" + date.month() : date.month()) + "/" + date.year();
     setSelectedDOB(date);
     setState({ ...state, DateOfBirth: newDate });
   }
@@ -51,9 +53,6 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="Update Account" />
-      <View style={styles.profileSection}>
-        <View style={styles.profileImage}></View>
-      </View>
 
       <View style={styles.mainSection}>
         <View style={styles.subSection}>
@@ -65,14 +64,12 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
           </View>
         </View>
 
-        {/* <TextInput value={userInformation.Username} onChangeText={(text) => setUserInformation()}></TextInput> */}
         <View style={styles.subSection}>
           <View style={styles.title}>
             <Text style={styles.text}> Email Address: </Text>
           </View>
           <View style={styles.editBox}>
-            <TextInput value={state.EmailAddress} onChangeText={(text) => setState({ ...state, EmailAddress: text })}></TextInput>
-            {!isEmailValid && <Text style={{ color: "red" }}>Invalid email address</Text>}
+            <Text>{state.EmailAddress}</Text>
           </View>
         </View>
 
@@ -85,16 +82,28 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
           </View>
         </View>
 
-        <View style={styles.subSection}>
+        <View style={[styles.subSection, { zIndex: 2 }]}>
           <View style={styles.title}>
             <Text style={styles.text}> Gender: </Text>
           </View>
-          <View style={styles.editBox}>
-            <TextInput value={state.Gender} onChangeText={(text) => setState({ ...state, Gender: text })}></TextInput>
-          </View>
+          <DropDownPicker
+            placeholder="Select One"
+            open={dropDownOpen}
+            setOpen={setDropDownOpen}
+            items={[
+              { label: "Male", value: "Male" },
+              { label: "Female", value: "Female" },
+              { label: "Prefer not to say", value: "Prefer not to say" },
+            ]}
+            value={state.Gender}
+            onSelectItem={(item) => {
+              setState({ ...state, Gender: item.value });
+            }}
+            style={styles.editBox}
+          />
         </View>
 
-        <View style={styles.subSection}>
+        <View style={[styles.subSection, { zIndex: 1 }]}>
           <View style={styles.title}>
             <Text style={styles.text}> Date of Birth: </Text>
           </View>
@@ -102,8 +111,8 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
             <Text>{state.DateOfBirth}</Text>
           </TouchableOpacity>
 
-          <Modal isVisible={isModalVisible}>
-            <View style={{ backgroundColor: "white", width: "100%" }}>
+          <Modal isVisible={isModalVisible} animationType="slide" transparent={true}>
+            <View style={styles.calendar}>
               <CalendarPicker onDateChange={onDateChange} />
               <Button title="Hide calendar" onPress={handleModal} />
             </View>
@@ -132,30 +141,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  profileSection: {
-    flex: 1,
-    width: "90%",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-  },
-
-  profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 80 / 2,
-    overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "black",
-    backgroundColor: "#fff",
-  },
-
-  profileName: {
-    fontWeight: "bold",
-    fontSize: 20,
-    margin: 5,
-  },
-
   mainSection: {
     flex: 5,
     width: "70%",
@@ -176,13 +161,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: "100%",
     borderColor: "gray",
-    borderRadius: 8,
+    borderRadius: 10,
     paddingHorizontal: 10,
     marginTop: 5,
     justifyContent: "center",
-    alignItems: "center",
   },
-
   emptySection: {
     flex: 1,
   },
@@ -193,5 +176,7 @@ const styles = StyleSheet.create({
 
   calendar: {
     width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 10,
   },
 });

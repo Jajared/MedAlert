@@ -21,8 +21,6 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
   });
 
   const handleFormSubmit = async () => {
-    await uploadImageToFirebase();
-    console.log(personalDetails);
     const userInfoRef = doc(collection(firestorage, "UsersData"), userId);
     // Update user information in Firestore
     await setDoc(userInfoRef, { ...personalDetails })

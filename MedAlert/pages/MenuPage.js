@@ -7,10 +7,6 @@ export default function ProfilePage({ navigation, userInformation, resetSchedule
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="Menu" />
-      <View style={styles.profileSection}>
-        <View style={styles.profileImage}></View>
-        <Text style={styles.profileName}>{userInformation.Username}</Text>
-      </View>
       <View style={styles.mainSettingsSection}>
         <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Update Account")}>
           <MaterialCommunityIcons name="account" size={30} color="black" style={{ flex: 1 }} />
@@ -88,27 +84,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     flex: 1,
     width: "100%",
-  },
-  profileSection: {
-    flex: 1,
-    width: "90%",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-  },
-  profileImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 80 / 2,
-    overflow: "hidden",
-    borderWidth: 1,
-    borderColor: "black",
-    backgroundColor: "#fff",
-  },
-  profileName: {
-    fontWeight: "bold",
-    fontSize: 20,
-    margin: 5,
   },
   mainSettingsSection: {
     flex: 5,

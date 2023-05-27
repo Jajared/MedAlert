@@ -34,6 +34,7 @@
     "react-native": "0.71.8",
     "react-native-bouncy-checkbox": "^3.0.7",
     "react-native-calendar-picker": "^7.1.4",
+    "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-image-base64": "^0.1.4",
     "react-native-modal": "^13.0.1",
