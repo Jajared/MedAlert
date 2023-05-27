@@ -4,7 +4,6 @@ export interface UserInformation {
   DateOfBirth: string;
   EmailAddress: string;
   PhoneNumber: string;
-  ProfilePicture: string;
 }
 
 export interface ScheduledItem extends MedicationItem {

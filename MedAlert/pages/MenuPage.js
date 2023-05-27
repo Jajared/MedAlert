@@ -8,9 +8,7 @@ export default function ProfilePage({ navigation, userInformation, resetSchedule
       <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="Menu" />
       <View style={styles.profileSection}>
-        <View style={styles.profileImage}>
-          <Image source={{ uri: userInformation.ProfilePicture }} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
-        </View>
+        <View style={styles.profileImage}></View>
         <Text style={styles.profileName}>{userInformation.Username}</Text>
       </View>
       <View style={styles.mainSettingsSection}>

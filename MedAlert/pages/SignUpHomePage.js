@@ -48,12 +48,16 @@ export default function SignUpHomePage({ navigation, onSignUpHome }) {
       <TouchableOpacity
         onPress={() => {
           if (isValidEmail() && isValidPassword()) {
-            createUserWithEmailAndPassword(auth, email, password).then((userCredential) => {
-              const user = userCredential.user;
-              const userId = user.uid;
-              onSignUpHome(userId);
-              navigation.replace("Sign Up Details", { userId: userId, EmailAddress: email });
-            });
+            createUserWithEmailAndPassword(auth, email, password)
+              .then((userCredential) => {
+                const user = userCredential.user;
+                const userId = user.uid;
+                onSignUpHome(userId);
+                navigation.replace("Sign Up Details", { userId: userId, EmailAddress: email });
+              })
+              .catch((error) => {
+                alert(error);
+              });
           } else {
             alert("Invalid email or password");
           }

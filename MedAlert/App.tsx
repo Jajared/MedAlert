@@ -278,6 +278,7 @@ export default function App() {
     try {
       signOut(auth).then(() => {
         setUserLoggedIn(false);
+        setIsSignUpComplete(false);
         setUserId("");
         console.log("Successfully signed out");
       });

@@ -10,7 +10,6 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
   const [state, setState] = useState({ ...userInformation });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedDOB, setSelectedDOB] = useState(null);
-  const [profilePicture, setProfilePicture] = useState(userInformation.ProfilePicture);
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
   function onDateChange(date) {
     var newDate = (date.dates() < 10 ? "0" + date.dates() : date.dates()) + "/" + (date.months() < 10 ? "0" + date.months() : date.months()) + "/" + date.year();
@@ -53,9 +52,7 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
       <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="Update Account" />
       <View style={styles.profileSection}>
-        <View style={styles.profileImage}>
-          <Image source={{ uri: profilePicture }} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
-        </View>
+        <View style={styles.profileImage}></View>
       </View>
 
       <View style={styles.mainSection}>

@@ -41,7 +41,7 @@ export default function LoginPage({ navigation, onLogin }) {
             if (success) {
               navigation.navigate("Home");
             } else {
-              alert("Cannot login");
+              alert("Please retry logging in");
             }
           } catch (error) {
             console.log(error);
@@ -55,9 +55,9 @@ export default function LoginPage({ navigation, onLogin }) {
       </TouchableOpacity>
       <View style={styles.emptySection}></View>
       <View style={styles.signUpSection}>
-        <Text>Don't have any account?</Text>
+        <Text style={{ fontSize: 15 }}>Don't have any account?</Text>
         <TouchableOpacity onPress={() => navigation.navigate("Sign Up Home")}>
-          <Text style={{ color: "#FF014E" }}> Sign Up</Text>
+          <Text style={{ color: "#FF014E", fontSize: 15 }}> Sign Up</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

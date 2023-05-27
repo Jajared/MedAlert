@@ -1,36 +1,28 @@
-import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, Button, StatusBar } from "react-native";
+import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, Button, StatusBar, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 import { useState } from "react";
 import { doc, collection, setDoc } from "firebase/firestore";
-import { firestorage } from "../firebaseConfig";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { firestorage, storage } from "../firebaseConfig";
+import * as ImagePicker from "expo-image-picker";
+
+/**https://firebasestorage.googleapis.com/v0/b/medalert-386812.appspot.com/o/profilePictures%2FcLNeJdkRJkfEzLMugJipcamAWwb2?alt=media&token=e2ea4d15-ec26-410e-b584-3aac020bfe15 */
 
 export default function SignUpDetailsPage({ navigation, route, setIsSignUpComplete }) {
   const userId = route.params.userId;
+  const [imageUri, setImageUri] = useState(null);
   const [personalDetails, setPersonalDetails] = useState({
     Name: "",
     Gender: "",
     DateOfBirth: "",
     EmailAddress: route.params.EmailAddress,
     PhoneNumber: "",
-    ProfilePicture: "https://firebasestorage.googleapis.com/v0/b/medalert-386812.appspot.com/o/profilePictures%2FcLNeJdkRJkfEzLMugJipcamAWwb2?alt=media&token=e2ea4d15-ec26-410e-b584-3aac020bfe15",
   });
 
-  const addPicture = async () => {
-    const reference = ref(storage, `profilePictures/${userId}`);
-    uploadBytes(reference, await filePathToBlob("/Users/hungryjared/Desktop/NUS/Projects/Orbital/MedAlert/assets/jamal.png")).then((snapshot) => {
-      console.log("Uploaded a blob or file!");
-      console.log(getDownloadURL(snapshot.ref).then((url) => console.log(url)));
-    });
-  };
-
-  function filePathToBlob(filePath) {
-    return fetch(filePath)
-      .then((response) => response.blob())
-      .then((blob) => blob);
-  }
-
   const handleFormSubmit = async () => {
+    await uploadImageToFirebase();
+    console.log(personalDetails);
     const userInfoRef = doc(collection(firestorage, "UsersData"), userId);
     // Update user information in Firestore
     await setDoc(userInfoRef, { ...personalDetails })
@@ -57,12 +49,6 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <Text style={styles.title}>Sign Up</Text>
-      <View style={styles.profileSection}>
-        <View style={styles.profileCircle}>
-          <AntDesign name="user" size={30} color="black" style={styles.profileImage} />
-        </View>
-        <Button title="Add Image" onPress={() => alert("Button pressed")} />
-      </View>
       <View style={styles.inputItem}>
         <Text style={styles.inputTitle}>Name</Text>
         <TextInput style={styles.inputBox} value={personalDetails.Name} placeholder="Name" onChangeText={(text) => setPersonalDetails({ ...personalDetails, Name: text })}></TextInput>
@@ -117,9 +103,13 @@ const styles = StyleSheet.create({
     borderColor: "black",
     alignItems: "center",
     justifyContent: "center",
+    overflow: "hidden",
   },
   profileImage: {
-    alignSelf: "center",
+    width: "100%",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   inputItem: {
     flex: 2,
