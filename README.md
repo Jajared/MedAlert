@@ -1,7 +1,7 @@
 # MedAlert
 ## Description
 <p align="center">
-  <img src="https://github.com/Jajared/MedAlert/assets/84561814/d97e23ce-430a-4ba3-a5e4-64507f86105d" width="240" height="500">
+  <img src="https://github.com/Jajared/MedAlert/assets/84561814/37dd4bfe-4010-4c9b-8bfa-10ba00401553" width="240" height="500">
 </p>
 MedAlert is a mobile app that aims to provide a user-friendly solution for individuals to manage their medication schedules efficiently. With a focus on user-accessibility, our app will offer a simple and intuitive interface, allowing users to set up personalised reminders for their medication needs. Our goal is to help people, especially those with chronic illnesses - to make consuming medication a less tedious and confusing process, which we understand can be very complicated.
 <br/>
