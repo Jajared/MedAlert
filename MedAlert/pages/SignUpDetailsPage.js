@@ -1,4 +1,4 @@
-import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, Button, StatusBar, Image } from "react-native";
+import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, Button, StatusBar, Image, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import Modal from "react-native-modal";
@@ -25,7 +25,7 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
 
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
   function onDateChange(date) {
-    var newDate = (date.date() < 10 ? "0" + date.dates() : date.dates()) + "/" + (date.month() < 10 ? "0" + date.month() : date.month()) + "/" + date.year();
+    var newDate = (date.date() < 10 ? "0" + date.date() : date.date()) + "/" + (date.month() < 10 ? "0" + +(parseInt(date.month()) + 1) : parseInt(date.month()) + 1) + "/" + date.year();
     setSelectedDOB(date);
     setPersonalDetails({ ...personalDetails, DateOfBirth: newDate });
   }
@@ -54,55 +54,57 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      <Text style={styles.title}>Profile</Text>
-      <Text style={styles.header}>More about you!</Text>
-      <View style={styles.inputItem}>
-        <Text style={styles.inputTitle}>Name</Text>
-        <TextInput style={styles.inputBox} value={personalDetails.Name} placeholder="Name" onChangeText={(text) => setPersonalDetails({ ...personalDetails, Name: text })}></TextInput>
-      </View>
-      <View style={styles.inputItem}>
-        <Text style={styles.inputTitle}>Date of Birth</Text>
-        <TextInput style={styles.inputBox} value={personalDetails.DateOfBirth} placeholder="Date of Birth" onTouchStart={handleModal} editable={false} />
-        <Modal isVisible={isModalVisible} animationType="slide" transparent={true}>
-          <View style={styles.calendar}>
-            <CalendarPicker onDateChange={onDateChange} />
-            <Button title="Hide calendar" onPress={handleModal} />
-          </View>
-        </Modal>
-      </View>
-      <View style={styles.inputItem}>
-        <Text style={styles.inputTitle}>Phone Number</Text>
-        <TextInput style={styles.inputBox} value={personalDetails.PhoneNumber} placeholder="Phone Number" keyboardType="numeric" onChangeText={(text) => setPersonalDetails({ ...personalDetails, PhoneNumber: text })}></TextInput>
-      </View>
-      <View style={styles.inputItem}>
-        <Text style={styles.inputTitle}>Gender</Text>
-        <DropDownPicker
-          placeholder="Select One"
-          open={dropDownOpen}
-          setOpen={setDropDownOpen}
-          items={[
-            { label: "Male", value: "Male" },
-            { label: "Female", value: "Female" },
-            { label: "Prefer not to say", value: "Prefer not to say" },
-          ]}
-          value={personalDetails.Gender}
-          onSelectItem={(item) => {
-            setPersonalDetails({ ...personalDetails, Gender: item.value });
-          }}
-          textStyle={{ color: "grey", fontSize: 15 }}
-          style={[styles.inputBox, { borderWidth: 0, borderRadius: 0 }]}
-          dropDownContainerStyle={{ borderWidth: 0 }}
-        />
-      </View>
-      <View style={styles.emptySection}></View>
-      <TouchableOpacity onPress={() => handleFormSubmit()} style={styles.buttonContainer}>
-        <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
-          <Text style={styles.buttonText}>Confirm</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-    </SafeAreaView>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" />
+        <Text style={styles.title}>Profile</Text>
+        <Text style={styles.header}>More about you!</Text>
+        <View style={styles.inputItem}>
+          <Text style={styles.inputTitle}>Name</Text>
+          <TextInput style={styles.inputBox} value={personalDetails.Name} placeholder="Name" onChangeText={(text) => setPersonalDetails({ ...personalDetails, Name: text })}></TextInput>
+        </View>
+        <View style={styles.inputItem}>
+          <Text style={styles.inputTitle}>Date of Birth</Text>
+          <TextInput style={styles.inputBox} value={personalDetails.DateOfBirth} placeholder="Date of Birth" onTouchStart={handleModal} editable={false} />
+          <Modal isVisible={isModalVisible} animationType="slide" transparent={true}>
+            <View style={styles.calendar}>
+              <CalendarPicker onDateChange={onDateChange} selectedDayColor="#DE3163" />
+              <Button title="Hide calendar" onPress={handleModal} />
+            </View>
+          </Modal>
+        </View>
+        <View style={styles.inputItem}>
+          <Text style={styles.inputTitle}>Phone Number</Text>
+          <TextInput style={styles.inputBox} value={personalDetails.PhoneNumber} placeholder="Phone Number" keyboardType="numeric" onChangeText={(text) => setPersonalDetails({ ...personalDetails, PhoneNumber: text })}></TextInput>
+        </View>
+        <View style={styles.inputItem}>
+          <Text style={styles.inputTitle}>Gender</Text>
+          <DropDownPicker
+            placeholder="Select One"
+            open={dropDownOpen}
+            setOpen={setDropDownOpen}
+            items={[
+              { label: "Male", value: "Male" },
+              { label: "Female", value: "Female" },
+              { label: "Prefer not to say", value: "Prefer not to say" },
+            ]}
+            value={personalDetails.Gender}
+            onSelectItem={(item) => {
+              setPersonalDetails({ ...personalDetails, Gender: item.value });
+            }}
+            textStyle={{ color: "grey", fontSize: 15 }}
+            style={[styles.inputBox, { borderWidth: 0, borderRadius: 0 }]}
+            dropDownContainerStyle={{ borderWidth: 0 }}
+          />
+        </View>
+        <View style={styles.emptySection}></View>
+        <TouchableOpacity onPress={() => handleFormSubmit()} style={styles.buttonContainer}>
+          <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
+            <Text style={styles.buttonText}>Confirm</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 

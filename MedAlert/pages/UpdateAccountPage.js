@@ -14,7 +14,7 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
   const [selectedDOB, setSelectedDOB] = useState(null);
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
   function onDateChange(date) {
-    var newDate = (date.date() < 10 ? "0" + date.date() : date.date()) + "/" + (date.month() < 10 ? "0" + date.month() : date.month()) + "/" + date.year();
+    var newDate = (date.date() < 10 ? "0" + date.date() : date.date()) + "/" + (date.month() < 10 ? "0" + +(parseInt(date.month()) + 1) : parseInt(date.month()) + 1) + "/" + date.year();
     setSelectedDOB(date);
     setState({ ...state, DateOfBirth: newDate });
   }
@@ -113,7 +113,7 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
 
           <Modal isVisible={isModalVisible} animationType="slide" transparent={true}>
             <View style={styles.calendar}>
-              <CalendarPicker onDateChange={onDateChange} />
+              <CalendarPicker onDateChange={onDateChange} selectedDayColor="#DE3163" />
               <Button title="Hide calendar" onPress={handleModal} />
             </View>
           </Modal>
