@@ -1,4 +1,4 @@
-import { Text, SafeAreaView, StyleSheet, View, TouchableOpacity, Image, Alert, StatusBar } from "react-native";
+import { Text, SafeAreaView, StyleSheet, View, TouchableOpacity, StatusBar } from "react-native";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons, Feather } from "@expo/vector-icons";
 
