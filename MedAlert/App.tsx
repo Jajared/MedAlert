@@ -27,8 +27,6 @@ import { DocumentReference } from "firebase/firestore";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Subscription } from "expo-modules-core";
-import * as BackgroundFetch from "expo-background-fetch";
-import * as TaskManager from "expo-task-manager";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 
 const Stack = createNativeStackNavigator();
@@ -65,85 +63,6 @@ async function registerForPushNotificationsAsync() {
   return token;
 }
 
-const RESET_SCHEDULE_TASK = "RESET_SCHEDULE_TASK";
-
-TaskManager.defineTask(RESET_SCHEDULE_TASK, async () => {
-  try {
-    resetScheduledItems();
-    return BackgroundFetch.BackgroundFetchResult.NewData;
-  } catch (error) {
-    console.log("Error resetting acknowledged field:", error);
-  }
-});
-
-const scheduleTaskAtMidnight = async () => {
-  const status = await BackgroundFetch.getStatusAsync();
-
-  await BackgroundFetch.registerTaskAsync(RESET_SCHEDULE_TASK, {
-    minimumInterval: 60 * 15, // Run once every 24 hours
-  });
-
-  console.log("Task scheduled at midnight");
-};
-
-async function resetScheduledItems() {
-  function getScheduledItems(allMedicationItems) {
-    var temp = [];
-    var count = 1;
-    for (let i = 0; i < allMedicationItems.length; i++) {
-      const timeInterval = 24 / allMedicationItems[i].Instructions.FrequencyPerDay;
-      for (let j = 0; j < allMedicationItems[i].Instructions.FrequencyPerDay; j++) {
-        temp.push({
-          ...allMedicationItems[i],
-          Acknowledged: false,
-          id: count,
-          Instructions: {
-            ...allMedicationItems[i].Instructions,
-            FirstDosageTiming: allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j > 24 * 60 ? allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j - 24 * 60 : allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j,
-          },
-        });
-        count++;
-      }
-    }
-    var result = sortScheduledItems(temp);
-    return result;
-  }
-  // Sort scheduled items in order of time
-  function sortScheduledItems(data: ScheduledItem[]) {
-    var scheduledItemsInOrder = [];
-    var lowestTime = 24 * 60;
-    var prevLowest = -1;
-    while (data.length != scheduledItemsInOrder.length) {
-      for (let i = 0; i < data.length; i++) {
-        if (data[i].Instructions.FirstDosageTiming < lowestTime && data[i].Instructions.FirstDosageTiming > prevLowest) {
-          lowestTime = data[i].Instructions.FirstDosageTiming;
-        }
-
-        if (i == data.length - 1) {
-          prevLowest = lowestTime;
-          for (let j = 0; j < data.length; j++) {
-            if (data[j].Instructions.FirstDosageTiming == lowestTime) {
-              scheduledItemsInOrder.push(data[j]);
-            }
-          }
-          lowestTime = 24 * 60;
-        }
-      }
-    }
-    return scheduledItemsInOrder;
-  }
-  const scheduledItemsRef = collection(firestorage, "MedicationInformation");
-  const querySnapshot = await getDocs(scheduledItemsRef);
-
-  querySnapshot.forEach((doc) => {
-    const medicationItems = doc.data().MedicationItems;
-    updateDoc(doc.ref, { ScheduledItems: getScheduledItems(medicationItems) });
-  });
-
-  console.log("Acknowledged field reset successfully.");
-}
-
-scheduleTaskAtMidnight();
 export default function App() {
   const [userInformation, setUserInformation] = useState<UserInformation>({
     Name: "",
@@ -184,40 +103,9 @@ export default function App() {
     }
   };
 
-  /** useEffect(() => {
-    fetchData();
-    setIsNotificationReset(false);
-  }, [isNotificationReset]); */
-
   useEffect(() => {
     checkUserAuthState();
   }, []);
-  /** useEffect(() => {
-    signOutAllUsers();
-  }, []);
-
-  const signOutAllUsers = () => {
-    auth
-      .signOut()
-      .then(() => {
-        setUserId("");
-        setIsSignUpComplete(false);
-        setUserInformation({
-          Name: "",
-          Gender: "",
-          DateOfBirth: "",
-          EmailAddress: "",
-          PhoneNumber: "",
-          ProfilePicture: "",
-        });
-        setAllMedicationItems([]);
-        setScheduledItems([]);
-        console.log("Successfully signed out");
-      })
-      .catch((error) => {
-        console.log("Error signing out:", error);
-      });
-  }; */
 
   useEffect(() => {
     if (userId && isSignUpComplete) {
@@ -548,7 +436,7 @@ export default function App() {
           {(props) => <AddMedicationSchedule {...props} addMedication={addMedication} />}
         </Stack.Screen>
         <Stack.Screen name="Profile Page" options={{ headerShown: false }}>
-          {(props) => <MenuPage {...props} userInformation={userInformation} resetScheduledItems={resetScheduledItems} setIsNotificationReset={setIsNotificationReset} onSignOut={handleSignOut} />}
+          {(props) => <MenuPage {...props} userInformation={userInformation} setIsNotificationReset={setIsNotificationReset} onSignOut={handleSignOut} />}
         </Stack.Screen>
         <Stack.Screen name="Medication Database" options={{ headerShown: false }}>
           {(props) => <MedicationDatabase {...props} />}

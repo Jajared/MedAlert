@@ -2,7 +2,7 @@ import { Text, SafeAreaView, StyleSheet, View, TouchableOpacity, Image, Alert, S
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons, Feather } from "@expo/vector-icons";
 
-export default function ProfilePage({ navigation, userInformation, resetScheduledItems, setIsNotificationReset, onSignOut }) {
+export default function ProfilePage({ navigation, userInformation, setIsNotificationReset, onSignOut }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -19,7 +19,6 @@ export default function ProfilePage({ navigation, userInformation, resetSchedule
         <TouchableOpacity
           style={styles.settingsItem}
           onPress={() => {
-            resetScheduledItems();
             setIsNotificationReset(true);
           }}
         >
