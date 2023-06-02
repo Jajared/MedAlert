@@ -28,40 +28,9 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Subscription } from "expo-modules-core";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import GuardianPage from "./pages/GuardianPage";
 
 const Stack = createNativeStackNavigator();
-
-async function registerForPushNotificationsAsync() {
-  let token;
-
-  if (Platform.OS === "android") {
-    await Notifications.setNotificationChannelAsync("default", {
-      name: "default",
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
-    });
-  }
-
-  if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
-  } else {
-    alert("Must use physical device for Push Notifications");
-  }
-
-  return token;
-}
 
 export default function App() {
   const [userInformation, setUserInformation] = useState<UserInformation>({
@@ -70,6 +39,7 @@ export default function App() {
     DateOfBirth: "",
     EmailAddress: "",
     PhoneNumber: "",
+    DeviceToken: "",
   });
   const [allMedicationItems, setAllMedicationItems] = useState<MedicationItem[]>([]);
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
@@ -85,6 +55,41 @@ export default function App() {
   const [isNotificationReset, setIsNotificationReset] = useState(false);
   const [isUserLoggedIn, setUserLoggedIn] = useState(false);
 
+  // Register for local push notifications
+  async function registerForPushNotificationsAsync() {
+    let token;
+
+    if (Platform.OS === "android") {
+      await Notifications.setNotificationChannelAsync("default", {
+        name: "default",
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: "#FF231F7C",
+      });
+    }
+
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== "granted") {
+        alert("Failed to get push token for push notification!");
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+      setExpoPushToken(token);
+    } else {
+      alert("Must use physical device for Push Notifications");
+    }
+
+    return token;
+  }
+
+  // Fetch user and medication data from firebase
   const fetchData = async (): Promise<void> => {
     try {
       setIsLoading(true);
@@ -437,6 +442,9 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen name="Profile Page" options={{ headerShown: false }}>
           {(props) => <MenuPage {...props} userInformation={userInformation} setIsNotificationReset={setIsNotificationReset} onSignOut={handleSignOut} />}
+        </Stack.Screen>
+        <Stack.Screen name="Guardian Page" options={{ headerShown: false }}>
+          {(props) => <GuardianPage {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Medication Database" options={{ headerShown: false }}>
           {(props) => <MedicationDatabase {...props} />}

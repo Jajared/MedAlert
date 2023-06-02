@@ -21,6 +21,7 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
     DateOfBirth: "",
     EmailAddress: route.params.EmailAddress,
     PhoneNumber: "",
+    DeviceToken: "",
   });
 
   const handleModal = () => setIsModalVisible(() => !isModalVisible);

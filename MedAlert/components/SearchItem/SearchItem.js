@@ -47,12 +47,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     padding: 10,
-    marginVertical: 8,
-    marginHorizontal: 5,
-    borderColor: "black",
-    borderWidth: 1,
-    borderRadius: 8,
-    backgroundColor: "#f0f0f0",
+    borderBottomColor: "#E0E0E0",
+    borderBottomWidth: 2,
+    backgroundColor: "white",
   },
   searchItemIcon: {
     flex: 1,
@@ -68,5 +65,6 @@ const styles = StyleSheet.create({
   searchItemTitle: {
     fontSize: 15,
     fontWeight: "bold",
+    marginBottom: 5,
   },
 });
