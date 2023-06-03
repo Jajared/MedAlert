@@ -32,3 +32,14 @@ export interface NotificationItem {
   };
   trigger: { hour: number; minute: number; repeats: boolean };
 }
+
+export interface FriendRequest {
+  OwnRequests: string[];
+  GuardianRequests: string[];
+}
+
+export interface RequestItem {
+  userId: string;
+  userName: string;
+  status: "Requested" | "Accepted" | "Rejected";
+}

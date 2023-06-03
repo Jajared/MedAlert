@@ -1,7 +1,6 @@
-import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, Button, StatusBar, Image, Keyboard, TouchableWithoutFeedback } from "react-native";
+import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, Button, StatusBar, Image, Keyboard, TouchableWithoutFeedback, Modal } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import Modal from "react-native-modal";
 import { doc, collection, setDoc } from "firebase/firestore";
 import { firestorage, storage } from "../firebaseConfig";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -50,6 +49,14 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
       .catch((error) => {
         console.error("Error pushing data:", error);
       });
+    const guardianInfoRef = doc(collection(firestorage, "GuardianRequest"), userId);
+    setDoc(guardianInfoRef, { OwnRequests: [], GuardianRequests: [] })
+      .then((docRef) => {
+        console.log("Data pushed successfully.");
+      })
+      .catch((error) => {
+        console.error("Error pushing data:", error);
+      });
     await setIsSignUpComplete(true);
     navigation.navigate("Home");
   };
@@ -67,11 +74,13 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
         <View style={styles.inputItem}>
           <Text style={styles.inputTitle}>Date of Birth</Text>
           <TextInput style={styles.inputBox} value={personalDetails.DateOfBirth} placeholder="Date of Birth" onTouchStart={handleModal} editable={false} />
-          <Modal isVisible={isModalVisible} animationType="slide" transparent={true}>
-            <View style={styles.calendar}>
-              <CalendarPicker onDateChange={onDateChange} selectedDayColor="#DE3163" />
-              <Button title="Hide calendar" onPress={handleModal} />
-            </View>
+          <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+            <SafeAreaView style={styles.popUpContainer}>
+              <View style={styles.popUp}>
+                <CalendarPicker onDateChange={onDateChange} selectedDayColor="#DE3163" />
+                <Button title="Hide calendar" onPress={handleModal} />
+              </View>
+            </SafeAreaView>
           </Modal>
         </View>
         <View style={styles.inputItem}>
@@ -151,7 +160,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   emptySection: {
-    flex: 5,
+    flex: 4,
   },
   buttonContainer: {
     flex: 2,
@@ -168,9 +177,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  calendar: {
+  popUpContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    alignItems: "center",
+    justifyContent: "center",
+    borderColor: "black",
+    borderWidth: 1,
+  },
+  popUp: {
+    backgroundColor: "white",
     width: "100%",
-    backgroundColor: "#fff",
-    borderRadius: 10,
+    height: "50%",
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

@@ -28,7 +28,9 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Subscription } from "expo-modules-core";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
-import GuardianPage from "./pages/GuardianPage";
+import GuardianHomePage from "./pages/GuardianHomePage";
+import AboutPage from "./pages/AboutPage";
+import HelpPage from "./pages/HelpPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -444,7 +446,7 @@ export default function App() {
           {(props) => <MenuPage {...props} userInformation={userInformation} setIsNotificationReset={setIsNotificationReset} onSignOut={handleSignOut} />}
         </Stack.Screen>
         <Stack.Screen name="Guardian Page" options={{ headerShown: false }}>
-          {(props) => <GuardianPage {...props} />}
+          {(props) => <GuardianHomePage {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Medication Database" options={{ headerShown: false }}>
           {(props) => <MedicationDatabase {...props} />}
@@ -454,6 +456,12 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
           {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} />}
+        </Stack.Screen>
+        <Stack.Screen name="Help" options={{ headerShown: false }}>
+          {(props) => <HelpPage {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="About" options={{ headerShown: false }}>
+          {(props) => <AboutPage {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Edit Medication Details" options={{ headerShown: false }}>
           {(props) => <EditMedicationDetails {...props} allMedicationItems={allMedicationItems} deleteMedicationFromList={deleteMedicationFromList} />}

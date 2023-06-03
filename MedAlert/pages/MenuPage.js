@@ -51,14 +51,14 @@ export default function ProfilePage({ navigation, userInformation, setIsNotifica
       <View style={styles.moreSettingsSection}>
         <Text style={{ fontSize: 15, fontWeight: "bold", flex: 1 }}>More</Text>
         <View style={styles.moreSettingsContainer}>
-          <TouchableOpacity style={styles.settingsItem}>
+          <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Help")}>
             <MaterialIcons name="support-agent" size={24} color="black" style={{ flex: 1 }} />
             <View style={styles.settingInfo}>
               <Text style={styles.settingsTitle}>Help & Support</Text>
             </View>
             <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.settingsItem}>
+          <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("About")}>
             <Ionicons name="ios-heart-circle" size={24} color="black" style={{ flex: 1 }} />
             <View style={styles.settingInfo}>
               <Text style={styles.settingsTitle}>About App</Text>
