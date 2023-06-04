@@ -26,7 +26,7 @@ export default function MedicationDatabase({ navigation }) {
   };
 
   const handleSearchByDosageForm = useCallback(
-    (dosageForm) => {
+    (dosageForm: string) => {
       if (dosageForm === "All") {
         setData(fullData);
       } else {

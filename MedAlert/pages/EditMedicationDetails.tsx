@@ -124,7 +124,6 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
             <Text style={styles.header}>Are you sure that you want to delete </Text>
             <Text style={{ fontWeight: "bold", fontSize: 20 }}> {medicationItem.Name}</Text>
             <Text style={styles.header}>from your medication list?</Text>
-            <Text></Text>
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 onPress={() => {

@@ -82,6 +82,21 @@ export default function GuardianRequestsPage({ navigation, userId }) {
     }
   };
 
+  // Remove guardian
+  const removeGuardian = async (guardianId: string) => {
+    try {
+      // Update guardian side
+      const guardianInfoRef = doc(firestorage, "GuardianInformation", guardianId);
+      await updateDoc(guardianInfoRef, { Patients: arrayRemove(userId) });
+      // Update user side
+      const userInfoRef = doc(firestorage, "GuardianInformation", userId);
+      await updateDoc(userInfoRef, { Guardians: arrayRemove(guardianId) });
+      setGuardiansInfo(guardiansInfo.filter((guardianInfo) => guardianInfo.UserId !== guardianId));
+    } catch (error) {
+      console.error("Error removing guardian:", error);
+    }
+  };
+
   // Register guardian
   const handleFormSubmit = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -138,7 +153,7 @@ export default function GuardianRequestsPage({ navigation, userId }) {
       </View>
       <View style={[styles.section, { flex: 2 }]}>
         <Text style={styles.sectionHeader}>Existing Guardians</Text>
-        <View style={{ width: "100%" }}>{guardiansInfo && <FlatList data={guardiansInfo} renderItem={(data) => <GuardianInfoItem props={data} />} keyExtractor={(item) => item.Name} />}</View>
+        <View style={{ width: "100%" }}>{guardiansInfo && <FlatList data={guardiansInfo} renderItem={(data) => <GuardianInfoItem props={data} removeGuardian={removeGuardian} />} keyExtractor={(item) => item.Name} />}</View>
       </View>
 
       <Modal visible={isAddPopUpVisible} animationType="slide" transparent={true}>

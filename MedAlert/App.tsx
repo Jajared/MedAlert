@@ -8,7 +8,7 @@ import AddMedicationDetails from "./pages/AddMedicationDetails";
 import AddMedicationSchedule from "./pages/AddMedicationSchedule";
 import MenuPage from "./pages/MenuPage";
 import UpdateAccountPage from "./pages/UpdateAccountPage";
-import { UserInformation, MedicationItem, ScheduledItem, NotificationItem } from "./utils/types";
+import { UserInformation, MedicationItemData, ScheduledItem, NotificationItem } from "./utils/types";
 import { collection, doc, getDoc, updateDoc, getDocs } from "firebase/firestore";
 import { firestorage } from "./firebaseConfig";
 import { auth } from "./firebaseConfig";
@@ -44,7 +44,7 @@ export default function App() {
     PhoneNumber: "",
     DeviceToken: "",
   });
-  const [allMedicationItems, setAllMedicationItems] = useState<MedicationItem[]>([]);
+  const [allMedicationItems, setAllMedicationItems] = useState<MedicationItemData[]>([]);
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userId, setUserId] = useState("");
@@ -237,7 +237,7 @@ export default function App() {
   };
 
   // Deletes medication item from list and updates database
-  const deleteMedicationFromList = async (medicationItem: MedicationItem) => {
+  const deleteMedicationFromList = async (medicationItem: MedicationItemData) => {
     var newAllMedicationItems = [...allMedicationItems];
     for (var i = 0; i < newAllMedicationItems.length; i++) {
       if (newAllMedicationItems[i].Name == medicationItem.Name) {
@@ -256,7 +256,7 @@ export default function App() {
   };
 
   // Edit scheduled items and notifications after edit/delete operations on MedicationItems
-  async function editScheduledItems(newAllMedicationItems: MedicationItem[]) {
+  async function editScheduledItems(newAllMedicationItems: MedicationItemData[]) {
     var temp = [];
     var count = 1;
     Notifications.cancelAllScheduledNotificationsAsync().then((response) => {
@@ -338,7 +338,7 @@ export default function App() {
   }
 
   // Get new scheduled items after adding new medication item
-  async function getNewScheduledItems(medicationData: MedicationItem) {
+  async function getNewScheduledItems(medicationData: MedicationItemData) {
     var count = scheduledItems.length + 1;
     var temp: ScheduledItem[] = [];
     const timeInterval = 24 / medicationData.Instructions.FrequencyPerDay;
@@ -386,7 +386,7 @@ export default function App() {
   }
 
   // Add medication item
-  const addMedication = async (medicationData: MedicationItem) => {
+  const addMedication = async (medicationData: MedicationItemData) => {
     try {
       const newScheduledItems = await getNewScheduledItems(medicationData);
       const newMedicationItems = [...allMedicationItems, medicationData];
@@ -452,7 +452,7 @@ export default function App() {
           {(props) => <MenuPage {...props} userInformation={userInformation} setIsNotificationReset={setIsNotificationReset} onSignOut={handleSignOut} />}
         </Stack.Screen>
         <Stack.Screen name="Guardian Home" options={{ headerShown: false }}>
-          {(props) => <GuardianHomePage {...props} />}
+          {(props) => <GuardianHomePage {...props} userId={userId} />}
         </Stack.Screen>
         <Stack.Screen name="Guardian Requests" options={{ headerShown: false }}>
           {(props) => <GuardianRequestsPage {...props} userId={userId} />}
