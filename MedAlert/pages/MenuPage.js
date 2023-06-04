@@ -16,7 +16,7 @@ export default function ProfilePage({ navigation, userInformation, setIsNotifica
           </View>
           <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Guardian Page")}>
+        <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Guardian Home")}>
           <MaterialIcons name="supervisor-account" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Saved Guardian</Text>

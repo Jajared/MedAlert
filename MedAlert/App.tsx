@@ -29,6 +29,7 @@ import * as Notifications from "expo-notifications";
 import { Subscription } from "expo-modules-core";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
 import GuardianHomePage from "./pages/GuardianHomePage";
+import GuardianRequestsPage from "./pages/GuardianRequestsPage";
 import AboutPage from "./pages/AboutPage";
 import HelpPage from "./pages/HelpPage";
 
@@ -157,6 +158,11 @@ export default function App() {
       setUserId(user.uid);
       medInfoRef.current = doc(firestorage, "MedicationInformation", user.uid);
       userInfoRef.current = doc(firestorage, "UsersData", user.uid);
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve("Wait 0.1 seconds");
+        }, 100);
+      });
       await fetchData();
       setUserLoggedIn(true);
       console.log("Successfully logged in");
@@ -445,8 +451,11 @@ export default function App() {
         <Stack.Screen name="Profile Page" options={{ headerShown: false }}>
           {(props) => <MenuPage {...props} userInformation={userInformation} setIsNotificationReset={setIsNotificationReset} onSignOut={handleSignOut} />}
         </Stack.Screen>
-        <Stack.Screen name="Guardian Page" options={{ headerShown: false }}>
+        <Stack.Screen name="Guardian Home" options={{ headerShown: false }}>
           {(props) => <GuardianHomePage {...props} />}
+        </Stack.Screen>
+        <Stack.Screen name="Guardian Requests" options={{ headerShown: false }}>
+          {(props) => <GuardianRequestsPage {...props} userId={userId} />}
         </Stack.Screen>
         <Stack.Screen name="Medication Database" options={{ headerShown: false }}>
           {(props) => <MedicationDatabase {...props} />}
