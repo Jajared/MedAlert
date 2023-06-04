@@ -160,8 +160,8 @@ export default function App() {
       userInfoRef.current = doc(firestorage, "UsersData", user.uid);
       await new Promise((resolve) => {
         setTimeout(() => {
-          resolve("Wait 0.1 seconds");
-        }, 100);
+          resolve("Wait 0.3 seconds");
+        }, 300);
       });
       await fetchData();
       setUserLoggedIn(true);

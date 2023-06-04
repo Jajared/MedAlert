@@ -5,12 +5,13 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Entypo } from "@expo/vector-icons";
 import CameraComponent from "../components/CameraComponent/CameraComponent";
 import CustomButton from "../components/Buttons/CustomButton";
+import { MedicationItemData } from "../utils/types";
 
 export default function AddMedicationDetails({ navigation, route }) {
-  const [state, setState] = useState({ Name: "", Type: route.params.Type, Purpose: "", Instructions: { TabletsPerIntake: 1, FrequencyPerDay: 0, Specifications: "", FirstDosageTiming: 540 } });
-  const [showCamera, setShowCamera] = useState(false);
+  const [state, setState] = useState<MedicationItemData>({ Name: "", Type: route.params.Type, Purpose: "", Instructions: { TabletsPerIntake: 1, FrequencyPerDay: 0, Specifications: "", FirstDosageTiming: 540 } });
+  const [showCamera, setShowCamera] = useState<boolean>(false);
 
-  function setFrequencyPerIntake(value) {
+  function setFrequencyPerIntake(value: number) {
     setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FrequencyPerDay: value } }));
   }
   function handleSubmit() {
@@ -45,11 +46,11 @@ export default function AddMedicationDetails({ navigation, route }) {
       <BackNavBar navigation={navigation} title="Add Medication" />
       <View style={styles.nameSection}>
         <Text style={styles.textHeader}>Name of Medication</Text>
-        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Name: text.trim() })} value={state.name} placeholder="Name" />
+        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Name: text.trim() })} value={state.Name} placeholder="Name" />
       </View>
       <View style={styles.purposeSection}>
         <Text style={styles.textHeader}>Purpose of Medication</Text>
-        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Purpose: text.trim() })} value={state.purpose} placeholder="Purpose" />
+        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Purpose: text.trim() })} value={state.Purpose} placeholder="Purpose" />
       </View>
       <View style={styles.intakeSection}>
         <Text style={styles.textHeader}>Tablets per Intake</Text>
@@ -63,57 +64,51 @@ export default function AddMedicationDetails({ navigation, route }) {
             }
           }}
         />
-        <Text style={styles.text}>{state.Instructions.TabletsPerIntake}</Text>
+        <Text style={styles.textHeader}>{state.Instructions.TabletsPerIntake}</Text>
         <Button title="+" onPress={() => setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake + 1 } }))} />
       </View>
       <View style={styles.frequencySection}>
         <Text style={styles.textHeader}>Take this medication:</Text>
-        <View style={styles.optionsContainer}>
-          <View style={styles.optionsRow}>
-            <BouncyCheckbox
-              text="Daily"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.frequencyItem}
-              isChecked={state.Instructions.FrequencyPerDay === 1}
-              onPress={() => setFrequencyPerIntake(1)}
-              disableBuiltInState={true}
-            />
-            <BouncyCheckbox
-              text="Twice a day"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.frequencyItem}
-              isChecked={state.Instructions.FrequencyPerDay === 2}
-              onPress={() => setFrequencyPerIntake(2)}
-              disableBuiltInState={true}
-            />
-          </View>
-          <View style={styles.optionsRow}>
-            <BouncyCheckbox
-              text="Three times a day"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.frequencyItem}
-              isChecked={state.Instructions.FrequencyPerDay === 3}
-              onPress={() => setFrequencyPerIntake(3)}
-              disableBuiltInState={true}
-            />
-            <BouncyCheckbox
-              text="Four times a day"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.frequencyItem}
-              isChecked={state.Instructions.FrequencyPerDay === 4}
-              onPress={() => setFrequencyPerIntake(4)}
-              disableBuiltInState={true}
-            />
-          </View>
-        </View>
+        <BouncyCheckbox
+          text="Daily"
+          textStyle={{
+            textDecorationLine: "none",
+          }}
+          style={styles.frequencyItem}
+          isChecked={state.Instructions.FrequencyPerDay === 1}
+          onPress={() => setFrequencyPerIntake(1)}
+          disableBuiltInState={true}
+        />
+        <BouncyCheckbox
+          text="Twice a day"
+          textStyle={{
+            textDecorationLine: "none",
+          }}
+          style={styles.frequencyItem}
+          isChecked={state.Instructions.FrequencyPerDay === 2}
+          onPress={() => setFrequencyPerIntake(2)}
+          disableBuiltInState={true}
+        />
+        <BouncyCheckbox
+          text="Three times a day"
+          textStyle={{
+            textDecorationLine: "none",
+          }}
+          style={styles.frequencyItem}
+          isChecked={state.Instructions.FrequencyPerDay === 3}
+          onPress={() => setFrequencyPerIntake(3)}
+          disableBuiltInState={true}
+        />
+        <BouncyCheckbox
+          text="Four times a day"
+          textStyle={{
+            textDecorationLine: "none",
+          }}
+          style={styles.frequencyItem}
+          isChecked={state.Instructions.FrequencyPerDay === 4}
+          onPress={() => setFrequencyPerIntake(4)}
+          disableBuiltInState={true}
+        />
       </View>
       <View style={styles.nextSection}>
         <CustomButton
@@ -136,7 +131,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "flex-starts",
+    justifyContent: "flex-start",
   },
   nameSection: {
     flex: 1,

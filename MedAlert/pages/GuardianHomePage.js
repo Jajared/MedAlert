@@ -24,9 +24,9 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   addButton: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    paddingRight: 30,
-    width: "100%",
+    position: "absolute",
+    right: 30,
+    top: 70,
+    zIndex: 1,
   },
 });
