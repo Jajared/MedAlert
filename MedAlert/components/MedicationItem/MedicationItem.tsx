@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Animated } from "react-native";
 import { Swipeable } from "react-native-gesture-handler";
 
-export default function MedicationItem({ props, navigation, setAcknowledged }) {
+export default function MedicationItem({ props, setAcknowledged }) {
   const medicationData = props.item;
   const pillIcon = require("../../assets/pill-icon.png");
   const syrupIcon = require("../../assets/syrup-icon.png");

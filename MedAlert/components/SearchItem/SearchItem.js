@@ -35,7 +35,7 @@ export default class SearchItem extends PureComponent {
         <View style={styles.searchItemIcon}>{this.getDosageFormIcon(item.dosage_form)}</View>
         <View style={styles.searchItemText}>
           <Text style={styles.searchItemTitle}>{item.product_name}</Text>
-          <Text style={styles.seachItemInfo}>{item.manufacturer}</Text>
+          <Text style={styles.searchItemInfo}>{item.manufacturer}</Text>
         </View>
       </TouchableOpacity>
     );

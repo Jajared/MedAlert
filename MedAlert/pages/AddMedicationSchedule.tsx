@@ -4,27 +4,32 @@ import BackNavBar from "../components/BackNavBar/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import CustomButton from "../components/Buttons/CustomButton";
+import { MedicationItemData } from "../utils/types";
 
 export default function AddMedicationSchedule({ navigation, route, addMedication }) {
-  const [state, setState] = useState({ ...route.params.state });
-  const [date, setDate] = useState(new Date(2023, 1, 1, 9, 0, 0));
-  const onChange = (event, selectedDate) => {
+  const [state, setState] = useState<MedicationItemData>({ ...route.params.state });
+  const [date, setDate] = useState<Date>(new Date(2023, 1, 1, 9, 0, 0));
+  const onChange = (event, selectedDate: Date) => {
     const currentDate = selectedDate;
     setDate(currentDate);
     setFirstDosageTiming(currentDate);
   };
-  function setFirstDosageTiming(date) {
+
+  function setFirstDosageTiming(date: Date) {
     setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FirstDosageTiming: convertTimeStringtoInteger(date) } }));
   }
-  function convertTimeStringtoInteger(date) {
+
+  function convertTimeStringtoInteger(date: Date) {
     var hours = date.getHours();
     var minutes = date.getMinutes();
     var time = hours * 60 + minutes;
     return time;
   }
-  function setSpecifications(value) {
+
+  function setSpecifications(value: string) {
     setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, Specifications: value } }));
   }
+
   function handleSubmit() {
     if (state.Instructions.Specifications.trim() == "") {
       alert("Please select instructions");
@@ -99,7 +104,6 @@ export default function AddMedicationSchedule({ navigation, route, addMedication
               navigation.navigate("Home");
             }
           }}
-          style={styles.nextSection}
         />
       </View>
       <View style={styles.bottomNavBar}></View>

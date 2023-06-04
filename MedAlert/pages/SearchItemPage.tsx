@@ -6,7 +6,7 @@ export default function SearchItemPage({ route, navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <BackNavBar navigation={navigation} title={item.product_name} style={{ flex: 1 }} />
+      <BackNavBar navigation={navigation} title={item.product_name} />
       <View style={styles.item}>
         <Text style={styles.subheader}>Product Name:</Text>
         <Text style={styles.text}>{item.product_name}</Text>

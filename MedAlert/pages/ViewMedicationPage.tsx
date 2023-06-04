@@ -18,7 +18,7 @@ export default function ViewMedicationPage({ navigation, allMedicationItems }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <BackNavBar navigation={navigation} title="View Medications" style={{ flex: 1 }} />
+      <BackNavBar navigation={navigation} title="View Medications" />
       <View style={styles.medicationSection}>
         {allMedicationItems && (
           <FlatList
@@ -39,7 +39,7 @@ export default function ViewMedicationPage({ navigation, allMedicationItems }) {
           />
         )}
       </View>
-      <BottomNavBar navigation={navigation} style={{ flex: 1 }} />
+      <BottomNavBar navigation={navigation} />
     </SafeAreaView>
   );
 }

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { FontAwesome5, Entypo } from "@expo/vector-icons";
 
-export default function BottomNavBar({ title, props, navigation }) {
+export default function BottomNavBar({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.iconSection}>

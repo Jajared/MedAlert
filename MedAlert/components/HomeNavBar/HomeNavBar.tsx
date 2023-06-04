@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-export default function HomeNavBar({ props, navigation, userName }) {
+export default function HomeNavBar({ navigation, userName }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate("Add Medication Type")} style={styles.addButton}>
