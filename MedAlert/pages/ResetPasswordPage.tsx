@@ -6,7 +6,7 @@ import BackNavBar from "../components/BackNavBar/BackNavBar";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function ResetPasswordPage({ navigation }) {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState<string>("");
   const handleSubmit = () => {
     checkUserExists()
       .then((exists) => {
@@ -27,7 +27,7 @@ export default function ResetPasswordPage({ navigation }) {
       });
   };
 
-  const checkUserExists = () => {
+  const checkUserExists = async () => {
     return fetchSignInMethodsForEmail(auth, email)
       .then((signInMethods) => {
         if (signInMethods && signInMethods.length > 0) {

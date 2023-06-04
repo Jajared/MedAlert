@@ -20,7 +20,7 @@ export default function ProfilePage({ navigation, userInformation, setIsNotifica
           <MaterialIcons name="supervisor-account" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Saved Guardian</Text>
-            <Text style={styles.settingsDescription}>Manage your guardian information</Text>
+            <Text style={styles.settingDescription}>Manage your guardian information</Text>
           </View>
           <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
         </TouchableOpacity>
@@ -28,7 +28,7 @@ export default function ProfilePage({ navigation, userInformation, setIsNotifica
           <AntDesign name="database" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Medication Database</Text>
-            <Text style={styles.settingsDescription}>Search through our database for your medication</Text>
+            <Text style={styles.settingDescription}>Search through our database for your medication</Text>
           </View>
           <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
         </TouchableOpacity>
@@ -43,7 +43,7 @@ export default function ProfilePage({ navigation, userInformation, setIsNotifica
           <Ionicons name="exit-outline" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Log Out</Text>
-            <Text style={styles.settingsDescription}>Log out of your existing account</Text>
+            <Text style={styles.settingDescription}>Log out of your existing account</Text>
           </View>
           <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
         </TouchableOpacity>

@@ -9,14 +9,14 @@ import SearchItem from "../components/SearchItem/SearchItem";
 const medData = Array.from(Object.values(medicationDb));
 
 export default function MedicationDatabase({ navigation }) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedDosageForm, setSelectedDosageForm] = useState("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedDosageForm, setSelectedDosageForm] = useState<string>("");
   const [data, setData] = useState(medData);
   const [fullData, setFullData] = useState(medData);
 
   const dosageFormTypes = ["All", "Tablet", "Injection", "Capsule", "Cream", "Solution", "Granule", "Syrup", "Ointment", "Powder"];
 
-  const handleSearchByName = (query) => {
+  const handleSearchByName = (query: string) => {
     setSearchQuery(query);
     const formattedQuery = query.toLowerCase();
     const filteredData = filter(fullData, (item) => {
