@@ -3,13 +3,14 @@ import BackNavBar from "../components/BackNavBar/BackNavBar";
 import { useState } from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import CustomButton from "../components/Buttons/CustomButton";
+import { MedicationItemData } from "../utils/types";
 
 export default function EditMedicationDetails({ navigation, allMedicationItems, deleteMedicationFromList, route }) {
   const [medicationItems, setMedicationItems] = useState(allMedicationItems);
   const { medicationName } = route.params;
-  const [medicationItem, setMedicationItem] = useState(medicationItems.filter((item) => item.Name === medicationName)[0]);
+  const [medicationItem, setMedicationItem] = useState<MedicationItemData>(medicationItems.filter((item) => item.Name === medicationName)[0]);
   const [isDeletionPopUpVisible, setIsDeletionPopUpVisible] = useState(false);
-  function setFrequencyPerIntake(value) {
+  function setFrequencyPerIntake(value: number) {
     setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FrequencyPerDay: value } }));
   }
 
@@ -34,11 +35,11 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
       <BackNavBar navigation={navigation} title="Edit Medication Details" />
       <View style={styles.nameSection}>
         <Text style={styles.textHeader}>Name of Medication</Text>
-        <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Name: text.trim() })} value={medicationItem.name} placeholder={medicationItem.Name} />
+        <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Name: text.trim() })} value={medicationItem.Name} placeholder={medicationItem.Name} />
       </View>
       <View style={styles.purposeSection}>
         <Text style={styles.textHeader}>Purpose of Medication</Text>
-        <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Purpose: text.trim() })} value={medicationItem.purpose} placeholder={medicationItem.Purpose} />
+        <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Purpose: text.trim() })} value={medicationItem.Purpose} placeholder={medicationItem.Purpose} />
       </View>
       <View style={styles.intakeSection}>
         <Text style={styles.textHeader}>Tablets per Intake</Text>
@@ -52,57 +53,51 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
             }
           }}
         />
-        <Text style={styles.text}>{medicationItem.Instructions.TabletsPerIntake}</Text>
+        <Text style={styles.textHeader}>{medicationItem.Instructions.TabletsPerIntake}</Text>
         <Button title="+" onPress={() => setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake + 1 } }))} />
       </View>
       <View style={styles.frequencySection}>
         <Text style={styles.textHeader}>Take this medication:</Text>
-        <View style={styles.optionsContainer}>
-          <View style={styles.optionsRow}>
-            <BouncyCheckbox
-              text="Daily"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.frequencyItem}
-              isChecked={medicationItem.Instructions.FrequencyPerDay === 1}
-              onPress={() => setFrequencyPerIntake(1)}
-              disableBuiltInState={true}
-            />
-            <BouncyCheckbox
-              text="Twice a day"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.frequencyItem}
-              isChecked={medicationItem.Instructions.FrequencyPerDay === 2}
-              onPress={() => setFrequencyPerIntake(2)}
-              disableBuiltInState={true}
-            />
-          </View>
-          <View style={styles.optionsRow}>
-            <BouncyCheckbox
-              text="Three times a day"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.frequencyItem}
-              isChecked={medicationItem.Instructions.FrequencyPerDay === 3}
-              onPress={() => setFrequencyPerIntake(3)}
-              disableBuiltInState={true}
-            />
-            <BouncyCheckbox
-              text="Four times a day"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.frequencyItem}
-              isChecked={medicationItem.Instructions.FrequencyPerDay === 4}
-              onPress={() => setFrequencyPerIntake(4)}
-              disableBuiltInState={true}
-            />
-          </View>
-        </View>
+        <BouncyCheckbox
+          text="Daily"
+          textStyle={{
+            textDecorationLine: "none",
+          }}
+          style={styles.frequencyItem}
+          isChecked={medicationItem.Instructions.FrequencyPerDay === 1}
+          onPress={() => setFrequencyPerIntake(1)}
+          disableBuiltInState={true}
+        />
+        <BouncyCheckbox
+          text="Twice a day"
+          textStyle={{
+            textDecorationLine: "none",
+          }}
+          style={styles.frequencyItem}
+          isChecked={medicationItem.Instructions.FrequencyPerDay === 2}
+          onPress={() => setFrequencyPerIntake(2)}
+          disableBuiltInState={true}
+        />
+        <BouncyCheckbox
+          text="Three times a day"
+          textStyle={{
+            textDecorationLine: "none",
+          }}
+          style={styles.frequencyItem}
+          isChecked={medicationItem.Instructions.FrequencyPerDay === 3}
+          onPress={() => setFrequencyPerIntake(3)}
+          disableBuiltInState={true}
+        />
+        <BouncyCheckbox
+          text="Four times a day"
+          textStyle={{
+            textDecorationLine: "none",
+          }}
+          style={styles.frequencyItem}
+          isChecked={medicationItem.Instructions.FrequencyPerDay === 4}
+          onPress={() => setFrequencyPerIntake(4)}
+          disableBuiltInState={true}
+        />
       </View>
       <View style={styles.nextSection}>
         <CustomButton
@@ -163,7 +158,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: "#fff",
     alignItems: "center",
-    justifyContent: "flex-starts",
+    justifyContent: "flex-start",
   },
   nameSection: {
     flex: 1,

@@ -4,15 +4,16 @@ export interface UserInformation {
   DateOfBirth: string;
   EmailAddress: string;
   PhoneNumber: string;
+  DeviceToken: string;
 }
 
-export interface ScheduledItem extends MedicationItem {
+export interface ScheduledItem extends MedicationItemData {
   Acknowledged: boolean;
   id: number;
   notificationId: string;
 }
 
-export interface MedicationItem {
+export interface MedicationItemData {
   Name: string;
   Type: string;
   Purpose: string;
@@ -30,4 +31,35 @@ export interface NotificationItem {
     body: string;
   };
   trigger: { hour: number; minute: number; repeats: boolean };
+}
+
+export interface FriendRequest {
+  OwnRequests: string[];
+  GuardianRequests: string[];
+}
+
+export interface RequestItem {
+  userId: string;
+  userName: string;
+  status: "Requested" | "Accepted" | "Rejected";
+}
+
+export interface GuardianInfo {
+  UserId: string;
+  Name: string;
+  Gender: string;
+  DateOfBirth: string;
+  EmailAddress: string;
+  PhoneNumber: string;
+  DeviceToken: string;
+}
+
+export interface GuardianRequest {
+  UserId: string;
+  Name: string;
+  Gender: string;
+  DateOfBirth: string;
+  EmailAddress: string;
+  PhoneNumber: string;
+  DeviceToken: string;
 }
