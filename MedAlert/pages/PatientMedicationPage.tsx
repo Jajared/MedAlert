@@ -1,46 +1,26 @@
-import { SafeAreaView, Text, StyleSheet, StatusBar, View, TextInput, TouchableOpacity, FlatList, ActivityIndicator } from "react-native";
+import { SafeAreaView, StyleSheet, StatusBar, View, FlatList, ActivityIndicator } from "react-native";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
-import { FontAwesome5 } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { doc, getDoc, getDocs, collection } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { firestorage } from "../firebaseConfig";
-import { ScheduledItem, GuardianScheduledItems } from "../utils/types";
+import { ScheduledItem } from "../utils/types";
 import PatientMedicationItem from "../components/PatientMedicationItem/PatientMedicationItem";
 
-export default function GuardianHomePage({ navigation, userId }) {
-  const [patientList, setPatientList] = useState<string[]>([]);
-  const [selectedPatientId, setSelectedPatientId] = useState<string>("");
-  const [fullData, setFullData] = useState<GuardianScheduledItems>({});
+export default function GuardianHomePage({ navigation, route }) {
+  const { guardianId, guardianName } = route.params;
+  const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState<boolean>(false);
-  const [items, setItems] = useState<any[]>([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      await getAllPatients();
-      for (const patientId of patientList) {
-        setItems((prev) => [...prev, { label: patientId, value: patientId }]);
-      }
-      await getAllPatientMedication();
-      setIsDataLoaded(true);
-    };
-    fetchData();
+    getAllGuardianMedication();
+    setIsDataLoaded(true);
   }, []);
 
-  const getAllPatientMedication = async () => {
-    for (const patientId of patientList) {
-      const patientMedicationRef = doc(firestorage, "MedicationInformation", patientId);
-      const snapshot = await getDoc(patientMedicationRef);
-      const patientMedicationList: ScheduledItem[] = snapshot.data().ScheduledItems;
-      setFullData((prev) => ({ ...prev, [patientId]: patientMedicationList }));
-    }
-  };
-
-  // Get all patients from firebase
-  const getAllPatients = async () => {
-    const patientInfoRef = doc(firestorage, "GuardianInformation", userId);
-    const snapshot = await getDoc(patientInfoRef);
-    const patientList = snapshot.data().Patients;
-    setPatientList(patientList);
+  const getAllGuardianMedication = async () => {
+    const patientMedicationRef = doc(firestorage, "MedicationInformation", guardianId);
+    const snapshot = await getDoc(patientMedicationRef);
+    const patientMedicationList: ScheduledItem[] = snapshot.data().ScheduledItems;
+    setScheduledItems(patientMedicationList);
   };
 
   if (!isDataLoaded) {
@@ -50,13 +30,12 @@ export default function GuardianHomePage({ navigation, userId }) {
       </View>
     );
   }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <TouchableOpacity onPress={() => navigation.navigate("Guardian Requests")} style={styles.addButton}>
-        <FontAwesome5 name="user-friends" size={24} color="black" />
-      </TouchableOpacity>
-      <BackNavBar navigation={navigation} title="Guardian Page" />
+      <BackNavBar navigation={navigation} title={guardianName} />
+      <View style={styles.medicationSection}>{scheduledItems && <FlatList data={scheduledItems.filter((data) => data.Acknowledged === false)} renderItem={(data) => <PatientMedicationItem props={data} />} keyExtractor={(item) => item.notificationId} />}</View>
     </SafeAreaView>
   );
 }
@@ -78,15 +57,5 @@ const styles = StyleSheet.create({
   medicationSection: {
     flex: 7,
     width: "100%",
-  },
-  dropDownBox: {
-    height: 50,
-    borderWidth: 1,
-    width: "50%",
-    borderColor: "gray",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    marginTop: 5,
-    justifyContent: "center",
   },
 });

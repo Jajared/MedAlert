@@ -454,8 +454,8 @@ export default function App() {
         <Stack.Screen name="Guardian Home" options={{ headerShown: false }}>
           {(props) => <GuardianHomePage {...props} userId={userId} />}
         </Stack.Screen>
-        <Stack.Screen name="Guardian Requests" options={{ headerShown: false }}>
-          {(props) => <PatientMedicationPage {...props} userId={userId} />}
+        <Stack.Screen name="Patient Medication" options={{ headerShown: false }}>
+          {(props) => <PatientMedicationPage {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Medication Database" options={{ headerShown: false }}>
           {(props) => <MedicationDatabase {...props} />}

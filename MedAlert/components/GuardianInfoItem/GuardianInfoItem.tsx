@@ -1,51 +1,52 @@
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { StyleSheet, Text, View, SafeAreaView, Modal } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import { StyleSheet, Text, View, SafeAreaView, Modal, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 
-export default function GuardianInfoItem({ props, removeGuardian }) {
+export default function GuardianInfoItem({ props, navigation, removeGuardian }) {
   const guardianInfo = props.item;
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
 
   return (
-    <SafeAreaView style={styles.itemContainer}>
-      {guardianInfo.Gender == "Female" ? <MaterialCommunityIcons name="face-woman-profile" size={24} color="black" style={{ flex: 1 }} /> : <MaterialCommunityIcons name="face-man-profile" size={24} color="black" style={{ flex: 1 }} />}
-      <View style={styles.infoContainer}>
-        <Text style={styles.name}>{guardianInfo.Name}</Text>
-        <Text style={styles.email}>{guardianInfo.EmailAddress}</Text>
-      </View>
-      <View style={styles.actionContainer}>
-        <TouchableOpacity style={styles.removeButton} onPress={() => setDeleteModalVisible(true)}>
-          <Text style={styles.removeText}>Remove</Text>
-        </TouchableOpacity>
-      </View>
-      <Modal visible={isDeleteModalVisible} transparent={true} animationType="slide">
-        <SafeAreaView style={styles.popUpContainer}>
-          <View style={styles.popUp}>
-            <Text style={styles.header}>Are you sure that you want to remove this guardian?</Text>
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                onPress={() => {
-                  removeGuardian(guardianInfo.UserId);
-                  setDeleteModalVisible(false);
-                }}
-                style={[styles.button, { backgroundColor: "green" }]}
-              >
-                <Text>YES</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  setDeleteModalVisible(false);
-                }}
-                style={[styles.button, { backgroundColor: "red" }]}
-              >
-                <Text>NO</Text>
-              </TouchableOpacity>
+    <TouchableOpacity onPress={() => navigation.navigate("Patient Medication", { guardianId: guardianInfo.UserId, guardianName: guardianInfo.Name })}>
+      <SafeAreaView style={styles.itemContainer}>
+        {guardianInfo.Gender == "Female" ? <MaterialCommunityIcons name="face-woman-profile" size={24} color="black" style={{ flex: 1 }} /> : <MaterialCommunityIcons name="face-man-profile" size={24} color="black" style={{ flex: 1 }} />}
+        <View style={styles.infoContainer}>
+          <Text style={styles.name}>{guardianInfo.Name}</Text>
+          <Text style={styles.email}>{guardianInfo.EmailAddress}</Text>
+        </View>
+        <View style={styles.actionContainer}>
+          <TouchableOpacity style={styles.removeButton} onPress={() => setDeleteModalVisible(true)}>
+            <Text style={styles.removeText}>Remove</Text>
+          </TouchableOpacity>
+        </View>
+        <Modal visible={isDeleteModalVisible} transparent={true} animationType="slide">
+          <SafeAreaView style={styles.popUpContainer}>
+            <View style={styles.popUp}>
+              <Text style={styles.header}>Are you sure that you want to remove this guardian?</Text>
+              <View style={styles.buttonContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    removeGuardian(guardianInfo.UserId);
+                    setDeleteModalVisible(false);
+                  }}
+                  style={[styles.button, { backgroundColor: "green" }]}
+                >
+                  <Text>YES</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    setDeleteModalVisible(false);
+                  }}
+                  style={[styles.button, { backgroundColor: "red" }]}
+                >
+                  <Text>NO</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </SafeAreaView>
-      </Modal>
-    </SafeAreaView>
+          </SafeAreaView>
+        </Modal>
+      </SafeAreaView>
+    </TouchableOpacity>
   );
 }
 

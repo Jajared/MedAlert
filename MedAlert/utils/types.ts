@@ -63,7 +63,3 @@ export interface GuardianRequest {
   PhoneNumber: string;
   DeviceToken: string;
 }
-
-export interface GuardianScheduledItems {
-  [userid: string]: ScheduledItem[];
-}

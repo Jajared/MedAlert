@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Animated } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function GuardianRequestItem({ props, acceptGuardianRequest, rejectGuardianRequest }) {

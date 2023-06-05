@@ -1,32 +1,25 @@
-import { SafeAreaView, Text, StyleSheet, StatusBar, View, TextInput, TouchableOpacity, Modal, FlatList, ScrollView } from "react-native";
-import { useState, useEffect, useCallback } from "react";
+import { SafeAreaView, Text, StyleSheet, StatusBar, View, TextInput, TouchableOpacity, FlatList, ScrollView } from "react-native";
+import { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import { auth } from "../firebaseConfig";
 import { fetchSignInMethodsForEmail } from "firebase/auth";
 import { firestorage } from "../firebaseConfig";
 import { collection, getDocs, query, where, doc, arrayUnion, setDoc, getDoc, arrayRemove, updateDoc } from "firebase/firestore";
-import { AntDesign } from "@expo/vector-icons";
 import GuardianRequestItem from "../components/GuardianRequestItem/GuardianRequestItem";
 import GuardianInfoItem from "../components/GuardianInfoItem/GuardianInfoItem";
 import { GuardianInfo, GuardianRequest } from "../utils/types";
-import { GuardianScheduledItems, ScheduledItem } from "../utils/types";
 
 export default function GuardianRequestsPage({ navigation, userId }) {
   const [addGuardianEmail, setAddGuardianEmail] = useState<string>("");
-  const [isAddPopUpVisible, setIsAddPopUpVisible] = useState<boolean>(false);
   const [guardiansRequests, setGuardiansRequests] = useState<GuardianRequest[]>([]);
   const [guardiansInfo, setGuardiansInfo] = useState<GuardianInfo[]>([]);
-  const [fullData, setFullData] = useState<GuardianScheduledItems>({});
-  const [selectedPatientId, setSelectedPatientId] = useState<string>("");
-  const [selectedDosageForm, setSelectedDosageForm] = useState<string>("");
   const [selectedFunction, setSelectedFunction] = useState<string>("Guardians");
   const functionTypes = ["Guardians", "Requests", "Add Guardian"];
 
   useEffect(() => {
     getAllGuardianRequests();
     getAllGuardians();
-    getAllGuardianMedication();
   }, []);
 
   // Get all guardian requests
@@ -61,17 +54,6 @@ export default function GuardianRequestsPage({ navigation, userId }) {
     setGuardiansInfo(guardians);
   };
 
-  // Get all guardian medication
-  const getAllGuardianMedication = async () => {
-    for (const guardianInfo of guardiansInfo) {
-      const guardianId = guardianInfo.UserId;
-      const guardianMedicationRef = doc(firestorage, "MedicationInformation", guardianId);
-      const snapshot = await getDoc(guardianMedicationRef);
-      const guardianMedicationList: ScheduledItem[] = snapshot.data().ScheduledItems;
-      setFullData((prev) => ({ ...prev, [guardianInfo.UserId]: guardianMedicationList }));
-    }
-  };
-
   // Accept Guardian Request
   const acceptGuardianRequest = async (patientId: string) => {
     try {
@@ -92,10 +74,10 @@ export default function GuardianRequestsPage({ navigation, userId }) {
     try {
       // Update guardian side
       const guardianInfoRef = doc(firestorage, "GuardianInformation", guardianId);
-      await updateDoc(guardianInfoRef, { IncomingRequests: arrayRemove(userId) });
+      await updateDoc(guardianInfoRef, { OutgoingRequests: arrayRemove(userId) });
       // Update user side
       const userInfoRef = doc(firestorage, "GuardianInformation", userId);
-      await updateDoc(userInfoRef, { OutgoingRequests: arrayRemove(guardianId) });
+      await updateDoc(userInfoRef, { IncomingRequests: arrayRemove(guardianId) });
       setGuardiansRequests(guardiansRequests.filter((guardianRequest) => guardianRequest.UserId !== guardianId));
     } catch (error) {
       console.error("Error rejecting guardian request:", error);
@@ -129,6 +111,10 @@ export default function GuardianRequestsPage({ navigation, userId }) {
         alert("No account found with this email.");
       } else {
         const guardianId = await searchDocumentIdByEmail(addGuardianEmail);
+        if (guardiansInfo.some((guardian) => guardian.UserId === guardianId)) {
+          alert("This user is already your guardian!");
+          return;
+        }
         addRequest(guardianId);
         setAddGuardianEmail("");
       }
@@ -157,7 +143,6 @@ export default function GuardianRequestsPage({ navigation, userId }) {
       const userInfoRef = doc(collection(firestorage, "GuardianInformation"), userId);
       await setDoc(userInfoRef, { OutgoingRequests: arrayUnion(guardianId) }, { merge: true });
       alert("Successfully requested!");
-      setIsAddPopUpVisible(false);
     } catch (error) {
       console.error("Error adding guardian request:", error);
     }
@@ -184,7 +169,7 @@ export default function GuardianRequestsPage({ navigation, userId }) {
           </ScrollView>
         </View>
         <View style={[styles.section, { flex: 2 }]}>
-          <View style={{ width: "100%" }}>{guardiansInfo && <FlatList data={guardiansInfo} renderItem={(data) => <GuardianInfoItem props={data} removeGuardian={removeGuardian} />} keyExtractor={(item) => item.Name} />}</View>
+          <View style={{ width: "100%" }}>{guardiansInfo && <FlatList data={guardiansInfo} renderItem={(data) => <GuardianInfoItem props={data} navigation={navigation} removeGuardian={removeGuardian} />} keyExtractor={(item) => item.Name} />}</View>
         </View>
       </SafeAreaView>
     );

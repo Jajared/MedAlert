@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Animated } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
 
-export default function PatientMedicationItem({ props, userName }) {
+export default function PatientMedicationItem({ props }) {
   const medicationData = props.item;
   const pillIcon = require("../../assets/pill-icon.png");
   const syrupIcon = require("../../assets/syrup-icon.png");
