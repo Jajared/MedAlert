@@ -6,14 +6,19 @@ import CustomButton from "../components/Buttons/CustomButton";
 import { MedicationItemData } from "../utils/types";
 
 export default function EditMedicationDetails({ navigation, allMedicationItems, deleteMedicationFromList, route }) {
-  const [medicationItems, setMedicationItems] = useState(allMedicationItems);
+  const [medicationItems, setMedicationItems] = useState<MedicationItemData[]>(allMedicationItems);
   const { medicationName } = route.params;
-  const [medicationItem, setMedicationItem] = useState<MedicationItemData>(medicationItems.filter((item) => item.Name === medicationName)[0]);
-  const [isDeletionPopUpVisible, setIsDeletionPopUpVisible] = useState(false);
-  console.log(medicationItem.Type == "Pill");
-  console.log(medicationItem.Instructions.TabletsPerIntake);
+  const [medicationItem, setMedicationItem] = useState<MedicationItemData>(medicationItems.filter((item: MedicationItemData) => item.Name === medicationName)[0]);
+  const [isDeletionPopUpVisible, setIsDeletionPopUpVisible] = useState<boolean>(false);
+  const [volume, setVolume] = useState<string>(medicationItem.Instructions.TabletsPerIntake.toString());
+
   function setFrequencyPerIntake(value: number) {
     setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FrequencyPerDay: value } }));
+  }
+
+  function setVolumePerIntake() {
+    setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: parseInt(volume) } }));
+    return { ...medicationItem, Instructions: { ...medicationItem.Instructions, TabletsPerIntake: parseInt(volume) } };
   }
 
   function handleSubmit() {
@@ -27,6 +32,10 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
     }
     if (medicationItem.Instructions.FrequencyPerDay == 0) {
       alert("Please select frequency");
+      return false;
+    }
+    if (isNaN(medicationItem.Instructions.TabletsPerIntake)) {
+      alert("Please enter a numeric value for Volume per Intake");
       return false;
     }
     return true;
@@ -167,7 +176,7 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
         </View>
         <View style={styles.intakeSection}>
           <Text style={styles.textHeader}>Volume per Intake (in ml)</Text>
-          <TextInput style={styles.volumeBox} keyboardType="decimal-pad" onChangeText={(text) => setMedicationItem({ ...medicationItem, Instructions: { ...medicationItem.Instructions, TabletsPerIntake: parseFloat(text)}})} value={(medicationItem.Instructions.TabletsPerIntake).toString()} placeholder={(medicationItem.Instructions.TabletsPerIntake).toString()} />
+          <TextInput style={styles.volumeBox} keyboardType="decimal-pad" onChangeText={(text) => setVolume(text)} value={volume} placeholder={volume} />
         </View>
         <View style={styles.frequencySection}>
           <Text style={styles.textHeader}>Take this medication:</Text>
@@ -216,8 +225,9 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
           <CustomButton
             title="Continue Editing"
             onPress={() => {
+              const newItem = setVolumePerIntake();
               if (handleSubmit()) {
-                navigation.navigate("Edit Medication Schedule", { medicationItem });
+                navigation.navigate("Edit Medication Schedule", { medicationItem: newItem });
               }
             }}
           />
@@ -378,8 +388,8 @@ const styles = StyleSheet.create({
     borderRadius: 40,
   },
   volumeBox: {
-    height: 50, 
-    borderWidth: 1, 
+    height: 50,
+    borderWidth: 1,
     borderColor: "gray",
     borderRadius: 8,
     paddingHorizontal: 20,
@@ -388,5 +398,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
-  }
+  },
 });
