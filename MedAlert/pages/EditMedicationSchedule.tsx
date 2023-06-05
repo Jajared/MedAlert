@@ -6,6 +6,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { MedicationItemData } from "../utils/types";
 
 export default function EditMedicationSchedule({ navigation, route, allMedicationItems, setEdit }) {
+  console.log({ ...route.params.medicationItem });
   const [medicationItem, setMedicationItem] = useState<MedicationItemData>({ ...route.params.medicationItem });
   const [date, setDate] = useState<Date>(new Date(2023, 1, 1, medicationItem.Instructions.FirstDosageTiming / 60, medicationItem.Instructions.FirstDosageTiming - (medicationItem.Instructions.FirstDosageTiming / 60) * 60, 0));
   const onChange = (event, selectedDate: Date) => {

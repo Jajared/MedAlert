@@ -218,7 +218,7 @@ export default function App() {
   };
 
   // Edit medication item and updates database
-  const setEdit = async (medicationItem) => {
+  const setEdit = async (medicationItem: MedicationItemData) => {
     var newAllMedicationItems = [...allMedicationItems];
     for (var i = 0; i < newAllMedicationItems.length; i++) {
       if (newAllMedicationItems[i].Name == medicationItem.Name) {

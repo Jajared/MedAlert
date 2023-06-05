@@ -152,7 +152,7 @@ export default function AddMedicationDetails({ navigation, route }) {
         </View>
         <View style={styles.intakeSection}>
           <Text style={styles.textHeader}>Volume per Intake (in ml)</Text>
-          <TextInput style={styles.volumeBox} keyboardType="decimal-pad" onChangeText={(text) => setState({ ...state, Instructions: { ...state.Instructions, TabletsPerIntake: parseFloat(text)}})}/>
+          <TextInput style={styles.volumeBox} keyboardType="decimal-pad" onChangeText={(text) => setState({ ...state, Instructions: { ...state.Instructions, TabletsPerIntake: parseFloat(text) } })} />
         </View>
         <View style={styles.frequencySection}>
           <Text style={styles.textHeader}>Take this medication:</Text>
@@ -272,8 +272,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   volumeBox: {
-    height: 50, 
-    borderWidth: 1, 
+    height: 50,
+    borderWidth: 1,
     borderColor: "gray",
     borderRadius: 8,
     paddingHorizontal: 20,
@@ -282,5 +282,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
-  }
+    textAlign: "center",
+  },
 });
