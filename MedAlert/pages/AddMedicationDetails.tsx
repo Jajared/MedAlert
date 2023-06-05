@@ -10,21 +10,26 @@ import { MedicationItemData } from "../utils/types";
 export default function AddMedicationDetails({ navigation, route }) {
   const [state, setState] = useState<MedicationItemData>({ Name: "", Type: route.params.Type, Purpose: "", Instructions: { TabletsPerIntake: 1, FrequencyPerDay: 0, Specifications: "", FirstDosageTiming: 540 } });
   const [showCamera, setShowCamera] = useState<boolean>(false);
+  const [selectedType, setSelectedType] = useState<string>("");
 
   function setFrequencyPerIntake(value: number) {
     setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FrequencyPerDay: value } }));
   }
   function handleSubmit() {
     if (state.Name.trim() === "") {
-      alert("Please enter name of medication");
+      alert("Please enter Name of Medication");
       return false;
     }
     if (state.Purpose.trim() === "") {
-      alert("Please enter purpose of medication");
+      alert("Please enter Purpose of Medication");
       return false;
     }
     if (state.Instructions.FrequencyPerDay == 0) {
-      alert("Please select frequency");
+      alert("Please select Frequency");
+      return false;
+    }
+    if (isNaN(state.Instructions.TabletsPerIntake)) {
+      alert("Please enter a numeric value for Volume per Intake");
       return false;
     }
     return true;
@@ -33,96 +38,179 @@ export default function AddMedicationDetails({ navigation, route }) {
   const handleCancel = () => {
     setShowCamera(false);
   };
-  return showCamera ? (
-    <View style={{ width: "100%", height: "100%" }}>
-      <CameraComponent onCancel={handleCancel} />
-    </View>
-  ) : (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      <TouchableOpacity style={{ position: "absolute", top: 60, right: 40, zIndex: 1 }} onPress={() => setShowCamera(true)}>
-        <Entypo name="camera" size={24} color="black" />
-      </TouchableOpacity>
-      <BackNavBar navigation={navigation} title="Add Medication" />
-      <View style={styles.nameSection}>
-        <Text style={styles.textHeader}>Name of Medication</Text>
-        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Name: text.trim() })} value={state.Name} placeholder="Name" />
+
+  if (route.params.Type == "Pill") {
+    return showCamera ? (
+      <View style={{ width: "100%", height: "100%" }}>
+        <CameraComponent onCancel={handleCancel} />
       </View>
-      <View style={styles.purposeSection}>
-        <Text style={styles.textHeader}>Purpose of Medication</Text>
-        <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Purpose: text.trim() })} value={state.Purpose} placeholder="Purpose" />
+    ) : (
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" />
+        <TouchableOpacity style={{ position: "absolute", top: 60, right: 40, zIndex: 1 }} onPress={() => setShowCamera(true)}>
+          <Entypo name="camera" size={24} color="black" />
+        </TouchableOpacity>
+        <BackNavBar navigation={navigation} title="Add Medication" />
+        <View style={styles.nameSection}>
+          <Text style={styles.textHeader}>Name of Medication</Text>
+          <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Name: text.trim() })} value={state.Name} placeholder="Name" />
+        </View>
+        <View style={styles.purposeSection}>
+          <Text style={styles.textHeader}>Purpose of Medication</Text>
+          <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Purpose: text.trim() })} value={state.Purpose} placeholder="Purpose" />
+        </View>
+        <View style={styles.intakeSection}>
+          <Text style={styles.textHeader}>Tablets per Intake</Text>
+          <Button
+            title="-"
+            onPress={() => {
+              if (state.Instructions.TabletsPerIntake > 1) {
+                setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake - 1 } }));
+              } else {
+                alert("Cannot be less than 1");
+              }
+            }}
+          />
+          <Text style={styles.textHeader}>{state.Instructions.TabletsPerIntake}</Text>
+          <Button title="+" onPress={() => setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake + 1 } }))} />
+        </View>
+        <View style={styles.frequencySection}>
+          <Text style={styles.textHeader}>Take this medication:</Text>
+          <BouncyCheckbox
+            text="Daily"
+            textStyle={{
+              textDecorationLine: "none",
+            }}
+            style={styles.frequencyItem}
+            isChecked={state.Instructions.FrequencyPerDay === 1}
+            onPress={() => setFrequencyPerIntake(1)}
+            disableBuiltInState={true}
+          />
+          <BouncyCheckbox
+            text="Twice a day"
+            textStyle={{
+              textDecorationLine: "none",
+            }}
+            style={styles.frequencyItem}
+            isChecked={state.Instructions.FrequencyPerDay === 2}
+            onPress={() => setFrequencyPerIntake(2)}
+            disableBuiltInState={true}
+          />
+          <BouncyCheckbox
+            text="Three times a day"
+            textStyle={{
+              textDecorationLine: "none",
+            }}
+            style={styles.frequencyItem}
+            isChecked={state.Instructions.FrequencyPerDay === 3}
+            onPress={() => setFrequencyPerIntake(3)}
+            disableBuiltInState={true}
+          />
+          <BouncyCheckbox
+            text="Four times a day"
+            textStyle={{
+              textDecorationLine: "none",
+            }}
+            style={styles.frequencyItem}
+            isChecked={state.Instructions.FrequencyPerDay === 4}
+            onPress={() => setFrequencyPerIntake(4)}
+            disableBuiltInState={true}
+          />
+        </View>
+        <View style={styles.nextSection}>
+          <CustomButton
+            title="Next"
+            onPress={() => {
+              if (handleSubmit() == true) {
+                navigation.navigate("Add Medication Schedule", { state });
+              }
+            }}
+          />
+        </View>
+        <View style={styles.bottomNavBar} />
+      </SafeAreaView>
+    );
+  } else {
+    return showCamera ? (
+      <View style={{ width: "100%", height: "100%" }}>
+        <CameraComponent onCancel={handleCancel} />
       </View>
-      <View style={styles.intakeSection}>
-        <Text style={styles.textHeader}>Tablets per Intake</Text>
-        <Button
-          title="-"
-          onPress={() => {
-            if (state.Instructions.TabletsPerIntake > 1) {
-              setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake - 1 } }));
-            } else {
-              alert("Cannot be less than 1");
-            }
-          }}
-        />
-        <Text style={styles.textHeader}>{state.Instructions.TabletsPerIntake}</Text>
-        <Button title="+" onPress={() => setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake + 1 } }))} />
-      </View>
-      <View style={styles.frequencySection}>
-        <Text style={styles.textHeader}>Take this medication:</Text>
-        <BouncyCheckbox
-          text="Daily"
-          textStyle={{
-            textDecorationLine: "none",
-          }}
-          style={styles.frequencyItem}
-          isChecked={state.Instructions.FrequencyPerDay === 1}
-          onPress={() => setFrequencyPerIntake(1)}
-          disableBuiltInState={true}
-        />
-        <BouncyCheckbox
-          text="Twice a day"
-          textStyle={{
-            textDecorationLine: "none",
-          }}
-          style={styles.frequencyItem}
-          isChecked={state.Instructions.FrequencyPerDay === 2}
-          onPress={() => setFrequencyPerIntake(2)}
-          disableBuiltInState={true}
-        />
-        <BouncyCheckbox
-          text="Three times a day"
-          textStyle={{
-            textDecorationLine: "none",
-          }}
-          style={styles.frequencyItem}
-          isChecked={state.Instructions.FrequencyPerDay === 3}
-          onPress={() => setFrequencyPerIntake(3)}
-          disableBuiltInState={true}
-        />
-        <BouncyCheckbox
-          text="Four times a day"
-          textStyle={{
-            textDecorationLine: "none",
-          }}
-          style={styles.frequencyItem}
-          isChecked={state.Instructions.FrequencyPerDay === 4}
-          onPress={() => setFrequencyPerIntake(4)}
-          disableBuiltInState={true}
-        />
-      </View>
-      <View style={styles.nextSection}>
-        <CustomButton
-          title="Next"
-          onPress={() => {
-            if (handleSubmit() == true) {
-              navigation.navigate("Add Medication Schedule", { state });
-            }
-          }}
-        />
-      </View>
-      <View style={styles.bottomNavBar} />
-    </SafeAreaView>
-  );
+    ) : (
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" />
+        <TouchableOpacity style={{ position: "absolute", top: 60, right: 40, zIndex: 1 }} onPress={() => setShowCamera(true)}>
+          <Entypo name="camera" size={24} color="black" />
+        </TouchableOpacity>
+        <BackNavBar navigation={navigation} title="Add Medication" />
+        <View style={styles.nameSection}>
+          <Text style={styles.textHeader}>Name of Medication</Text>
+          <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Name: text.trim() })} value={state.Name} placeholder="Name" />
+        </View>
+        <View style={styles.purposeSection}>
+          <Text style={styles.textHeader}>Purpose of Medication</Text>
+          <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Purpose: text.trim() })} value={state.Purpose} placeholder="Purpose" />
+        </View>
+        <View style={styles.intakeSection}>
+          <Text style={styles.textHeader}>Volume per Intake (in ml)</Text>
+          <TextInput style={styles.volumeBox} keyboardType="decimal-pad" onChangeText={(text) => setState({ ...state, Instructions: { ...state.Instructions, TabletsPerIntake: parseFloat(text)}})}/>
+        </View>
+        <View style={styles.frequencySection}>
+          <Text style={styles.textHeader}>Take this medication:</Text>
+          <BouncyCheckbox
+            text="Daily"
+            textStyle={{
+              textDecorationLine: "none",
+            }}
+            style={styles.frequencyItem}
+            isChecked={state.Instructions.FrequencyPerDay === 1}
+            onPress={() => setFrequencyPerIntake(1)}
+            disableBuiltInState={true}
+          />
+          <BouncyCheckbox
+            text="Twice a day"
+            textStyle={{
+              textDecorationLine: "none",
+            }}
+            style={styles.frequencyItem}
+            isChecked={state.Instructions.FrequencyPerDay === 2}
+            onPress={() => setFrequencyPerIntake(2)}
+            disableBuiltInState={true}
+          />
+          <BouncyCheckbox
+            text="Three times a day"
+            textStyle={{
+              textDecorationLine: "none",
+            }}
+            style={styles.frequencyItem}
+            isChecked={state.Instructions.FrequencyPerDay === 3}
+            onPress={() => setFrequencyPerIntake(3)}
+            disableBuiltInState={true}
+          />
+          <BouncyCheckbox
+            text="Four times a day"
+            textStyle={{
+              textDecorationLine: "none",
+            }}
+            style={styles.frequencyItem}
+            isChecked={state.Instructions.FrequencyPerDay === 4}
+            onPress={() => setFrequencyPerIntake(4)}
+            disableBuiltInState={true}
+          />
+        </View>
+        <View style={styles.nextSection}>
+          <CustomButton
+            title="Next"
+            onPress={() => {
+              if (handleSubmit() == true) {
+                navigation.navigate("Add Medication Schedule", { state });
+              }
+            }}
+          />
+        </View>
+        <View style={styles.bottomNavBar} />
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -183,4 +271,16 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 20,
   },
+  volumeBox: {
+    height: 50, 
+    borderWidth: 1, 
+    borderColor: "gray",
+    borderRadius: 8,
+    paddingHorizontal: 20,
+    marginTop: 5,
+    marginHorizontal: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    flex: 1,
+  }
 });
