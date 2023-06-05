@@ -51,7 +51,7 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
       });
     // Update guardian information in Firestore
     const guardianInfoRef = doc(collection(firestorage, "GuardianInformation"), userId);
-    setDoc(guardianInfoRef, { IncomingRequests: [], OutgoingRequests: [], Guardians: [], Patients: [] })
+    setDoc(guardianInfoRef, { IncomingRequests: [], OutgoingRequests: [], Guardians: [] })
       .then((docRef) => {
         console.log("Data pushed successfully.");
       })

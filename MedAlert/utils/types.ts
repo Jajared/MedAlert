@@ -64,6 +64,6 @@ export interface GuardianRequest {
   DeviceToken: string;
 }
 
-export interface PatientsScheduledItems {
-  [userId: string]: ScheduledItem[];
+export interface GuardianScheduledItems {
+  [userid: string]: ScheduledItem[];
 }

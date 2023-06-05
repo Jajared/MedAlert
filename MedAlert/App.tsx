@@ -28,8 +28,8 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { Subscription } from "expo-modules-core";
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "firebase/auth";
+import PatientMedicationPage from "./pages/PatientMedicationPage";
 import GuardianHomePage from "./pages/GuardianHomePage";
-import GuardianRequestsPage from "./pages/GuardianRequestsPage";
 import AboutPage from "./pages/AboutPage";
 import HelpPage from "./pages/HelpPage";
 
@@ -455,7 +455,7 @@ export default function App() {
           {(props) => <GuardianHomePage {...props} userId={userId} />}
         </Stack.Screen>
         <Stack.Screen name="Guardian Requests" options={{ headerShown: false }}>
-          {(props) => <GuardianRequestsPage {...props} userId={userId} />}
+          {(props) => <PatientMedicationPage {...props} userId={userId} />}
         </Stack.Screen>
         <Stack.Screen name="Medication Database" options={{ headerShown: false }}>
           {(props) => <MedicationDatabase {...props} />}
