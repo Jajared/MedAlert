@@ -15,6 +15,16 @@ export default function ViewMedicationPage({ navigation, allMedicationItems }) {
       return syrupIcon;
     }
   }
+
+  function getUnits(medicationData) {
+    const type = medicationData.Type;
+    if (type === "Pill") {
+      return "Tablets per Intake";
+    } else if (type === "Liquid") {
+      return "ml per Intake";
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -30,7 +40,9 @@ export default function ViewMedicationPage({ navigation, allMedicationItems }) {
                   <View style={styles.medicationInfo}>
                     <Text style={{ fontWeight: "bold", fontSize: 20 }}>{item.Name}</Text>
                     <Text>{item.Purpose}</Text>
-                    <Text>{item.Instructions.TabletsPerIntake} tablets per intake</Text>
+                    <Text>
+                      {item.Instructions.TabletsPerIntake} {getUnits(item)}
+                    </Text>
                   </View>
                 </TouchableOpacity>
               </View>

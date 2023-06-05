@@ -31,9 +31,9 @@ export default function MedicationItem({ props, setAcknowledged }) {
   function getUnits() {
     const type = medicationData.Type;
     if (type === "Pill") {
-      return "Tablets Per Intake"
+      return "Tablets per Intake";
     } else {
-      return "ml Per Intake"
+      return "ml per Intake";
     }
   }
 
@@ -54,7 +54,9 @@ export default function MedicationItem({ props, setAcknowledged }) {
             <View style={styles.medicationInfo}>
               <Text style={{ fontWeight: "bold", fontSize: 20 }}>{medicationData.Name}</Text>
               <Text>{medicationData.Purpose}</Text>
-              <Text>{medicationData.Instructions.TabletsPerIntake} {getUnits()}</Text>
+              <Text>
+                {medicationData.Instructions.TabletsPerIntake} {getUnits()}
+              </Text>
             </View>
           </View>
         </View>
