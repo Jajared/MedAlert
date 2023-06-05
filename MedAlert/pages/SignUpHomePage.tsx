@@ -55,7 +55,7 @@ export default function SignUpHomePage({ navigation, onSignUpHome }) {
                 const user = userCredential.user;
                 const userId = user.uid;
                 onSignUpHome(userId);
-                navigation.replace("Sign Up Details", { userId: userId, EmailAddress: email });
+                navigation.replace("Sign Up Details", { userId: userId, EmailAddress: email.toLowerCase() });
               })
               .catch((error) => {
                 alert(error);

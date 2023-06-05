@@ -14,6 +14,15 @@ export default function PatientMedicationItem({ props }) {
     }
   }
 
+  function getUnits() {
+    const type = medicationData.Type;
+    if (type === "Pill") {
+      return "Tablets per Intake";
+    } else {
+      return "ml per Intake";
+    }
+  }
+
   function getTime() {
     const time = medicationData.Instructions.FirstDosageTiming;
     const date = new Date();
@@ -30,7 +39,9 @@ export default function PatientMedicationItem({ props }) {
           <View style={styles.medicationInfo}>
             <Text style={{ fontWeight: "bold", fontSize: 20 }}>{medicationData.Name}</Text>
             <Text>{medicationData.Purpose}</Text>
-            <Text>{medicationData.Instructions.TabletsPerIntake} tablets per intake</Text>
+            <Text>
+              {medicationData.Instructions.TabletsPerIntake} {getUnits()}
+            </Text>
           </View>
         </View>
       </View>

@@ -64,6 +64,7 @@ export default function GuardianRequestsPage({ navigation, userId }) {
       const userInfoRef = doc(firestorage, "GuardianInformation", userId);
       await updateDoc(userInfoRef, { IncomingRequests: arrayRemove(patientId), Guardians: arrayUnion(patientId) });
       setGuardiansRequests(guardiansRequests.filter((guardianRequest) => guardianRequest.UserId !== patientId));
+      getAllGuardians();
     } catch (error) {
       console.error("Error accepting guardian request:", error);
     }
@@ -79,6 +80,7 @@ export default function GuardianRequestsPage({ navigation, userId }) {
       const userInfoRef = doc(firestorage, "GuardianInformation", userId);
       await updateDoc(userInfoRef, { IncomingRequests: arrayRemove(guardianId) });
       setGuardiansRequests(guardiansRequests.filter((guardianRequest) => guardianRequest.UserId !== guardianId));
+      getAllGuardians();
     } catch (error) {
       console.error("Error rejecting guardian request:", error);
     }
@@ -123,13 +125,17 @@ export default function GuardianRequestsPage({ navigation, userId }) {
 
   // Search document id by email
   const searchDocumentIdByEmail = async (email: string) => {
-    const querySnapshot = query(collection(firestorage, "UsersData"), where("EmailAddress", "==", email));
-    const snapshot = await getDocs(querySnapshot);
-    if (snapshot.empty) {
-      console.log("No matching documents.");
-      return;
+    try {
+      const querySnapshot = query(collection(firestorage, "UsersData"), where("EmailAddress", "==", email.toLowerCase()));
+      const snapshot = await getDocs(querySnapshot);
+      if (snapshot.empty) {
+        console.log("No matching documents.");
+        return;
+      }
+      return snapshot.docs[0].id;
+    } catch (error) {
+      console.error("Error searching document id by email:", error);
     }
-    return snapshot.docs[0].id;
   };
 
   // Add request
@@ -154,19 +160,17 @@ export default function GuardianRequestsPage({ navigation, userId }) {
         <StatusBar barStyle="dark-content" />
         <BackNavBar navigation={navigation} title="Guardian Home" />
         <View style={styles.pageBar}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pageBar}>
-            {functionTypes.map((req) => (
-              <TouchableOpacity
-                key={req}
-                onPress={() => {
-                  setSelectedFunction(req);
-                }}
-                style={[styles.filterItem, req === selectedFunction && styles.selectedFilterItem]}
-              >
-                <Text style={[styles.filterText, req === selectedFunction && styles.selectedFilterText]}>{req}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+          {functionTypes.map((req) => (
+            <TouchableOpacity
+              key={req}
+              onPress={() => {
+                setSelectedFunction(req);
+              }}
+              style={[styles.filterItem, req === selectedFunction && styles.selectedFilterItem]}
+            >
+              <Text style={[styles.filterText, req === selectedFunction && styles.selectedFilterText]}>{req}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
         <View style={[styles.section, { flex: 2 }]}>
           <View style={{ width: "100%" }}>{guardiansInfo && <FlatList data={guardiansInfo} renderItem={(data) => <GuardianInfoItem props={data} navigation={navigation} removeGuardian={removeGuardian} />} keyExtractor={(item) => item.Name} />}</View>
@@ -179,19 +183,17 @@ export default function GuardianRequestsPage({ navigation, userId }) {
         <StatusBar barStyle="dark-content" />
         <BackNavBar navigation={navigation} title="Guardian Home" />
         <View style={styles.pageBar}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pageBar}>
-            {functionTypes.map((req) => (
-              <TouchableOpacity
-                key={req}
-                onPress={() => {
-                  setSelectedFunction(req);
-                }}
-                style={[styles.filterItem, req === selectedFunction && styles.selectedFilterItem]}
-              >
-                <Text style={[styles.filterText, req === selectedFunction && styles.selectedFilterText]}>{req}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+          {functionTypes.map((req) => (
+            <TouchableOpacity
+              key={req}
+              onPress={() => {
+                setSelectedFunction(req);
+              }}
+              style={[styles.filterItem, req === selectedFunction && styles.selectedFilterItem]}
+            >
+              <Text style={[styles.filterText, req === selectedFunction && styles.selectedFilterText]}>{req}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
         <View style={[styles.section, { flex: 1 }]}>
           <View style={{ width: "100%" }}>{guardiansRequests && <FlatList data={guardiansRequests} renderItem={(data) => <GuardianRequestItem props={data} acceptGuardianRequest={acceptGuardianRequest} rejectGuardianRequest={rejectGuardianRequest} />} keyExtractor={(item) => item.Name} />}</View>
@@ -204,19 +206,17 @@ export default function GuardianRequestsPage({ navigation, userId }) {
         <StatusBar barStyle="dark-content" />
         <BackNavBar navigation={navigation} title="Guardian Home" />
         <View style={styles.pageBar}>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.pageBar}>
-            {functionTypes.map((req) => (
-              <TouchableOpacity
-                key={req}
-                onPress={() => {
-                  setSelectedFunction(req);
-                }}
-                style={[styles.filterItem, req === selectedFunction && styles.selectedFilterItem]}
-              >
-                <Text style={[styles.filterText, req === selectedFunction && styles.selectedFilterText]}>{req}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
+          {functionTypes.map((req) => (
+            <TouchableOpacity
+              key={req}
+              onPress={() => {
+                setSelectedFunction(req);
+              }}
+              style={[styles.filterItem, req === selectedFunction && styles.selectedFilterItem]}
+            >
+              <Text style={[styles.filterText, req === selectedFunction && styles.selectedFilterText]}>{req}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
         <SafeAreaView style={styles.popUpContainer}>
           <Text style={styles.title}>Add a guardian!</Text>
@@ -341,16 +341,14 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   pageBar: {
-    marginVertical: 10,
     flexDirection: "row",
     alignItems: "center",
-    marginHorizontal: 10,
   },
   filterItem: {
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 20,
-    marginRight: 10,
+    marginHorizontal: 5,
     backgroundColor: "#E0E0E0",
   },
   selectedFilterItem: {
