@@ -2,12 +2,13 @@ import { Text, SafeAreaView, View, StyleSheet, Image, TouchableOpacity, StatusBa
 import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import { FlatList } from "react-native";
+import { MedicationItemData } from "../utils/types";
 
 export default function ViewMedicationPage({ navigation, allMedicationItems }) {
   const pillIcon = require("../assets/pill-icon.png");
   const syrupIcon = require("../assets/syrup-icon.png");
 
-  function getIcon(medicationData) {
+  function getIcon(medicationData: MedicationItemData) {
     const type = medicationData.Type;
     if (type === "Pill") {
       return pillIcon;
@@ -16,7 +17,7 @@ export default function ViewMedicationPage({ navigation, allMedicationItems }) {
     }
   }
 
-  function getUnits(medicationData) {
+  function getUnits(medicationData: MedicationItemData) {
     const type = medicationData.Type;
     if (type === "Pill") {
       return "Tablets per Intake";

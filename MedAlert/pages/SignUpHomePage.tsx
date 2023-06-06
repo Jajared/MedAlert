@@ -7,9 +7,9 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 
 export default function SignUpHomePage({ navigation, onSignUpHome }) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
