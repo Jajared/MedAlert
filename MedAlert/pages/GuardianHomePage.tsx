@@ -10,7 +10,7 @@ import GuardianRequestItem from "../components/GuardianRequestItem/GuardianReque
 import GuardianInfoItem from "../components/GuardianInfoItem/GuardianInfoItem";
 import { GuardianInfo, GuardianRequest } from "../utils/types";
 
-export default function GuardianRequestsPage({ navigation, userId }) {
+export default function GuardianHomePage({ navigation, userId }) {
   const [addGuardianEmail, setAddGuardianEmail] = useState<string>("");
   const [guardiansRequests, setGuardiansRequests] = useState<GuardianRequest[]>([]);
   const [guardiansInfo, setGuardiansInfo] = useState<GuardianInfo[]>([]);

@@ -6,7 +6,7 @@ import { firestorage } from "../firebaseConfig";
 import { ScheduledItem } from "../utils/types";
 import PatientMedicationItem from "../components/PatientMedicationItem/PatientMedicationItem";
 
-export default function GuardianHomePage({ navigation, route }) {
+export default function PatientMedicationPage({ navigation, route }) {
   const { guardianId, guardianName } = route.params;
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
   const [isDataLoaded, setIsDataLoaded] = useState<boolean>(false);
