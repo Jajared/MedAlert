@@ -52,7 +52,7 @@ export default function AddMedicationDetails({ navigation, route }) {
   if (route.params.Type == "Pill") {
     return showCamera ? (
       <View style={{ width: "100%", height: "100%" }}>
-        <CameraComponent onCancel={handleCancel} setIsLoading={setIsLoading} />
+        <CameraComponent onCancel={handleCancel} setIsLoading={setIsLoading} setState={setState} state={state} />
       </View>
     ) : (
       <SafeAreaView style={styles.container}>
@@ -143,7 +143,7 @@ export default function AddMedicationDetails({ navigation, route }) {
   } else {
     return showCamera ? (
       <View style={{ width: "100%", height: "100%" }}>
-        <CameraComponent onCancel={handleCancel} setIsLoading={setIsLoading} />
+        <CameraComponent onCancel={handleCancel} setIsLoading={setIsLoading} setState={setState} state={state} />
       </View>
     ) : (
       <SafeAreaView style={styles.container}>

@@ -6,7 +6,7 @@ import * as MediaLibrary from "expo-media-library";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import callGoogleVisionAsync from "./GoogleVision";
 
-const CameraComponent = ({ onCancel, setIsLoading }) => {
+const CameraComponent = ({ onCancel, setIsLoading, setState, state }) => {
   const [image, setImage] = useState(null);
   const [imageData, setImageData] = useState<string>(null);
   const [hasPermission, setHasPermission] = useState(null);
@@ -46,7 +46,7 @@ const CameraComponent = ({ onCancel, setIsLoading }) => {
   const handleUseImage = async () => {
     if (imageData) {
       try {
-        callGoogleVisionAsync(imageData, setIsLoading);
+        callGoogleVisionAsync(imageData, setIsLoading, setState, state);
         setImage(null);
         onCancel();
       } catch (e) {

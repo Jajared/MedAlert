@@ -1,3 +1,5 @@
+import { MedicationItemData } from "../../utils/types";
+
 const API_KEY = "AIzaSyA630mEkGs-Zq9cMkIVWs9rfrLEZGOIKic";
 const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}`;
 
@@ -21,7 +23,7 @@ function generateBody(image: string) {
   return body;
 }
 
-async function callGoogleVisionAsync(image: string, setIsLoading: (isLoading: boolean) => void) {
+async function callGoogleVisionAsync(image: string, setIsLoading: (isLoading: boolean) => void, setState: (state: MedicationItemData) => void, state: MedicationItemData) {
   return new Promise(async (resolve, reject) => {
     setIsLoading(true);
     const body = generateBody(image); //pass in our image for the payload
@@ -37,7 +39,8 @@ async function callGoogleVisionAsync(image: string, setIsLoading: (isLoading: bo
       .json()
       .then((res) => {
         const response = res.responses[0].fullTextAnnotation.text;
-        detectMedicationNames(response);
+        const result = parseText(response);
+        setState({ ...state, Name: result[0], Instructions: { ...state.Instructions, TabletsPerIntake: result[1] } });
         resolve(res);
         setIsLoading(false);
       })
@@ -47,53 +50,37 @@ async function callGoogleVisionAsync(image: string, setIsLoading: (isLoading: bo
   });
 }
 
-function detectMedicationNames(text: string): string[] {
-  const medicationDictionary: string[] = [
-    // Add medication names to the dictionary
-    "Etoricoxib",
-    // Add more medication names as needed
-  ];
+// Parse the text to extract the medication name and dosage per intake
+function parseText(text: string) {
+  text = text.replace(/\n/g, " ");
+  // Extract medication name
+  const medicationNameRegex = /([a-zA-Z]+\s)?\d+MG/i;
+  const medicationNameMatch = text.match(medicationNameRegex);
+  const medicationName = medicationNameMatch ? medicationNameMatch[1] : "";
+  const cleanedMedicationName = medicationName.charAt(0).toUpperCase() + medicationName.slice(1).toLowerCase();
 
-  const detectedMedicationNames: string[] = [];
-
-  // Step 1: Tokenization
-  const tokens: string[] = text.split(/\s+/);
-
-  // Step 2: Text Processing
-  const processedTokens: string[] = tokens.map((token) => token.toLowerCase());
-
-  // Step 3: Keyword Matching
-  for (const token of processedTokens) {
-    // Step 3a: Exact Match
-    if (medicationDictionary.includes(token)) {
-      detectedMedicationNames.push(token);
-    }
-    // Step 3b: Partial Match
-    else {
-      const partialMatches: string[] = medicationDictionary.filter((medication) => medication.includes(token));
-      detectedMedicationNames.push(...partialMatches);
-    }
+  // Extract dosage per intake
+  const dosageIntakeRegex = /take (\d+|[A-Z]+) tab/i;
+  const dosageIntakeMatch = text.match(dosageIntakeRegex);
+  const dosageIntake = dosageIntakeMatch ? dosageIntakeMatch[1] : "";
+  const numberMapping = {
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+    five: 5,
+    six: 6,
+    seven: 7,
+    eight: 8,
+    nine: 9,
+    ten: 10,
+  };
+  const isNumber = (value) => !isNaN(value);
+  const cleanedDosageIntake = isNumber(dosageIntake) ? Number(dosageIntake) : numberMapping[dosageIntake.toLowerCase()];
+  if (cleanedDosageIntake == 0 || cleanedDosageIntake == "") {
+    alert("Unable to detect medication details. Please try again.");
   }
-
-  // Step 4: Context Analysis
-  const contextKeywords: string[] = ["medicine", "drug", "prescription", "mg", "tab"];
-  const filteredMedicationNames: string[] = detectedMedicationNames.filter((name) => contextKeywords.some((keyword) => text.toLowerCase().includes(keyword)));
-
-  // Step 5: Validation
-  const validatedMedicationNames: string[] = validateMedicationNames(filteredMedicationNames);
-
-  // Step 6: Post-processing
-  const uniqueMedicationNames: string[] = Array.from(new Set(validatedMedicationNames));
-
-  return uniqueMedicationNames;
-}
-
-// Helper function for validation using external sources
-function validateMedicationNames(medicationNames: string[]): string[] {
-  // Perform validation using external sources or APIs
-  // Example: Make API requests to DrugBank API or RxNorm API for validation
-  // Return the validated medication names
-  return medicationNames;
+  return [cleanedMedicationName, cleanedDosageIntake];
 }
 
 export default callGoogleVisionAsync;
