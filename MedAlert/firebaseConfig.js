@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
@@ -6,7 +8,7 @@ import { getAuth } from "firebase/auth";
 import "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA630mEkGs-Zq9cMkIVWs9rfrLEZGOIKic",
+  apiKey: process.env.FIREBASE_API_KEY,
   authDomain: "medalert-386812.firebaseapp.com",
   databaseURL: "https://medalert-386812-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "medalert-386812",

@@ -1,7 +1,8 @@
+require("dotenv").config();
+
 import { MedicationItemData } from "../../utils/types";
 
-const API_KEY = "AIzaSyA630mEkGs-Zq9cMkIVWs9rfrLEZGOIKic";
-const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${API_KEY}`;
+const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${process.env.VISION_API_KEY}`;
 
 // Also try DOCUMENT_TEXT_DETECTION instead of TEXT_DETECTION as per https://cloud.google.com/vision/docs/ocr
 function generateBody(image: string) {
