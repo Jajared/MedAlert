@@ -3,6 +3,7 @@ import MedicationItem from "../components/MedicationItem/MedicationItem";
 import { FlatList } from "react-native";
 import HomeNavBar from "../components/HomeNavBar/HomeNavBar";
 import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
+import { ScheduledItem } from "../utils/types";
 
 export default function HomeScreen({ navigation, scheduledItems, setAcknowledged, userName }) {
   return (
@@ -11,7 +12,7 @@ export default function HomeScreen({ navigation, scheduledItems, setAcknowledged
       <View style={styles.topNavBar}>
         <HomeNavBar navigation={navigation} userName={userName} />
       </View>
-      <View style={styles.medicationSection}>{scheduledItems && <FlatList data={scheduledItems.filter((data) => data.Acknowledged === false)} renderItem={(data) => <MedicationItem props={data} setAcknowledged={setAcknowledged} />} keyExtractor={(item) => item.notificationId} />}</View>
+      <View style={styles.medicationSection}>{scheduledItems && <FlatList data={scheduledItems.filter((data: ScheduledItem) => data.Acknowledged === false)} renderItem={(data) => <MedicationItem props={data} setAcknowledged={setAcknowledged} />} keyExtractor={(item) => item.notificationId} />}</View>
       <View style={styles.bottomNavBar}>
         <BottomNavBar navigation={navigation} />
       </View>

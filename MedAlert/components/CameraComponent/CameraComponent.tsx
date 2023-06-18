@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Image } from "react-native";
-import { Camera } from "expo-camera";
+import { Camera, CameraType, FlashMode } from "expo-camera";
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
-import callGoogleVisionAsync from "./GoogleVision";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import callGoogleVisionAsync from "./GoogleVision";
 
-const CameraComponent = ({ onCancel }) => {
+const CameraComponent = ({ onCancel, setIsLoading, setState, state }) => {
   const [image, setImage] = useState(null);
-  const [imageData, setImageData] = useState(null);
+  const [imageData, setImageData] = useState<string>(null);
   const [hasPermission, setHasPermission] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
-  const [flashMode, setFlashMode] = useState(Camera.Constants.FlashMode.off);
+  const [type, setType] = useState(CameraType.back);
+  const [flashMode, setFlashMode] = useState(FlashMode.off);
   const cameraRef = useRef(null);
 
   useEffect(() => {
@@ -46,9 +46,8 @@ const CameraComponent = ({ onCancel }) => {
   const handleUseImage = async () => {
     if (imageData) {
       try {
-        callGoogleVisionAsync(imageData);
+        callGoogleVisionAsync(imageData, setIsLoading, setState, state);
         setImage(null);
-        alert("Processing image...");
         onCancel();
       } catch (e) {
         console.log(e);
@@ -66,10 +65,10 @@ const CameraComponent = ({ onCancel }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.topBar}>
-        <TouchableOpacity style={styles.button} onPress={() => setFlashMode(flashMode === Camera.Constants.FlashMode.off ? Camera.Constants.FlashMode.on : Camera.Constants.FlashMode.off)}>
-          <Entypo name="flash" size={30} color={flashMode === Camera.Constants.FlashMode.off ? "white" : "yellow"} />
+        <TouchableOpacity style={styles.button} onPress={() => setFlashMode(flashMode === FlashMode.off ? FlashMode.on : FlashMode.off)}>
+          <Entypo name="flash" size={30} color={flashMode === FlashMode.off ? "white" : "yellow"} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => setType(type === Camera.Constants.Type.back ? Camera.Constants.Type.front : Camera.Constants.Type.back)}>
+        <TouchableOpacity style={styles.button} onPress={() => setType(type === CameraType.back ? CameraType.front : CameraType.back)}>
           <MaterialIcons name="flip-camera-android" size={30} color="white" />
         </TouchableOpacity>
       </View>

@@ -2,6 +2,7 @@
   "expo": {
     "name": "MedAlert",
     "slug": "MedAlert",
+    "description": "MedAlert is a mobile application that helps users keep track of their medications and reminds them to take their medications.",
     "version": "1.0.0",
     "owner": "jajabonks",
     "orientation": "portrait",

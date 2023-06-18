@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button, StatusBar } from "react-native";
+import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button, StatusBar, ActivityIndicator } from "react-native";
 import { useState } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -11,6 +11,7 @@ export default function AddMedicationDetails({ navigation, route }) {
   const [state, setState] = useState<MedicationItemData>({ Name: "", Type: route.params.Type, Purpose: "", Instructions: { TabletsPerIntake: 1, FrequencyPerDay: 0, Specifications: "", FirstDosageTiming: 540 } });
   const [showCamera, setShowCamera] = useState<boolean>(false);
   const [selectedType, setSelectedType] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   function setFrequencyPerIntake(value: number) {
     setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FrequencyPerDay: value } }));
@@ -39,10 +40,19 @@ export default function AddMedicationDetails({ navigation, route }) {
     setShowCamera(false);
   };
 
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.processingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Processing...</Text>
+      </SafeAreaView>
+    );
+  }
+
   if (route.params.Type == "Pill") {
     return showCamera ? (
       <View style={{ width: "100%", height: "100%" }}>
-        <CameraComponent onCancel={handleCancel} />
+        <CameraComponent onCancel={handleCancel} setIsLoading={setIsLoading} setState={setState} state={state} />
       </View>
     ) : (
       <SafeAreaView style={styles.container}>
@@ -133,7 +143,7 @@ export default function AddMedicationDetails({ navigation, route }) {
   } else {
     return showCamera ? (
       <View style={{ width: "100%", height: "100%" }}>
-        <CameraComponent onCancel={handleCancel} />
+        <CameraComponent onCancel={handleCancel} setIsLoading={setIsLoading} setState={setState} state={state} />
       </View>
     ) : (
       <SafeAreaView style={styles.container}>
@@ -283,5 +293,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     textAlign: "center",
+  },
+  processingContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
