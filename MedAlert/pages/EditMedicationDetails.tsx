@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button, Modal, StatusBar } from "react-native";
+import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button, Modal, StatusBar, Keyboard, TouchableWithoutFeedback } from "react-native";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import { useState } from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -42,235 +42,239 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
   }
   if (medicationItem.Type == "Pill") {
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" />
-        <BackNavBar navigation={navigation} title="Edit Medication Details" />
-        <View style={styles.nameSection}>
-          <Text style={styles.textHeader}>Name of Medication</Text>
-          <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Name: text.trim() })} value={medicationItem.Name} placeholder={medicationItem.Name} />
-        </View>
-        <View style={styles.purposeSection}>
-          <Text style={styles.textHeader}>Purpose of Medication</Text>
-          <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Purpose: text.trim() })} value={medicationItem.Purpose} placeholder={medicationItem.Purpose} />
-        </View>
-        <View style={styles.intakeSection}>
-          <Text style={styles.textHeader}>Tablets per Intake</Text>
-          <Button
-            title="-"
-            onPress={() => {
-              if (medicationItem.Instructions.TabletsPerIntake > 1) {
-                setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake - 1 } }));
-              } else {
-                alert("Cannot be less than 1");
-              }
-            }}
-          />
-          <Text style={styles.textHeader}>{medicationItem.Instructions.TabletsPerIntake}</Text>
-          <Button title="+" onPress={() => setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake + 1 } }))} />
-        </View>
-        <View style={styles.frequencySection}>
-          <Text style={styles.textHeader}>Take this medication:</Text>
-          <BouncyCheckbox
-            text="Daily"
-            textStyle={{
-              textDecorationLine: "none",
-            }}
-            style={styles.frequencyItem}
-            isChecked={medicationItem.Instructions.FrequencyPerDay === 1}
-            onPress={() => setFrequencyPerIntake(1)}
-            disableBuiltInState={true}
-          />
-          <BouncyCheckbox
-            text="Twice a day"
-            textStyle={{
-              textDecorationLine: "none",
-            }}
-            style={styles.frequencyItem}
-            isChecked={medicationItem.Instructions.FrequencyPerDay === 2}
-            onPress={() => setFrequencyPerIntake(2)}
-            disableBuiltInState={true}
-          />
-          <BouncyCheckbox
-            text="Three times a day"
-            textStyle={{
-              textDecorationLine: "none",
-            }}
-            style={styles.frequencyItem}
-            isChecked={medicationItem.Instructions.FrequencyPerDay === 3}
-            onPress={() => setFrequencyPerIntake(3)}
-            disableBuiltInState={true}
-          />
-          <BouncyCheckbox
-            text="Four times a day"
-            textStyle={{
-              textDecorationLine: "none",
-            }}
-            style={styles.frequencyItem}
-            isChecked={medicationItem.Instructions.FrequencyPerDay === 4}
-            onPress={() => setFrequencyPerIntake(4)}
-            disableBuiltInState={true}
-          />
-        </View>
-        <View style={styles.nextSection}>
-          <CustomButton
-            title="Continue Editing"
-            onPress={() => {
-              if (handleSubmit()) {
-                navigation.navigate("Edit Medication Schedule", { medicationItem });
-              }
-            }}
-          />
-        </View>
-        <View style={styles.nextSection}>
-          <TouchableOpacity
-            onPress={() => {
-              setIsDeletionPopUpVisible(true);
-            }}
-          >
-            <Text style={styles.deleteBox}>DELETE MEDICATION</Text>
-          </TouchableOpacity>
-        </View>
-        <Modal visible={isDeletionPopUpVisible} transparent={true} animationType="slide">
-          <SafeAreaView style={styles.popUpContainer}>
-            <View style={styles.popUp}>
-              <Text style={styles.header}>Are you sure that you want to delete </Text>
-              <Text style={{ fontWeight: "bold", fontSize: 20 }}> {medicationItem.Name}</Text>
-              <Text style={styles.header}>from your medication list?</Text>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    deleteMedicationFromList(medicationItem);
-                    setIsDeletionPopUpVisible(false);
-                    navigation.navigate("Home");
-                  }}
-                  style={[styles.button, { backgroundColor: "green" }]}
-                >
-                  <Text>YES</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsDeletionPopUpVisible(false);
-                  }}
-                  style={[styles.button, { backgroundColor: "red" }]}
-                >
-                  <Text>NO</Text>
-                </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <SafeAreaView style={styles.container}>
+          <StatusBar barStyle="dark-content" />
+          <BackNavBar navigation={navigation} title="Edit Medication Details" />
+          <View style={styles.nameSection}>
+            <Text style={styles.textHeader}>Name of Medication</Text>
+            <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Name: text.trim() })} value={medicationItem.Name} placeholder={medicationItem.Name} />
+          </View>
+          <View style={styles.purposeSection}>
+            <Text style={styles.textHeader}>Purpose of Medication</Text>
+            <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Purpose: text.trim() })} value={medicationItem.Purpose} placeholder={medicationItem.Purpose} />
+          </View>
+          <View style={styles.intakeSection}>
+            <Text style={styles.textHeader}>Tablets per Intake</Text>
+            <Button
+              title="-"
+              onPress={() => {
+                if (medicationItem.Instructions.TabletsPerIntake > 1) {
+                  setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake - 1 } }));
+                } else {
+                  alert("Cannot be less than 1");
+                }
+              }}
+            />
+            <Text style={styles.textHeader}>{medicationItem.Instructions.TabletsPerIntake}</Text>
+            <Button title="+" onPress={() => setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake + 1 } }))} />
+          </View>
+          <View style={styles.frequencySection}>
+            <Text style={styles.textHeader}>Take this medication:</Text>
+            <BouncyCheckbox
+              text="Daily"
+              textStyle={{
+                textDecorationLine: "none",
+              }}
+              style={styles.frequencyItem}
+              isChecked={medicationItem.Instructions.FrequencyPerDay === 1}
+              onPress={() => setFrequencyPerIntake(1)}
+              disableBuiltInState={true}
+            />
+            <BouncyCheckbox
+              text="Twice a day"
+              textStyle={{
+                textDecorationLine: "none",
+              }}
+              style={styles.frequencyItem}
+              isChecked={medicationItem.Instructions.FrequencyPerDay === 2}
+              onPress={() => setFrequencyPerIntake(2)}
+              disableBuiltInState={true}
+            />
+            <BouncyCheckbox
+              text="Three times a day"
+              textStyle={{
+                textDecorationLine: "none",
+              }}
+              style={styles.frequencyItem}
+              isChecked={medicationItem.Instructions.FrequencyPerDay === 3}
+              onPress={() => setFrequencyPerIntake(3)}
+              disableBuiltInState={true}
+            />
+            <BouncyCheckbox
+              text="Four times a day"
+              textStyle={{
+                textDecorationLine: "none",
+              }}
+              style={styles.frequencyItem}
+              isChecked={medicationItem.Instructions.FrequencyPerDay === 4}
+              onPress={() => setFrequencyPerIntake(4)}
+              disableBuiltInState={true}
+            />
+          </View>
+          <View style={styles.nextSection}>
+            <CustomButton
+              title="Continue Editing"
+              onPress={() => {
+                if (handleSubmit()) {
+                  navigation.navigate("Edit Medication Schedule", { medicationItem });
+                }
+              }}
+            />
+          </View>
+          <View style={styles.nextSection}>
+            <TouchableOpacity
+              onPress={() => {
+                setIsDeletionPopUpVisible(true);
+              }}
+            >
+              <Text style={styles.deleteBox}>DELETE MEDICATION</Text>
+            </TouchableOpacity>
+          </View>
+          <Modal visible={isDeletionPopUpVisible} transparent={true} animationType="slide">
+            <SafeAreaView style={styles.popUpContainer}>
+              <View style={styles.popUp}>
+                <Text style={styles.header}>Are you sure that you want to delete </Text>
+                <Text style={{ fontWeight: "bold", fontSize: 20 }}> {medicationItem.Name}</Text>
+                <Text style={styles.header}>from your medication list?</Text>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      deleteMedicationFromList(medicationItem);
+                      setIsDeletionPopUpVisible(false);
+                      navigation.navigate("Home");
+                    }}
+                    style={[styles.button, { backgroundColor: "green" }]}
+                  >
+                    <Text>YES</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setIsDeletionPopUpVisible(false);
+                    }}
+                    style={[styles.button, { backgroundColor: "red" }]}
+                  >
+                    <Text>NO</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          </SafeAreaView>
-        </Modal>
-      </SafeAreaView>
+            </SafeAreaView>
+          </Modal>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     );
   } else {
     return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" />
-        <BackNavBar navigation={navigation} title="Edit Medication Details" />
-        <View style={styles.nameSection}>
-          <Text style={styles.textHeader}>Name of Medication</Text>
-          <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Name: text.trim() })} value={medicationItem.Name} placeholder={medicationItem.Name} />
-        </View>
-        <View style={styles.purposeSection}>
-          <Text style={styles.textHeader}>Purpose of Medication</Text>
-          <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Purpose: text.trim() })} value={medicationItem.Purpose} placeholder={medicationItem.Purpose} />
-        </View>
-        <View style={styles.intakeSection}>
-          <Text style={styles.textHeader}>Volume per Intake (in ml)</Text>
-          <TextInput style={styles.volumeBox} keyboardType="decimal-pad" onChangeText={(text) => setVolume(text)} value={volume} placeholder={volume} />
-        </View>
-        <View style={styles.frequencySection}>
-          <Text style={styles.textHeader}>Take this medication:</Text>
-          <BouncyCheckbox
-            text="Daily"
-            textStyle={{
-              textDecorationLine: "none",
-            }}
-            style={styles.frequencyItem}
-            isChecked={medicationItem.Instructions.FrequencyPerDay === 1}
-            onPress={() => setFrequencyPerIntake(1)}
-            disableBuiltInState={true}
-          />
-          <BouncyCheckbox
-            text="Twice a day"
-            textStyle={{
-              textDecorationLine: "none",
-            }}
-            style={styles.frequencyItem}
-            isChecked={medicationItem.Instructions.FrequencyPerDay === 2}
-            onPress={() => setFrequencyPerIntake(2)}
-            disableBuiltInState={true}
-          />
-          <BouncyCheckbox
-            text="Three times a day"
-            textStyle={{
-              textDecorationLine: "none",
-            }}
-            style={styles.frequencyItem}
-            isChecked={medicationItem.Instructions.FrequencyPerDay === 3}
-            onPress={() => setFrequencyPerIntake(3)}
-            disableBuiltInState={true}
-          />
-          <BouncyCheckbox
-            text="Four times a day"
-            textStyle={{
-              textDecorationLine: "none",
-            }}
-            style={styles.frequencyItem}
-            isChecked={medicationItem.Instructions.FrequencyPerDay === 4}
-            onPress={() => setFrequencyPerIntake(4)}
-            disableBuiltInState={true}
-          />
-        </View>
-        <View style={styles.nextSection}>
-          <CustomButton
-            title="Continue Editing"
-            onPress={() => {
-              const newItem = setVolumePerIntake();
-              if (handleSubmit()) {
-                navigation.navigate("Edit Medication Schedule", { medicationItem: newItem });
-              }
-            }}
-          />
-        </View>
-        <View style={styles.nextSection}>
-          <TouchableOpacity
-            onPress={() => {
-              setIsDeletionPopUpVisible(true);
-            }}
-          >
-            <Text style={styles.deleteBox}>DELETE MEDICATION</Text>
-          </TouchableOpacity>
-        </View>
-        <Modal visible={isDeletionPopUpVisible} transparent={true} animationType="slide">
-          <SafeAreaView style={styles.popUpContainer}>
-            <View style={styles.popUp}>
-              <Text style={styles.header}>Are you sure that you want to delete </Text>
-              <Text style={{ fontWeight: "bold", fontSize: 20 }}> {medicationItem.Name}</Text>
-              <Text style={styles.header}>from your medication list?</Text>
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    deleteMedicationFromList(medicationItem);
-                    setIsDeletionPopUpVisible(false);
-                    navigation.navigate("Home");
-                  }}
-                  style={[styles.button, { backgroundColor: "green" }]}
-                >
-                  <Text>YES</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsDeletionPopUpVisible(false);
-                  }}
-                  style={[styles.button, { backgroundColor: "red" }]}
-                >
-                  <Text>NO</Text>
-                </TouchableOpacity>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <SafeAreaView style={styles.container}>
+          <StatusBar barStyle="dark-content" />
+          <BackNavBar navigation={navigation} title="Edit Medication Details" />
+          <View style={styles.nameSection}>
+            <Text style={styles.textHeader}>Name of Medication</Text>
+            <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Name: text.trim() })} value={medicationItem.Name} placeholder={medicationItem.Name} />
+          </View>
+          <View style={styles.purposeSection}>
+            <Text style={styles.textHeader}>Purpose of Medication</Text>
+            <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Purpose: text.trim() })} value={medicationItem.Purpose} placeholder={medicationItem.Purpose} />
+          </View>
+          <View style={styles.intakeSection}>
+            <Text style={styles.textHeader}>Volume per Intake (in ml)</Text>
+            <TextInput style={styles.volumeBox} keyboardType="decimal-pad" onChangeText={(text) => setVolume(text)} value={volume} placeholder={volume} />
+          </View>
+          <View style={styles.frequencySection}>
+            <Text style={styles.textHeader}>Take this medication:</Text>
+            <BouncyCheckbox
+              text="Daily"
+              textStyle={{
+                textDecorationLine: "none",
+              }}
+              style={styles.frequencyItem}
+              isChecked={medicationItem.Instructions.FrequencyPerDay === 1}
+              onPress={() => setFrequencyPerIntake(1)}
+              disableBuiltInState={true}
+            />
+            <BouncyCheckbox
+              text="Twice a day"
+              textStyle={{
+                textDecorationLine: "none",
+              }}
+              style={styles.frequencyItem}
+              isChecked={medicationItem.Instructions.FrequencyPerDay === 2}
+              onPress={() => setFrequencyPerIntake(2)}
+              disableBuiltInState={true}
+            />
+            <BouncyCheckbox
+              text="Three times a day"
+              textStyle={{
+                textDecorationLine: "none",
+              }}
+              style={styles.frequencyItem}
+              isChecked={medicationItem.Instructions.FrequencyPerDay === 3}
+              onPress={() => setFrequencyPerIntake(3)}
+              disableBuiltInState={true}
+            />
+            <BouncyCheckbox
+              text="Four times a day"
+              textStyle={{
+                textDecorationLine: "none",
+              }}
+              style={styles.frequencyItem}
+              isChecked={medicationItem.Instructions.FrequencyPerDay === 4}
+              onPress={() => setFrequencyPerIntake(4)}
+              disableBuiltInState={true}
+            />
+          </View>
+          <View style={styles.nextSection}>
+            <CustomButton
+              title="Continue Editing"
+              onPress={() => {
+                const newItem = setVolumePerIntake();
+                if (handleSubmit()) {
+                  navigation.navigate("Edit Medication Schedule", { medicationItem: newItem });
+                }
+              }}
+            />
+          </View>
+          <View style={styles.nextSection}>
+            <TouchableOpacity
+              onPress={() => {
+                setIsDeletionPopUpVisible(true);
+              }}
+            >
+              <Text style={styles.deleteBox}>DELETE MEDICATION</Text>
+            </TouchableOpacity>
+          </View>
+          <Modal visible={isDeletionPopUpVisible} transparent={true} animationType="slide">
+            <SafeAreaView style={styles.popUpContainer}>
+              <View style={styles.popUp}>
+                <Text style={styles.header}>Are you sure that you want to delete </Text>
+                <Text style={{ fontWeight: "bold", fontSize: 20 }}> {medicationItem.Name}</Text>
+                <Text style={styles.header}>from your medication list?</Text>
+                <View style={styles.buttonContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      deleteMedicationFromList(medicationItem);
+                      setIsDeletionPopUpVisible(false);
+                      navigation.navigate("Home");
+                    }}
+                    style={[styles.button, { backgroundColor: "green" }]}
+                  >
+                    <Text>YES</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setIsDeletionPopUpVisible(false);
+                    }}
+                    style={[styles.button, { backgroundColor: "red" }]}
+                  >
+                    <Text>NO</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          </SafeAreaView>
-        </Modal>
-      </SafeAreaView>
+            </SafeAreaView>
+          </Modal>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
     );
   }
 }

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, View, StatusBar } from "react-native";
+import { StyleSheet, Text, SafeAreaView, View, StatusBar, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { useState } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -38,76 +38,78 @@ export default function AddMedicationSchedule({ navigation, route, addMedication
     return true;
   }
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      <BackNavBar navigation={navigation} title="Schedule" />
-      <View style={styles.optionsSection}>
-        <Text style={styles.textHeader}>Medication Instructions</Text>
-        <View style={styles.optionsContainer}>
-          <View style={styles.optionsRow}>
-            <BouncyCheckbox
-              text="Before Meal"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.optionsItem}
-              isChecked={state.Instructions.Specifications === "Before Meal"}
-              onPress={() => setSpecifications("Before Meal")}
-              disableBuiltInState={true}
-            />
-            <BouncyCheckbox
-              text="After Meal"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.optionsItem}
-              isChecked={state.Instructions.Specifications === "After Meal"}
-              onPress={() => setSpecifications("After Meal")}
-              disableBuiltInState={true}
-            />
-          </View>
-          <View style={styles.optionsRow}>
-            <BouncyCheckbox
-              text="Every morning"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.optionsItem}
-              isChecked={state.Instructions.Specifications === "Every morning"}
-              onPress={() => setSpecifications("Every morning")}
-              disableBuiltInState={true}
-            />
-            <BouncyCheckbox
-              text="No specific instructions"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.optionsItem}
-              isChecked={state.Instructions.Specifications === "No specific instructions"}
-              onPress={() => setSpecifications("No specific instructions")}
-              disableBuiltInState={true}
-            />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" />
+        <BackNavBar navigation={navigation} title="Schedule" />
+        <View style={styles.optionsSection}>
+          <Text style={styles.textHeader}>Medication Instructions</Text>
+          <View style={styles.optionsContainer}>
+            <View style={styles.optionsRow}>
+              <BouncyCheckbox
+                text="Before Meal"
+                textStyle={{
+                  textDecorationLine: "none",
+                }}
+                style={styles.optionsItem}
+                isChecked={state.Instructions.Specifications === "Before Meal"}
+                onPress={() => setSpecifications("Before Meal")}
+                disableBuiltInState={true}
+              />
+              <BouncyCheckbox
+                text="After Meal"
+                textStyle={{
+                  textDecorationLine: "none",
+                }}
+                style={styles.optionsItem}
+                isChecked={state.Instructions.Specifications === "After Meal"}
+                onPress={() => setSpecifications("After Meal")}
+                disableBuiltInState={true}
+              />
+            </View>
+            <View style={styles.optionsRow}>
+              <BouncyCheckbox
+                text="Every morning"
+                textStyle={{
+                  textDecorationLine: "none",
+                }}
+                style={styles.optionsItem}
+                isChecked={state.Instructions.Specifications === "Every morning"}
+                onPress={() => setSpecifications("Every morning")}
+                disableBuiltInState={true}
+              />
+              <BouncyCheckbox
+                text="No specific instructions"
+                textStyle={{
+                  textDecorationLine: "none",
+                }}
+                style={styles.optionsItem}
+                isChecked={state.Instructions.Specifications === "No specific instructions"}
+                onPress={() => setSpecifications("No specific instructions")}
+                disableBuiltInState={true}
+              />
+            </View>
           </View>
         </View>
-      </View>
-      <View style={styles.dosageSection}>
-        <Text style={styles.textHeader}>First dosage timing:</Text>
-        <DateTimePicker testID="dateTimePicker" display="spinner" value={date} mode="time" onChange={onChange} />
-      </View>
-      <View style={{ flex: 3 }} />
-      <View style={styles.nextSection}>
-        <CustomButton
-          title="next"
-          onPress={() => {
-            if (handleSubmit() == true) {
-              addMedication(state);
-              navigation.navigate("Home");
-            }
-          }}
-        />
-      </View>
-      <View style={styles.bottomNavBar}></View>
-    </SafeAreaView>
+        <View style={styles.dosageSection}>
+          <Text style={styles.textHeader}>First dosage timing:</Text>
+          <DateTimePicker testID="dateTimePicker" display="spinner" value={date} mode="time" onChange={onChange} />
+        </View>
+        <View style={{ flex: 3 }} />
+        <View style={styles.nextSection}>
+          <CustomButton
+            title="next"
+            onPress={() => {
+              if (handleSubmit() == true) {
+                addMedication(state);
+                navigation.navigate("Home");
+              }
+            }}
+          />
+        </View>
+        <View style={styles.bottomNavBar}></View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 

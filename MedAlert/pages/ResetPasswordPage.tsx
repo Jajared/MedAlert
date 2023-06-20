@@ -1,7 +1,7 @@
 import { sendPasswordResetEmail, fetchSignInMethodsForEmail } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 import { useState } from "react";
-import { SafeAreaView, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { SafeAreaView, Text, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -43,17 +43,19 @@ export default function ResetPasswordPage({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <BackNavBar navigation={navigation} title="Reset Password" />
-      <Text style={{ margin: 10, fontSize: 15 }}>Enter the email associated with your account and we'll send an email with instructions to reset your password</Text>
-      <Text style={{ margin: 10, fontSize: 15, fontWeight: "bold" }}>Email Address:</Text>
-      <TextInput placeholder="Email" onChangeText={(text) => setEmail(text)} style={styles.inputBox} />
-      <TouchableOpacity onPress={() => handleSubmit()} style={styles.buttonContainer}>
-        <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
-          <Text style={styles.buttonText}>Send Instructions</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-    </SafeAreaView>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <SafeAreaView style={styles.container}>
+        <BackNavBar navigation={navigation} title="Reset Password" />
+        <Text style={{ margin: 10, fontSize: 15 }}>Enter the email associated with your account and we'll send an email with instructions to reset your password</Text>
+        <Text style={{ margin: 10, fontSize: 15, fontWeight: "bold" }}>Email Address:</Text>
+        <TextInput placeholder="Email" onChangeText={(text) => setEmail(text)} style={styles.inputBox} />
+        <TouchableOpacity onPress={() => handleSubmit()} style={styles.buttonContainer}>
+          <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
+            <Text style={styles.buttonText}>Send Instructions</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 

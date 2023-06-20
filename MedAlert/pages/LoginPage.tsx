@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, StyleSheet, View, TextInput, TouchableOpacity, StatusBar, Image } from "react-native";
+import { SafeAreaView, Text, StyleSheet, View, TextInput, TouchableOpacity, StatusBar, Image, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useState } from "react";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -13,54 +13,56 @@ export default function LoginPage({ navigation, onLogin }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      <Image source={require("../assets/medalert_icon.png")} style={styles.logo}></Image>
-      <Text style={styles.title}>Welcome! 👋</Text>
-      <View style={styles.inputBox}>
-        <AntDesign name="mail" size={20} color="black" style={styles.inputIcon} />
-        <TextInput style={styles.inputText} value={email} placeholder="Email" onChangeText={(text) => setEmail(text)}></TextInput>
-      </View>
-      <View style={styles.inputBox}>
-        <AntDesign name="lock" size={26} color="black" style={styles.inputIcon} />
-        <TextInput style={{ flex: 8 }} value={password} secureTextEntry={!showPassword} placeholder="Password" onChangeText={(text) => setPassword(text)}></TextInput>
-        <TouchableOpacity style={styles.showButton} onPress={togglePasswordVisibility}>
-          <Feather name={showPassword ? "eye-off" : "eye"} size={20} color="gray" />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.optionsBar}>
-        <TouchableOpacity onPress={() => navigation.navigate("Reset Password")}>
-          <Text style={{ color: "#FF014E" }}>Forgot Password?</Text>
-        </TouchableOpacity>
-      </View>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" />
+        <Image source={require("../assets/medalert_icon.png")} style={styles.logo}></Image>
+        <Text style={styles.title}>Welcome! 👋</Text>
+        <View style={styles.inputBox}>
+          <AntDesign name="mail" size={20} color="black" style={styles.inputIcon} />
+          <TextInput style={styles.inputText} value={email} placeholder="Email" onChangeText={(text) => setEmail(text)}></TextInput>
+        </View>
+        <View style={styles.inputBox}>
+          <AntDesign name="lock" size={26} color="black" style={styles.inputIcon} />
+          <TextInput style={{ flex: 8 }} value={password} secureTextEntry={!showPassword} placeholder="Password" onChangeText={(text) => setPassword(text)}></TextInput>
+          <TouchableOpacity style={styles.showButton} onPress={togglePasswordVisibility}>
+            <Feather name={showPassword ? "eye-off" : "eye"} size={20} color="gray" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.optionsBar}>
+          <TouchableOpacity onPress={() => navigation.navigate("Reset Password")}>
+            <Text style={{ color: "#FF014E" }}>Forgot Password?</Text>
+          </TouchableOpacity>
+        </View>
 
-      <TouchableOpacity
-        onPress={async () => {
-          try {
-            const success = await onLogin(email, password);
-            if (success) {
-              navigation.navigate("Home");
-            } else {
-              alert("Please retry logging in");
+        <TouchableOpacity
+          onPress={async () => {
+            try {
+              const success = await onLogin(email, password);
+              if (success) {
+                navigation.navigate("Home");
+              } else {
+                alert("Please retry logging in");
+              }
+            } catch (error) {
+              console.log(error);
             }
-          } catch (error) {
-            console.log(error);
-          }
-        }}
-        style={styles.buttonContainer}
-      >
-        <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
-          <Text style={styles.buttonText}>Login</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-      <View style={styles.emptySection}></View>
-      <View style={styles.signUpSection}>
-        <Text style={{ fontSize: 15 }}>Don't have any account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate("Sign Up Home")}>
-          <Text style={{ color: "#FF014E", fontSize: 15 }}> Sign Up</Text>
+          }}
+          style={styles.buttonContainer}
+        >
+          <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
+            <Text style={styles.buttonText}>Login</Text>
+          </LinearGradient>
         </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+        <View style={styles.emptySection}></View>
+        <View style={styles.signUpSection}>
+          <Text style={{ fontSize: 15 }}>Don't have any account?</Text>
+          <TouchableOpacity onPress={() => navigation.navigate("Sign Up Home")}>
+            <Text style={{ color: "#FF014E", fontSize: 15 }}> Sign Up</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 

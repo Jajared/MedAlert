@@ -1,9 +1,10 @@
-import { StyleSheet, Text, SafeAreaView, View, Button, StatusBar } from "react-native";
+import { StyleSheet, Text, SafeAreaView, View, Button, StatusBar, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useState } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MedicationItemData } from "../utils/types";
+import CustomButton from "../components/Buttons/CustomButton";
 
 export default function EditMedicationSchedule({ navigation, route, allMedicationItems, setEdit }) {
   console.log({ ...route.params.medicationItem });
@@ -35,76 +36,78 @@ export default function EditMedicationSchedule({ navigation, route, allMedicatio
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      <BackNavBar navigation={navigation} title="Edit Medication Schedule" />
-      <View style={styles.optionsSection}>
-        <Text style={styles.textHeader}>Medication Instructions</Text>
-        <View style={styles.optionsContainer}>
-          <View style={styles.optionsRow}>
-            <BouncyCheckbox
-              text="Before Meal"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.optionsItem}
-              isChecked={medicationItem.Instructions.Specifications === "Before Meal"}
-              onPress={() => setSpecifications("Before Meal")}
-              disableBuiltInState={true}
-            />
-            <BouncyCheckbox
-              text="After Meal"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.optionsItem}
-              isChecked={medicationItem.Instructions.Specifications === "After Meal"}
-              onPress={() => setSpecifications("After Meal")}
-              disableBuiltInState={true}
-            />
-          </View>
-          <View style={styles.optionsRow}>
-            <BouncyCheckbox
-              text="Every morning"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.optionsItem}
-              isChecked={medicationItem.Instructions.Specifications === "Every morning"}
-              onPress={() => setSpecifications("Every morning")}
-              disableBuiltInState={true}
-            />
-            <BouncyCheckbox
-              text="No specific instructions"
-              textStyle={{
-                textDecorationLine: "none",
-              }}
-              style={styles.optionsItem}
-              isChecked={medicationItem.Instructions.Specifications === "No specific instructions"}
-              onPress={() => setSpecifications("No specific instructions")}
-              disableBuiltInState={true}
-            />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" />
+        <BackNavBar navigation={navigation} title="Edit Medication Schedule" />
+        <View style={styles.optionsSection}>
+          <Text style={styles.textHeader}>Medication Instructions</Text>
+          <View style={styles.optionsContainer}>
+            <View style={styles.optionsRow}>
+              <BouncyCheckbox
+                text="Before Meal"
+                textStyle={{
+                  textDecorationLine: "none",
+                }}
+                style={styles.optionsItem}
+                isChecked={medicationItem.Instructions.Specifications === "Before Meal"}
+                onPress={() => setSpecifications("Before Meal")}
+                disableBuiltInState={true}
+              />
+              <BouncyCheckbox
+                text="After Meal"
+                textStyle={{
+                  textDecorationLine: "none",
+                }}
+                style={styles.optionsItem}
+                isChecked={medicationItem.Instructions.Specifications === "After Meal"}
+                onPress={() => setSpecifications("After Meal")}
+                disableBuiltInState={true}
+              />
+            </View>
+            <View style={styles.optionsRow}>
+              <BouncyCheckbox
+                text="Every morning"
+                textStyle={{
+                  textDecorationLine: "none",
+                }}
+                style={styles.optionsItem}
+                isChecked={medicationItem.Instructions.Specifications === "Every morning"}
+                onPress={() => setSpecifications("Every morning")}
+                disableBuiltInState={true}
+              />
+              <BouncyCheckbox
+                text="No specific instructions"
+                textStyle={{
+                  textDecorationLine: "none",
+                }}
+                style={styles.optionsItem}
+                isChecked={medicationItem.Instructions.Specifications === "No specific instructions"}
+                onPress={() => setSpecifications("No specific instructions")}
+                disableBuiltInState={true}
+              />
+            </View>
           </View>
         </View>
-      </View>
-      <View style={styles.dosageSection}>
-        <Text style={styles.textHeader}>First dosage timing:</Text>
-        <DateTimePicker testID="dateTimePicker" display="spinner" value={date} mode="time" onChange={onChange} />
-      </View>
-      <View style={{ flex: 3 }} />
-      <View style={styles.nextSection}>
-        <Button
-          title="next"
-          onPress={() => {
-            if (handleSubmit() == true) {
-              setEdit(medicationItem);
-              navigation.navigate("Home");
-            }
-          }}
-        />
-      </View>
-      <View style={styles.bottomNavBar}></View>
-    </SafeAreaView>
+        <View style={styles.dosageSection}>
+          <Text style={styles.textHeader}>First dosage timing:</Text>
+          <DateTimePicker testID="dateTimePicker" display="spinner" value={date} mode="time" onChange={onChange} />
+        </View>
+        <View style={{ flex: 3 }} />
+        <View style={styles.nextSection}>
+          <CustomButton
+            title="next"
+            onPress={() => {
+              if (handleSubmit() == true) {
+                setEdit(medicationItem);
+                navigation.navigate("Home");
+              }
+            }}
+          />
+        </View>
+        <View style={styles.bottomNavBar}></View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
