@@ -225,7 +225,7 @@ export default function App() {
         newAllMedicationItems[i] = medicationItem;
       }
     }
-    const newScheduledItems = await editScheduledItems(newAllMedicationItems);
+    const newScheduledItems = await editScheduledItems(medicationItem);
     await updateDoc(medInfoRef.current, { MedicationItems: newAllMedicationItems, ScheduledItems: newScheduledItems })
       .then((docRef) => {
         console.log("Data changed successfully.");
@@ -244,7 +244,7 @@ export default function App() {
         newAllMedicationItems.splice(i, 1);
       }
     }
-    const newScheduledItems = await editScheduledItems(newAllMedicationItems);
+    const newScheduledItems = scheduledItems.filter((item) => item.Name != medicationItem.Name);
     await updateDoc(medInfoRef.current, { MedicationItems: newAllMedicationItems, ScheduledItems: newScheduledItems })
       .then((docRef) => {
         console.log("Data changed successfully.");
@@ -256,31 +256,31 @@ export default function App() {
   };
 
   // Edit scheduled items and notifications after edit/delete operations on MedicationItems
-  async function editScheduledItems(newAllMedicationItems: MedicationItemData[]) {
+  async function editScheduledItems(changedMedicationItem: MedicationItemData) {
     var temp = [];
     var count = 1;
     Notifications.cancelAllScheduledNotificationsAsync().then((response) => {
       console.log("Resetting all notifications");
     });
-    for (let i = 0; i < newAllMedicationItems.length; i++) {
-      const timeInterval = 24 / newAllMedicationItems[i].Instructions.FrequencyPerDay;
-      for (let j = 0; j < newAllMedicationItems[i].Instructions.FrequencyPerDay; j++) {
-        const newScheduledItem: ScheduledItem = {
-          ...newAllMedicationItems[i],
-          Acknowledged: false,
-          id: count,
-          notificationId: "",
-          Instructions: {
-            ...newAllMedicationItems[i].Instructions,
-            FirstDosageTiming: newAllMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j > 24 * 60 ? newAllMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j - 24 * 60 : newAllMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j,
-          },
-        };
-        const scheduledItem = await scheduleNotificationItem(newScheduledItem);
-        temp.push(scheduledItem);
-        count++;
-      }
+    const tempScheduledItems = scheduledItems.filter((item) => item.Name != changedMedicationItem.Name);
+    const timeInterval = 24 / changedMedicationItem.Instructions.FrequencyPerDay;
+    for (let j = 0; j < changedMedicationItem.Instructions.FrequencyPerDay; j++) {
+      const newScheduledItem: ScheduledItem = {
+        ...changedMedicationItem,
+        Acknowledged: false,
+        id: count,
+        notificationId: "",
+        Instructions: {
+          ...changedMedicationItem.Instructions,
+          FirstDosageTiming: changedMedicationItem.Instructions.FirstDosageTiming + timeInterval * 60 * j > 24 * 60 ? changedMedicationItem.Instructions.FirstDosageTiming + timeInterval * 60 * j - 24 * 60 : changedMedicationItem.Instructions.FirstDosageTiming + timeInterval * 60 * j,
+        },
+      };
+      const scheduledItem = await scheduleNotificationItem(newScheduledItem);
+      temp.push(scheduledItem);
+      count++;
     }
-    var result = sortScheduledItems(temp);
+    const newScheduledItems = [...tempScheduledItems, ...temp];
+    var result = sortScheduledItems(newScheduledItems);
     return result;
   }
 
