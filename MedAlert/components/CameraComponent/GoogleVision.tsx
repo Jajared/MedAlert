@@ -38,7 +38,7 @@ async function callGoogleVisionAsync(image: string, setIsLoading: (isLoading: bo
     response.json().then((res) => {
       const response = res.responses[0].fullTextAnnotation.text;
       const result = parseText(response);
-      setState({ ...state, Name: result[0], Instructions: { ...state.Instructions, TabletsPerIntake: result[1] } });
+      setState({ ...state, Name: result[0], Instructions: { ...state.Instructions, TabletsPerIntake: result[1], FrequencyPerDay: result[2] } });
       setIsLoading(false);
     });
   } catch (error) {
@@ -49,6 +49,7 @@ async function callGoogleVisionAsync(image: string, setIsLoading: (isLoading: bo
 // Parse the text to extract the medication name and dosage per intake
 function parseText(text: string) {
   text = text.replace(/\n/g, " ");
+  console.log(text);
   // Extract medication name
   const medicationNameRegex = /([a-zA-Z]+\s)?\d+MG/i;
   const medicationNameMatch = text.match(medicationNameRegex);
@@ -73,10 +74,17 @@ function parseText(text: string) {
   };
   const isNumber = (value) => !isNaN(value);
   const cleanedDosageIntake = isNumber(dosageIntake) ? Number(dosageIntake) : numberMapping[dosageIntake.toLowerCase()];
+
+  // Extract frequency
+  const pattern = /(\d+|[A-Z]+)\s*(time(?:s))\s*(?:a|per)?\s*(?:day|daily)/i;
+  const match = text.match(pattern);
+  const frequency = match ? match[1] : "";
+  const cleanedFrequency = frequency == "" ? 1 : isNumber(frequency) ? Number(frequency) : numberMapping[frequency.toLowerCase()];
+
   if (cleanedDosageIntake == 0 || cleanedDosageIntake == "") {
     alert("Unable to detect medication details. Please try again.");
   }
-  return [cleanedMedicationName, cleanedDosageIntake];
+  return [cleanedMedicationName, cleanedDosageIntake, cleanedFrequency];
 }
 
 export default callGoogleVisionAsync;

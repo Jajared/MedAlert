@@ -113,7 +113,6 @@ export default function App() {
 
   useEffect(() => {
     checkUserAuthState();
-    fetchData();
   }, []);
 
   useEffect(() => {

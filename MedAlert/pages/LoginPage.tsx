@@ -42,7 +42,7 @@ export default function LoginPage({ navigation, onLogin }) {
               if (success) {
                 navigation.navigate("Home");
               } else {
-                alert("Please retry logging in");
+                alert("Invalid email or password. Please retry logging in");
               }
             } catch (error) {
               console.log(error);
