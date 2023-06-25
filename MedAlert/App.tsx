@@ -180,6 +180,16 @@ export default function App() {
         setUserLoggedIn(false);
         setIsSignUpComplete(false);
         setUserId("");
+        setAllMedicationItems([]);
+        setScheduledItems([]);
+        setUserInformation({
+          Name: "",
+          Gender: "",
+          DateOfBirth: "",
+          EmailAddress: "",
+          PhoneNumber: "",
+          DeviceToken: "",
+        });
         console.log("Successfully signed out");
       });
     } catch (error) {

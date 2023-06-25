@@ -1,4 +1,4 @@
-import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacity, Button, StatusBar } from "react-native";
+import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacity, Button, StatusBar, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useState } from "react";
 import BackNavBar from "../components/BackNavBar/BackNavBar";
 import CalendarPicker from "react-native-calendar-picker";
@@ -50,85 +50,87 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
   }; */
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
-      <BackNavBar navigation={navigation} title="Update Account" />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <SafeAreaView style={styles.container}>
+        <StatusBar barStyle="dark-content" />
+        <BackNavBar navigation={navigation} title="Update Account" />
 
-      <View style={styles.mainSection}>
-        <View style={styles.subSection}>
-          <View style={styles.title}>
-            <Text style={styles.text}> Name: </Text>
-          </View>
-          <View style={styles.editBox}>
-            <TextInput value={state.Name} onChangeText={(text) => setState({ ...state, Name: text })}></TextInput>
-          </View>
-        </View>
-
-        <View style={styles.subSection}>
-          <View style={styles.title}>
-            <Text style={styles.text}> Email Address: </Text>
-          </View>
-          <View style={styles.editBox}>
-            <Text>{state.EmailAddress}</Text>
-          </View>
-        </View>
-
-        <View style={styles.subSection}>
-          <View style={styles.title}>
-            <Text style={styles.text}> Phone Number: </Text>
-          </View>
-          <View style={styles.editBox}>
-            <TextInput value={state.PhoneNumber} onChangeText={(text) => setState({ ...state, PhoneNumber: text })} keyboardType="numeric"></TextInput>
-          </View>
-        </View>
-
-        <View style={[styles.subSection, { zIndex: 2 }]}>
-          <View style={styles.title}>
-            <Text style={styles.text}> Gender: </Text>
-          </View>
-          <DropDownPicker
-            placeholder="Select One"
-            open={dropDownOpen}
-            setOpen={setDropDownOpen}
-            items={[
-              { label: "Male", value: "Male" },
-              { label: "Female", value: "Female" },
-              { label: "Prefer not to say", value: "Prefer not to say" },
-            ]}
-            value={state.Gender}
-            onSelectItem={(item) => {
-              setState({ ...state, Gender: item.value });
-            }}
-            style={styles.editBox}
-          />
-        </View>
-
-        <View style={[styles.subSection, { zIndex: 1 }]}>
-          <View style={styles.title}>
-            <Text style={styles.text}> Date of Birth: </Text>
-          </View>
-          <TouchableOpacity style={styles.editBox} onPress={handleModal}>
-            <Text>{state.DateOfBirth}</Text>
-          </TouchableOpacity>
-
-          <Modal isVisible={isModalVisible} animationType="slide" transparent={true}>
-            <View style={styles.calendar}>
-              <CalendarPicker onDateChange={onDateChange} selectedDayColor="#DE3163" />
-              <Button title="Hide calendar" onPress={handleModal} />
+        <View style={styles.mainSection}>
+          <View style={styles.subSection}>
+            <View style={styles.title}>
+              <Text style={styles.text}> Name: </Text>
             </View>
-          </Modal>
-        </View>
-      </View>
+            <View style={styles.editBox}>
+              <TextInput value={state.Name} onChangeText={(text) => setState({ ...state, Name: text })}></TextInput>
+            </View>
+          </View>
 
-      <CustomButton
-        title="Update"
-        onPress={() => {
-          updateUserInformation(state);
-          navigation.goBack();
-        }}
-      />
-      <View style={styles.emptySection}></View>
-    </SafeAreaView>
+          <View style={styles.subSection}>
+            <View style={styles.title}>
+              <Text style={styles.text}> Email Address: </Text>
+            </View>
+            <View style={styles.editBox}>
+              <Text>{state.EmailAddress}</Text>
+            </View>
+          </View>
+
+          <View style={styles.subSection}>
+            <View style={styles.title}>
+              <Text style={styles.text}> Phone Number: </Text>
+            </View>
+            <View style={styles.editBox}>
+              <TextInput value={state.PhoneNumber} onChangeText={(text) => setState({ ...state, PhoneNumber: text })} keyboardType="numeric"></TextInput>
+            </View>
+          </View>
+
+          <View style={[styles.subSection, { zIndex: 2 }]}>
+            <View style={styles.title}>
+              <Text style={styles.text}> Gender: </Text>
+            </View>
+            <DropDownPicker
+              placeholder="Select One"
+              open={dropDownOpen}
+              setOpen={setDropDownOpen}
+              items={[
+                { label: "Male", value: "Male" },
+                { label: "Female", value: "Female" },
+                { label: "Prefer not to say", value: "Prefer not to say" },
+              ]}
+              value={state.Gender}
+              onSelectItem={(item) => {
+                setState({ ...state, Gender: item.value });
+              }}
+              style={styles.editBox}
+            />
+          </View>
+
+          <View style={[styles.subSection, { zIndex: 1 }]}>
+            <View style={styles.title}>
+              <Text style={styles.text}> Date of Birth: </Text>
+            </View>
+            <TouchableOpacity style={styles.editBox} onPress={handleModal}>
+              <Text>{state.DateOfBirth}</Text>
+            </TouchableOpacity>
+
+            <Modal isVisible={isModalVisible} animationType="slide" transparent={true}>
+              <View style={styles.calendar}>
+                <CalendarPicker onDateChange={onDateChange} selectedDayColor="#DE3163" />
+                <Button title="Hide calendar" onPress={handleModal} />
+              </View>
+            </Modal>
+          </View>
+        </View>
+
+        <CustomButton
+          title="Update"
+          onPress={() => {
+            updateUserInformation(state);
+            navigation.goBack();
+          }}
+        />
+        <View style={styles.emptySection}></View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
