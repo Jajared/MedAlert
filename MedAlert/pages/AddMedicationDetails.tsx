@@ -143,17 +143,10 @@ export default function AddMedicationDetails({ navigation, route }) {
       </TouchableWithoutFeedback>
     );
   } else {
-    return showCamera ? (
-      <View style={{ width: "100%", height: "100%" }}>
-        <CameraComponent onCancel={handleCancel} setIsLoading={setIsLoading} setState={setState} state={state} />
-      </View>
-    ) : (
+    return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <SafeAreaView style={styles.container}>
           <StatusBar barStyle="dark-content" />
-          <TouchableOpacity style={{ position: "absolute", top: 60, right: 40, zIndex: 1 }} onPress={() => setShowCamera(true)}>
-            <Entypo name="camera" size={24} color="black" />
-          </TouchableOpacity>
           <BackNavBar navigation={navigation} title="Add Medication" />
           <View style={styles.nameSection}>
             <Text style={styles.textHeader}>Name of Medication</Text>

@@ -1,7 +1,7 @@
-import { MedicationItem, ScheduledItem } from "../utils/types";
+import { MedicationItemData, ScheduledItem } from "../utils/types";
 
 interface FirestoreData {
-  MedicationItems: MedicationItem[];
+  MedicationItems: MedicationItemData[];
   ScheduledItems: ScheduledItem[];
 }
 

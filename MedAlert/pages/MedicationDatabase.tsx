@@ -13,7 +13,6 @@ export default function MedicationDatabase({ navigation }) {
   const [selectedDosageForm, setSelectedDosageForm] = useState<string>("");
   const [data, setData] = useState(medData);
   const [fullData, setFullData] = useState(medData);
-
   const dosageFormTypes = ["All", "Tablet", "Injection", "Capsule", "Cream", "Solution", "Granule", "Syrup", "Ointment", "Powder"];
 
   const handleSearchByName = (query: string) => {

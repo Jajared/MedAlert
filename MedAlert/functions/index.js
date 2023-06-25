@@ -59,8 +59,10 @@ exports.resetScheduledData = onSchedule("00 16 * * *", async () => {
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
-          const medicationItems = doc.data().MedicationItems;
-          doc.ref.update({ ScheduledItems: getScheduledItems(medicationItems) });
+          const scheduledItems = doc.data().ScheduledItems;
+          getScheduledItems(scheduledItems).then((scheduledItems) => {
+            doc.ref.update({ ScheduledItems: scheduledItems });
+          });
         });
       });
     return null;

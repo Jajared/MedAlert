@@ -1,8 +1,7 @@
-require("dotenv").config();
-
 import { MedicationItemData } from "../../utils/types";
 
-const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${process.env.VISION_API_KEY}`;
+const VISION_API_KEY = "AIzaSyA630mEkGs-Zq9cMkIVWs9rfrLEZGOIKic";
+const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${VISION_API_KEY}`;
 
 // Also try DOCUMENT_TEXT_DETECTION instead of TEXT_DETECTION as per https://cloud.google.com/vision/docs/ocr
 function generateBody(image: string) {
@@ -25,7 +24,7 @@ function generateBody(image: string) {
 }
 
 async function callGoogleVisionAsync(image: string, setIsLoading: (isLoading: boolean) => void, setState: (state: MedicationItemData) => void, state: MedicationItemData) {
-  return new Promise(async (resolve, reject) => {
+  try {
     setIsLoading(true);
     const body = generateBody(image); //pass in our image for the payload
     const response = await fetch(API_URL, {
@@ -36,19 +35,15 @@ async function callGoogleVisionAsync(image: string, setIsLoading: (isLoading: bo
       },
       body: JSON.stringify(body),
     });
-    response
-      .json()
-      .then((res) => {
-        const response = res.responses[0].fullTextAnnotation.text;
-        const result = parseText(response);
-        setState({ ...state, Name: result[0], Instructions: { ...state.Instructions, TabletsPerIntake: result[1] } });
-        resolve(res);
-        setIsLoading(false);
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
+    response.json().then((res) => {
+      const response = res.responses[0].fullTextAnnotation.text;
+      const result = parseText(response);
+      setState({ ...state, Name: result[0], Instructions: { ...state.Instructions, TabletsPerIntake: result[1] } });
+      setIsLoading(false);
+    });
+  } catch (error) {
+    alert("Unable to detect medication details. Please try again.");
+  }
 }
 
 // Parse the text to extract the medication name and dosage per intake

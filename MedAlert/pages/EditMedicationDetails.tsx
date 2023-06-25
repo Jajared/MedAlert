@@ -48,7 +48,9 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
           <BackNavBar navigation={navigation} title="Edit Medication Details" />
           <View style={styles.nameSection}>
             <Text style={styles.textHeader}>Name of Medication</Text>
-            <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Name: text.trim() })} value={medicationItem.Name} placeholder={medicationItem.Name} />
+            <View style={styles.uneditableBox}>
+              <Text style={styles.uneditableText}>{medicationItem.Name}</Text>
+            </View>
           </View>
           <View style={styles.purposeSection}>
             <Text style={styles.textHeader}>Purpose of Medication</Text>
@@ -171,7 +173,9 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
           <BackNavBar navigation={navigation} title="Edit Medication Details" />
           <View style={styles.nameSection}>
             <Text style={styles.textHeader}>Name of Medication</Text>
-            <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Name: text.trim() })} value={medicationItem.Name} placeholder={medicationItem.Name} />
+            <View style={styles.uneditableBox}>
+              <Text style={styles.uneditableText}>{medicationItem.Name}</Text>
+            </View>
           </View>
           <View style={styles.purposeSection}>
             <Text style={styles.textHeader}>Purpose of Medication</Text>
@@ -402,5 +406,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
+  },
+  uneditableBox: {
+    height: 50,
+    borderWidth: 1,
+    borderColor: "gray",
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginTop: 5,
+    alignItems: "flex-start",
+    justifyContent: "center",
+  },
+  uneditableText: {
+    fontSize: 14,
+    color: "gray",
   },
 });

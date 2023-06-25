@@ -6,13 +6,14 @@ import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
 import { ScheduledItem } from "../utils/types";
 
 export default function HomeScreen({ navigation, scheduledItems, setAcknowledged, userName }) {
+  console.log(scheduledItems);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.topNavBar}>
         <HomeNavBar navigation={navigation} userName={userName} />
       </View>
-      <View style={styles.medicationSection}>{scheduledItems && <FlatList data={scheduledItems.filter((data: ScheduledItem) => data.Acknowledged === false)} renderItem={(data) => <MedicationItem props={data} setAcknowledged={setAcknowledged} />} keyExtractor={(item) => item.notificationId} />}</View>
+      <View style={styles.medicationSection}>{scheduledItems && <FlatList data={scheduledItems.filter((data: ScheduledItem) => data.Acknowledged === false)} renderItem={(data) => <MedicationItem props={data} setAcknowledged={setAcknowledged} />} keyExtractor={(item: ScheduledItem) => item.notificationId} />}</View>
       <View style={styles.bottomNavBar}>
         <BottomNavBar navigation={navigation} />
       </View>

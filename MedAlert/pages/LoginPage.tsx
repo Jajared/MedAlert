@@ -75,9 +75,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logo: {
-    height: 100,
-    width: 100,
-    marginVertical: 60,
+    flex: 7,
+    resizeMode: "contain",
+    marginVertical: 20,
   },
   title: {
     flex: 1,
