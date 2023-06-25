@@ -6,7 +6,7 @@
     "version": "1.0.0",
     "owner": "jajabonks",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/medalert_icon.png",
     "userInterfaceStyle": "light",
     "plugins": [
       [
