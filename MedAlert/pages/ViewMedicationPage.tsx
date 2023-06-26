@@ -52,7 +52,9 @@ export default function ViewMedicationPage({ navigation, allMedicationItems }) {
           />
         )}
       </View>
-      <BottomNavBar navigation={navigation} />
+      <View style={styles.bottomNavBar}>
+        <BottomNavBar navigation={navigation} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -90,5 +92,8 @@ const styles = StyleSheet.create({
     height: "80%",
     resizeMode: "contain",
     marginLeft: 10,
+  },
+  bottomNavBar: {
+    height: 60,
   },
 });

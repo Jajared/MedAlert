@@ -20,6 +20,7 @@ import MedicationDatabase from "./pages/MedicationDatabase";
 import LoginPage from "./pages/LoginPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import SearchItemPage from "./pages/SearchItemPage";
+import PerformancePage from "./pages/PerformancePage";
 import SignUpHomePage from "./pages/SignUpHomePage";
 import SignUpDetailsPage from "./pages/SignUpDetailsPage";
 import ViewMedicationPage from "./pages/ViewMedicationPage";
@@ -448,6 +449,9 @@ export default function App() {
       <Stack.Navigator>
         <Stack.Screen name="Home" options={{ headerShown: false }}>
           {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} fetchData={fetchData} />}
+        </Stack.Screen>
+        <Stack.Screen name="Performance" options={{ headerShown: false }}>
+          {(props) => <PerformancePage {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Add Medication Type" options={{ headerShown: false }}>
           {(props) => <AddMedicationType {...props} />}
