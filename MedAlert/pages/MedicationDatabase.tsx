@@ -36,8 +36,8 @@ export default function MedicationDatabase({ navigation }) {
     [fullData, setData]
   );
 
-  const contains = ({ product_name }, query) => {
-    if (product_name.toLowerCase().includes(query)) {
+  const contains = ({ product_name, active_ingredients }, query) => {
+    if (product_name.toLowerCase().includes(query) || active_ingredients.toLowerCase().includes(query)) {
       return true;
     }
     return false;
