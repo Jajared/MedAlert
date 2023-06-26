@@ -18,7 +18,6 @@ export default function BottomNavBar({ navigation }) {
           <Text style={[styles.text, currentRoute === "View All Medications" && styles.selectedText]}>Medications</Text>
         </TouchableOpacity>
       </View>
-
       <View style={styles.iconSection}>
         <TouchableOpacity onPress={() => navigation.navigate("Performance")}>
           <AntDesign name="areachart" size={26} style={[styles.icon, currentRoute === "Performance" && styles.selectedIcon]} />
@@ -27,7 +26,7 @@ export default function BottomNavBar({ navigation }) {
       </View>
       <View style={styles.iconSection}>
         <TouchableOpacity onPress={() => navigation.navigate("Profile Page")}>
-          <Entypo name="menu" size={26} style={[styles.icon, currentRoute === "Profile Page" && styles.selectedIcon]} />
+          <Entypo name="menu" size={28} style={[styles.icon, currentRoute === "Profile Page" && styles.selectedIcon]} />
           <Text style={[styles.text, currentRoute === "Profile Page" && styles.selectedText]}>Menu</Text>
         </TouchableOpacity>
       </View>
@@ -45,7 +44,6 @@ const styles = StyleSheet.create({
     borderTopColor: "gray",
     borderTopWidth: 0.5,
     paddingTop: 10,
-    paddingHorizontal: 5,
   },
   iconSection: {
     flex: 1,

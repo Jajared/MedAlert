@@ -451,7 +451,7 @@ export default function App() {
           {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} fetchData={fetchData} />}
         </Stack.Screen>
         <Stack.Screen name="Performance" options={{ headerShown: false }}>
-          {(props) => <PerformancePage {...props} />}
+          {(props) => <PerformancePage {...props} userId={userId} />}
         </Stack.Screen>
         <Stack.Screen name="Add Medication Type" options={{ headerShown: false }}>
           {(props) => <AddMedicationType {...props} />}
