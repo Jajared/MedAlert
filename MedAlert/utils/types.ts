@@ -66,12 +66,12 @@ export interface GuardianRequest {
 export interface TotalConsumptionData {
   value: number;
   date: string;
-  medications: ConsumptionData[];
+  medicationsConsumed: ConsumptionData[];
 }
 
 export interface ConsumptionData {
   medicationName: string;
-  scheduledTime: string;
-  actualTime: string;
+  scheduledTime: number;
+  actualTime: number;
   difference: number;
 }

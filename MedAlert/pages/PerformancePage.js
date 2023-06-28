@@ -1,26 +1,46 @@
 import { SafeAreaView, StatusBar, View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { LineChart, PieChart } from "react-native-gifted-charts";
-import React, { useEffect, useState } from "react";
-import { collection, doc, getDoc, updateDoc, getDocs, setDoc } from "firebase/firestore";
-import { firestorage } from "../firebaseConfig";
+import React, { useEffect, useState, useCallback } from "react";
 import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
 
 function PerformancePage({ navigation, statisticsData }) {
-  const [chartData, setChartData] = useState(statisticsData);
+  const [chartData, setChartData] = useState([
+    { date: "1", value: 0 },
+    { date: "2", value: 0 },
+  ]);
   const [piechartData, setPieChartData] = useState([
     { value: 50, color: "rgb(20, 195, 142)" },
     { value: 50, color: "rgb(255, 74, 74)" },
   ]);
-  const [isLoading, setIsLoading] = useState(false);
   const [selectedTimeFrame, setTimeFrame] = useState("Week");
-  const timeFrames = ["Week", "Month", "Year"];
+  const timeFrames = ["Day", "Week", "Month"];
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    getPieChartData();
+    setChartData(statisticsData);
+    getPieChartData(statisticsData);
   }, []);
 
-  const getPieChartData = () => {
-    const { positiveCount, negativeCount } = statisticsData.reduce(
+  const handleTimeFrameChange = useCallback((timeFrame) => {
+    if (timeFrame === "Day") {
+      const todayData = statisticsData[statisticsData.length - 1];
+      console.log(todayData);
+      setChartData([todayData]);
+      getPieChartData([todayData]);
+    } else if (timeFrame === "Week") {
+      const weekData = statisticsData.slice(statisticsData.length - 7, statisticsData.length);
+      setChartData(weekData);
+      getPieChartData(weekData);
+    } else {
+      const monthData = statisticsData.slice(statisticsData.length - 30, statisticsData.length);
+      setChartData(monthData);
+      getPieChartData(monthData);
+    }
+  }, []);
+
+  const getPieChartData = (data) => {
+    setIsLoading(true);
+    const { positiveCount, negativeCount } = data.reduce(
       (counts, { value }) => {
         if (value > 0.5 || value < -0.5) {
           // 0.5hr (30 minutes) is the threshold
@@ -41,6 +61,7 @@ function PerformancePage({ navigation, statisticsData }) {
       { value: positivePercentage, color: "rgb(20, 195, 142)" },
       { value: negativePercentage, color: "rgb(255, 74, 74)" },
     ]);
+    setIsLoading(false);
   };
 
   if (isLoading) {
@@ -97,6 +118,7 @@ function PerformancePage({ navigation, statisticsData }) {
             hideDataPoints
             isAnimated
             scrollToEnd
+            adjustToWidth
             animationDuration={800}
             animateOnDataChange
             onDataChangeAnimationDuration={1000}
@@ -212,12 +234,12 @@ const styles = StyleSheet.create({
     flex: 8,
     width: "100%",
     alignItems: "center",
+    paddingHorizontal: 30,
   },
   chart: {
     flex: 1,
-    width: "90%",
+    width: "100%",
     alignItems: "center",
-    paddingHorizontal: 20,
   },
   bottomNavBar: {
     height: 60,

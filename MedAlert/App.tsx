@@ -8,7 +8,7 @@ import AddMedicationDetails from "./pages/AddMedicationDetails";
 import AddMedicationSchedule from "./pages/AddMedicationSchedule";
 import MenuPage from "./pages/MenuPage";
 import UpdateAccountPage from "./pages/UpdateAccountPage";
-import { UserInformation, MedicationItemData, ScheduledItem, NotificationItem, TotalConsumptionData } from "./utils/types";
+import { UserInformation, MedicationItemData, ScheduledItem, NotificationItem, TotalConsumptionData, ConsumptionData } from "./utils/types";
 import { collection, doc, getDoc, updateDoc, getDocs } from "firebase/firestore";
 import { firestorage } from "./firebaseConfig";
 import { auth } from "./firebaseConfig";
@@ -347,14 +347,35 @@ export default function App() {
   // Acknowledge notification
   function setAcknowledged(id: number) {
     var newScheduledItems = [...scheduledItems];
+    var currentDate = new Date().toISOString().split("T")[0];
     for (let i = 0; i < newScheduledItems.length; i++) {
       if (newScheduledItems[i].id === id) {
         newScheduledItems[i].Acknowledged = true;
+        // Update statistics data
+        const newEntry: ConsumptionData = {
+          medicationName: newScheduledItems[i].Name,
+          scheduledTime: newScheduledItems[i].Instructions.FirstDosageTiming,
+          actualTime: new Date().getHours() * 60 + new Date().getMinutes(),
+          difference: new Date().getHours() * 60 + new Date().getMinutes() - newScheduledItems[i].Instructions.FirstDosageTiming,
+        };
+        if (statisticsData[statisticsData.length - 1].date == currentDate) {
+          // Add new entry to existing statistics data
+          statisticsData[statisticsData.length - 1].medicationsConsumed.push(newEntry);
+          // Recalculate value
+          statisticsData[statisticsData.length - 1].value += newEntry.difference / 60;
+        } else {
+          // Add new entry to statistics data
+          statisticsData.push({
+            date: currentDate,
+            medicationsConsumed: [newEntry],
+            value: newEntry.difference / 60,
+          });
+        }
       }
     }
+    updateDoc(statisticsInfoRef.current, { TotalConsumptionData: statisticsData });
     setScheduledItems(newScheduledItems);
     updateDoc(medInfoRef.current, { ScheduledItems: newScheduledItems });
-    // Update statistics data
   }
 
   // Get new scheduled items after adding new medication item
