@@ -8,12 +8,13 @@ import AddMedicationDetails from "./pages/AddMedicationDetails";
 import AddMedicationSchedule from "./pages/AddMedicationSchedule";
 import MenuPage from "./pages/MenuPage";
 import UpdateAccountPage from "./pages/UpdateAccountPage";
-import { UserInformation, MedicationItemData, ScheduledItem, NotificationItem } from "./utils/types";
+import { UserInformation, MedicationItemData, ScheduledItem, NotificationItem, TotalConsumptionData } from "./utils/types";
 import { collection, doc, getDoc, updateDoc, getDocs } from "firebase/firestore";
 import { firestorage } from "./firebaseConfig";
 import { auth } from "./firebaseConfig";
 import { userDataConverter } from "./converters/userDataConverter";
 import { medDataConverter } from "./converters/medDataConverter";
+import { statisticsDataConverter } from "./converters/statisticsDataConverter";
 import EditMedicationDetails from "./pages/EditMedicationDetails";
 import EditMedicationSchedule from "./pages/EditMedicationSchedule";
 import MedicationDatabase from "./pages/MedicationDatabase";
@@ -47,11 +48,13 @@ export default function App() {
   });
   const [allMedicationItems, setAllMedicationItems] = useState<MedicationItemData[]>([]);
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
+  const [statisticsData, setStatisticsData] = useState<TotalConsumptionData[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userId, setUserId] = useState("");
   const [isSignUpComplete, setIsSignUpComplete] = useState(false);
   const medInfoRef = useRef<DocumentReference>();
   const userInfoRef = useRef<DocumentReference>();
+  const statisticsInfoRef = useRef<DocumentReference>();
   const [expoPushToken, setExpoPushToken] = useState("");
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef<Subscription>();
@@ -99,11 +102,14 @@ export default function App() {
       setIsLoading(true);
       const medInfoQuerySnapshot = await getDoc(medInfoRef.current.withConverter(medDataConverter));
       const userQuerySnapshot = await getDoc(userInfoRef.current.withConverter(userDataConverter));
+      const statisticsSnapshot = await getDoc(statisticsInfoRef.current.withConverter(statisticsDataConverter));
+      const statisticsInfoData = statisticsSnapshot.data();
       const medInfoData = medInfoQuerySnapshot.data();
       const userInfoData = userQuerySnapshot.data();
       setUserInformation(userInfoData);
       setAllMedicationItems(medInfoData.MedicationItems);
       setScheduledItems(medInfoData.ScheduledItems);
+      setStatisticsData(statisticsInfoData.TotalConsumptionData);
       console.log("Data fetched successfully");
     } catch (error) {
       console.log("Error fetching data:", error);
@@ -120,6 +126,7 @@ export default function App() {
     if (userId && isSignUpComplete) {
       medInfoRef.current = doc(firestorage, "MedicationInformation", userId);
       userInfoRef.current = doc(firestorage, "UsersData", userId);
+      statisticsInfoRef.current = doc(firestorage, "StatisticsData", userId);
       registerForPushNotificationsAsync().then((token) => setExpoPushToken(token));
 
       // Foreground notification
@@ -159,6 +166,7 @@ export default function App() {
       setUserId(user.uid);
       medInfoRef.current = doc(firestorage, "MedicationInformation", user.uid);
       userInfoRef.current = doc(firestorage, "UsersData", user.uid);
+      statisticsInfoRef.current = doc(firestorage, "StatisticsData", user.uid);
       await new Promise((resolve) => {
         setTimeout(() => {
           resolve("Wait 0.3 seconds");
@@ -346,6 +354,7 @@ export default function App() {
     }
     setScheduledItems(newScheduledItems);
     updateDoc(medInfoRef.current, { ScheduledItems: newScheduledItems });
+    // Update statistics data
   }
 
   // Get new scheduled items after adding new medication item
@@ -451,7 +460,7 @@ export default function App() {
           {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} fetchData={fetchData} />}
         </Stack.Screen>
         <Stack.Screen name="Performance" options={{ headerShown: false }}>
-          {(props) => <PerformancePage {...props} userId={userId} />}
+          {(props) => <PerformancePage {...props} statisticsData={statisticsData} />}
         </Stack.Screen>
         <Stack.Screen name="Add Medication Type" options={{ headerShown: false }}>
           {(props) => <AddMedicationType {...props} />}

@@ -58,6 +58,20 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
       .catch((error) => {
         console.error("Error pushing data:", error);
       });
+    // Update statistics data in Firestore
+    const statisticsDataRef = doc(collection(firestorage, "StatisticsData"), userId);
+    setDoc(statisticsDataRef, {
+      TotalConsumptionData: [
+        { date: new Date(new Date().getTime() - 24 * 60 * 60 * 1000).toISOString().split("T")[0], value: 0, medications: [] },
+        { date: new Date().toISOString().split("T")[0], value: 0, medications: [] },
+      ],
+    })
+      .then((docRef) => {
+        console.log("Data pushed successfully.");
+      })
+      .catch((error) => {
+        console.error("Error pushing data:", error);
+      });
     await setIsSignUpComplete(true);
     navigation.navigate("Home");
   };

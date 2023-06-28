@@ -54,7 +54,7 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
           </View>
           <View style={styles.purposeSection}>
             <Text style={styles.textHeader}>Purpose of Medication</Text>
-            <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Purpose: text.trim() })} value={medicationItem.Purpose} placeholder={medicationItem.Purpose} />
+            <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Purpose: text })} value={medicationItem.Purpose} placeholder={medicationItem.Purpose} />
           </View>
           <View style={styles.intakeSection}>
             <Text style={styles.textHeader}>Tablets per Intake</Text>
@@ -179,7 +179,7 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
           </View>
           <View style={styles.purposeSection}>
             <Text style={styles.textHeader}>Purpose of Medication</Text>
-            <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Purpose: text.trim() })} value={medicationItem.Purpose} placeholder={medicationItem.Purpose} />
+            <TextInput style={styles.inputBox} onChangeText={(text) => setMedicationItem({ ...medicationItem, Purpose: text })} value={medicationItem.Purpose} placeholder={medicationItem.Purpose} />
           </View>
           <View style={styles.intakeSection}>
             <Text style={styles.textHeader}>Volume per Intake (in ml)</Text>

@@ -63,3 +63,15 @@ export interface GuardianRequest {
   PhoneNumber: string;
   DeviceToken: string;
 }
+export interface TotalConsumptionData {
+  value: number;
+  date: string;
+  medications: ConsumptionData[];
+}
+
+export interface ConsumptionData {
+  medicationName: string;
+  scheduledTime: string;
+  actualTime: string;
+  difference: number;
+}

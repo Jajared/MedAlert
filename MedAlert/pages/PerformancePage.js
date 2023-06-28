@@ -5,11 +5,8 @@ import { collection, doc, getDoc, updateDoc, getDocs, setDoc } from "firebase/fi
 import { firestorage } from "../firebaseConfig";
 import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
 
-function PerformancePage({ navigation, userId }) {
-  const [chartData, setChartData] = useState([
-    { date: "2021-09-01", value: -1 },
-    { date: "2021-09-02", value: 0.5 },
-  ]);
+function PerformancePage({ navigation, statisticsData }) {
+  const [chartData, setChartData] = useState(statisticsData);
   const [piechartData, setPieChartData] = useState([
     { value: 50, color: "rgb(20, 195, 142)" },
     { value: 50, color: "rgb(255, 74, 74)" },
@@ -19,46 +16,11 @@ function PerformancePage({ navigation, userId }) {
   const timeFrames = ["Week", "Month", "Year"];
 
   useEffect(() => {
-    getStatisticsData();
+    getPieChartData();
   }, []);
 
-  const uploadMockData = async () => {
-    try {
-      const querySnapshot = doc(firestorage, "StatisticsData", userId);
-      const mockData = {
-        TimeData: [
-          { date: "2021-09-01", value: 0.5 },
-          { date: "2021-09-02", value: 0.5 },
-          { date: "2021-09-03", value: 0.5 },
-          { date: "2021-09-04", value: 0.5 },
-        ],
-      };
-      await updateDoc(querySnapshot, mockData);
-      console.log("mock data uploaded");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getStatisticsData = async () => {
-    try {
-      setIsLoading(true);
-      const querySnapshot = doc(firestorage, "StatisticsData", userId);
-      const snapshot = await getDoc(querySnapshot);
-      const timeData = snapshot.data().TimeData;
-      setChartData(timeData);
-      const piechartData = getPieChartData(timeData);
-      setPieChartData(piechartData);
-      console.log("statistics data fetched");
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getPieChartData = (data) => {
-    const { positiveCount, negativeCount } = data.reduce(
+  const getPieChartData = () => {
+    const { positiveCount, negativeCount } = statisticsData.reduce(
       (counts, { value }) => {
         if (value > 0.5 || value < -0.5) {
           // 0.5hr (30 minutes) is the threshold
@@ -75,10 +37,10 @@ function PerformancePage({ navigation, userId }) {
     const positivePercentage = (positiveCount / total) * 100;
     const negativePercentage = (negativeCount / total) * 100;
 
-    return [
+    setPieChartData([
       { value: positivePercentage, color: "rgb(20, 195, 142)" },
       { value: negativePercentage, color: "rgb(255, 74, 74)" },
-    ];
+    ]);
   };
 
   if (isLoading) {
@@ -137,13 +99,11 @@ function PerformancePage({ navigation, userId }) {
             scrollToEnd
             animationDuration={800}
             animateOnDataChange
-            onDateChangeAnimationDuration={1000}
+            onDataChangeAnimationDuration={1000}
             spacing={30}
             color="black"
             startFillColor="#FF5C5C"
             endFillColor="#D1FFBD"
-            startOpacity={0.7}
-            endOpacity={0.7}
             initialSpacing={0}
             yAxisColor="white"
             yAxisThickness={0}
@@ -204,7 +164,7 @@ const styles = StyleSheet.create({
   pageHeader: {
     fontSize: 24,
     fontWeight: "bold",
-    marginTop: 20,
+    marginTop: 10,
     marginBottom: 10,
   },
   backNavBar: {
@@ -234,7 +194,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FAF6E0",
   },
   filterText: {
-    fontSize: 16,
+    fontSize: 14,
     color: "black",
     fontWeight: "bold",
   },

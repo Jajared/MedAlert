@@ -26,6 +26,14 @@ function generateBody(image: string) {
 async function callGoogleVisionAsync(image: string, setIsLoading: (isLoading: boolean) => void, setState: (state: MedicationItemData) => void, state: MedicationItemData) {
   try {
     setIsLoading(true);
+    const abortController = new AbortController();
+    const { signal } = abortController;
+    const timeoutId = setTimeout(() => {
+      abortController.abort();
+      setIsLoading(false);
+      alert("Unable to detect medication details. Please try again.");
+    }, 20000);
+
     const body = generateBody(image); //pass in our image for the payload
     const response = await fetch(API_URL, {
       method: "POST",
@@ -34,7 +42,9 @@ async function callGoogleVisionAsync(image: string, setIsLoading: (isLoading: bo
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
+      signal,
     });
+    clearTimeout(timeoutId);
     response.json().then((res) => {
       const response = res.responses[0].fullTextAnnotation.text;
       const result = parseText(response);
