@@ -8,7 +8,7 @@ import AddMedicationDetails from "./pages/AddMedicationDetails";
 import AddMedicationSchedule from "./pages/AddMedicationSchedule";
 import MenuPage from "./pages/MenuPage";
 import UpdateAccountPage from "./pages/UpdateAccountPage";
-import { UserInformation, MedicationItemData, ScheduledItem, NotificationItem, TotalConsumptionData, ConsumptionData } from "./utils/types";
+import { UserInformation, MedicationItemData, ScheduledItem, NotificationItem, ConsumptionDataSummary, ConsumptionEvent } from "./utils/types";
 import { collection, doc, getDoc, updateDoc, getDocs } from "firebase/firestore";
 import { firestorage } from "./firebaseConfig";
 import { auth } from "./firebaseConfig";
@@ -48,7 +48,7 @@ export default function App() {
   });
   const [allMedicationItems, setAllMedicationItems] = useState<MedicationItemData[]>([]);
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
-  const [statisticsData, setStatisticsData] = useState<TotalConsumptionData[]>([]);
+  const [consumptionEvents, setConsumptionEvents] = useState<ConsumptionEvent[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userId, setUserId] = useState("");
   const [isSignUpComplete, setIsSignUpComplete] = useState(false);
@@ -109,7 +109,7 @@ export default function App() {
       setUserInformation(userInfoData);
       setAllMedicationItems(medInfoData.MedicationItems);
       setScheduledItems(medInfoData.ScheduledItems);
-      setStatisticsData(statisticsInfoData.TotalConsumptionData);
+      setConsumptionEvents(statisticsInfoData.ConsumptionEvents);
       console.log("Data fetched successfully");
     } catch (error) {
       console.log("Error fetching data:", error);
@@ -347,33 +347,23 @@ export default function App() {
   // Acknowledge notification
   function setAcknowledged(id: number) {
     var newScheduledItems = [...scheduledItems];
-    var currentDate = new Date().toISOString().split("T")[0];
+    var newConsumptionEvents = [...consumptionEvents];
+    var currentDate = new Date();
     for (let i = 0; i < newScheduledItems.length; i++) {
       if (newScheduledItems[i].id === id) {
         newScheduledItems[i].Acknowledged = true;
         // Update statistics data
-        const newEntry: ConsumptionData = {
+        const newEntry: ConsumptionEvent = {
+          date: currentDate.toISOString().split("T")[0],
           medicationName: newScheduledItems[i].Name,
           scheduledTime: newScheduledItems[i].Instructions.FirstDosageTiming,
-          actualTime: new Date().getHours() * 60 + new Date().getMinutes(),
-          difference: new Date().getHours() * 60 + new Date().getMinutes() - newScheduledItems[i].Instructions.FirstDosageTiming,
+          actualTime: currentDate.getHours() * 60 + currentDate.getMinutes(),
+          difference: currentDate.getHours() * 60 + currentDate.getMinutes() - newScheduledItems[i].Instructions.FirstDosageTiming,
         };
-        if (statisticsData[statisticsData.length - 1].date == currentDate) {
-          // Add new entry to existing statistics data
-          statisticsData[statisticsData.length - 1].medicationsConsumed.push(newEntry);
-          // Recalculate value
-          statisticsData[statisticsData.length - 1].value += newEntry.difference / 60;
-        } else {
-          // Add new entry to statistics data
-          statisticsData.push({
-            date: currentDate,
-            medicationsConsumed: [newEntry],
-            value: newEntry.difference / 60,
-          });
-        }
+        newConsumptionEvents.push(newEntry);
       }
     }
-    updateDoc(statisticsInfoRef.current, { TotalConsumptionData: statisticsData });
+    updateDoc(statisticsInfoRef.current, { ConsumptionEvents: newConsumptionEvents });
     setScheduledItems(newScheduledItems);
     updateDoc(medInfoRef.current, { ScheduledItems: newScheduledItems });
   }
@@ -481,7 +471,7 @@ export default function App() {
           {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} fetchData={fetchData} />}
         </Stack.Screen>
         <Stack.Screen name="Performance" options={{ headerShown: false }}>
-          {(props) => <PerformancePage {...props} statisticsData={statisticsData} />}
+          {(props) => <PerformancePage {...props} consumptionEvents={consumptionEvents} />}
         </Stack.Screen>
         <Stack.Screen name="Add Medication Type" options={{ headerShown: false }}>
           {(props) => <AddMedicationType {...props} />}

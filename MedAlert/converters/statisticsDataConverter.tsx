@@ -1,17 +1,17 @@
-import { TotalConsumptionData, ConsumptionData } from "../utils/types";
+import { ConsumptionDataSummary, ConsumptionEvent } from "../utils/types";
 
 interface FirestoreData {
-  TotalConsumptionData: TotalConsumptionData[];
+  ConsumptionEvents: ConsumptionEvent[];
 }
 
 export const statisticsDataConverter = {
   toFirestore(data: FirestoreData) {
-    return { TotalConsumptionData: data.TotalConsumptionData };
+    return { ConsumptionEvents: data.ConsumptionEvents };
   },
   fromFirestore(snapshot): FirestoreData {
     const data = snapshot.data();
     return {
-      TotalConsumptionData: data.TotalConsumptionData,
+      ConsumptionEvents: data.ConsumptionEvents,
     };
   },
 };

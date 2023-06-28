@@ -61,15 +61,8 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
     // Update statistics data in Firestore
     const statisticsDataRef = doc(collection(firestorage, "StatisticsData"), userId);
     const today = new Date();
-    const initialConsumptionData = [];
-
-    for (let i = 6; i >= 0; i--) {
-      const date = new Date(today.getTime() - i * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
-      const dataPoint = { date: date, value: 0, medicationsConsumed: [] };
-      initialConsumptionData.push(dataPoint);
-    }
     setDoc(statisticsDataRef, {
-      TotalConsumptionData: initialConsumptionData,
+      ConsumptionEvents: [],
     })
       .then((docRef) => {
         console.log("Data pushed successfully.");

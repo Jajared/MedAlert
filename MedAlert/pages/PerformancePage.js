@@ -3,40 +3,77 @@ import { LineChart, PieChart } from "react-native-gifted-charts";
 import React, { useEffect, useState, useCallback } from "react";
 import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
 
-function PerformancePage({ navigation, statisticsData }) {
-  const [chartData, setChartData] = useState([
-    { date: "1", value: 0 },
-    { date: "2", value: 0 },
-  ]);
-  const [piechartData, setPieChartData] = useState([
-    { value: 50, color: "rgb(20, 195, 142)" },
-    { value: 50, color: "rgb(255, 74, 74)" },
-  ]);
+function PerformancePage({ navigation, consumptionEvents }) {
+  const DEFAULT_CHART_DATA = [
+    { date: "2023-06-27", value: 0 },
+    { date: "2023-06-28", value: 0 },
+  ];
+  const DEFAULT_PIECHART_DATA = [
+    { value: 100, color: "rgb(20, 195, 142)" },
+    { value: 0, color: "rgb(255, 74, 74)" },
+  ];
+  const [chartData, setChartData] = useState(DEFAULT_CHART_DATA);
+  const [piechartData, setPieChartData] = useState(DEFAULT_PIECHART_DATA);
   const [selectedTimeFrame, setTimeFrame] = useState("Week");
   const timeFrames = ["Day", "Week", "Month"];
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    setChartData(statisticsData);
-    getPieChartData(statisticsData);
-  }, []);
+  useEffect(() => {}, []);
 
   const handleTimeFrameChange = useCallback((timeFrame) => {
-    if (timeFrame === "Day") {
-      const todayData = statisticsData[statisticsData.length - 1];
-      console.log(todayData);
-      setChartData([todayData]);
-      getPieChartData([todayData]);
-    } else if (timeFrame === "Week") {
-      const weekData = statisticsData.slice(statisticsData.length - 7, statisticsData.length);
-      setChartData(weekData);
-      getPieChartData(weekData);
-    } else {
-      const monthData = statisticsData.slice(statisticsData.length - 30, statisticsData.length);
-      setChartData(monthData);
-      getPieChartData(monthData);
-    }
+    getChartData(timeFrame);
   }, []);
+
+  const getChartData = async (timeFrame) => {
+    setIsLoading(true);
+    if (timeFrame === "Day") {
+      const chartData = await calculateDataDaily(consumptionEvents);
+      setChartData(chartData);
+    } else if (timeFrame === "Week") {
+      const chartData = await calculateDataWeekly(consumptionEvents);
+      setChartData(chartData);
+    } else {
+      const chartData = calculateDataMonthly(consumptionEvents);
+      setChartData(chartData);
+    }
+    setPieChartData(getPieChartData(chartData));
+    setIsLoading(false);
+  };
+
+  // Filter and calculate data based on a weekly time frame
+  function calculateDataWeekly(data) {
+    const currentDate = new Date();
+    const weekStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
+    const filteredData = data.filter((event) => {
+      const eventDate = new Date(event.date);
+      return eventDate >= weekStartDate && eventDate <= currentDate;
+    });
+    const chartData = filteredData.map((event) => {
+      return { date: event.date, value: event.value };
+    });
+    return chartData;
+  }
+
+  // Filter and calculate data based on a daily time frame
+  function calculateDataDaily(data) {
+    const currentDate = new Date().toISOString().split("T")[0];
+    const filteredData = data.filter((event) => event.date === currentDate);
+    const chartData = filteredData.map((event) => {
+      return { date: event.date, value: event.value };
+    });
+    return chartData;
+  }
+
+  // Filter and calculate data based on a monthly time frame
+  function calculateDataMonthly(data) {
+    const currentDate = new Date();
+    const monthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const filteredData = data.filter((event) => {
+      const eventDate = new Date(event.date);
+      return eventDate >= monthStartDate && eventDate <= currentDate;
+    });
+    return filteredData;
+  }
 
   const getPieChartData = (data) => {
     setIsLoading(true);
@@ -82,6 +119,7 @@ function PerformancePage({ navigation, statisticsData }) {
               key={timeFrame}
               onPress={() => {
                 setTimeFrame(timeFrame);
+                handleTimeFrameChange(timeFrame);
               }}
               style={[styles.filterItem, timeFrame == selectedTimeFrame && styles.selectedFilterItem]}
             >
@@ -151,16 +189,15 @@ function PerformancePage({ navigation, statisticsData }) {
                 return (
                   <View
                     style={{
-                      height: 120,
+                      height: 40,
                       width: 100,
-                      backgroundColor: items[0].value > 0 ? "#D1FFBD" : "#FF5C5C",
+                      backgroundColor: items[0].value > 30 || items[0].value < -30 ? "#FF5C5C" : "#D1FFBD",
                       borderRadius: 4,
                       justifyContent: "center",
                       alignItems: "center",
                     }}
                   >
                     <Text style={{ color: "black", fontSize: 14, fontWeight: "bold" }}>{items[0].date}</Text>
-                    <Text style={{ color: "black" }}>{items[0].value}</Text>
                   </View>
                 );
               },
