@@ -1,12 +1,14 @@
 import { SafeAreaView, StatusBar, View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { LineChart, PieChart } from "react-native-gifted-charts";
 import React, { useEffect, useState, useCallback } from "react";
+import { getDoc, doc, updateDoc, setDoc } from "firebase/firestore";
+import { firestorage } from "../firebaseConfig";
 import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
 
-function PerformancePage({ navigation, consumptionEvents }) {
+function PerformancePage({ navigation, consumptionEvents, userId }) {
   const DEFAULT_CHART_DATA = [
-    { date: "2023-06-27", value: 0 },
-    { date: "2023-06-28", value: 0 },
+    { date: new Date().toISOString().split("T")[0], value: 0 },
+    { date: new Date().toISOString().split("T")[0], value: 0 },
   ];
   const DEFAULT_PIECHART_DATA = [
     { value: 100, color: "rgb(20, 195, 142)" },
@@ -14,69 +16,112 @@ function PerformancePage({ navigation, consumptionEvents }) {
   ];
   const [chartData, setChartData] = useState(DEFAULT_CHART_DATA);
   const [piechartData, setPieChartData] = useState(DEFAULT_PIECHART_DATA);
-  const [selectedTimeFrame, setTimeFrame] = useState("Week");
-  const timeFrames = ["Day", "Week", "Month"];
+  const [selectedTimeFrame, setTimeFrame] = useState("1W");
+  const [spacing, setSpacing] = useState(80);
+  const timeFrames = ["Day", "1W", "MTD", "1M"];
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    getChartData(selectedTimeFrame);
+  }, []);
 
   const handleTimeFrameChange = useCallback((timeFrame) => {
+    if (timeFrame === "Day") {
+      setSpacing(150);
+    } else if (timeFrame === "1W") {
+      setSpacing(60);
+    } else if (timeFrame === "MTD") {
+      setSpacing(20);
+    } else {
+      setSpacing(20);
+    }
     getChartData(timeFrame);
   }, []);
 
+  function testData() {
+    const startDate = new Date(); // Current date
+    startDate.setDate(startDate.getDate() - 15); // Go back 1 month
+    const endDate = new Date(); // Current date
+    const sampleData = [];
+    while (startDate <= endDate) {
+      const currentDate = new Date(startDate);
+      const event = {
+        date: currentDate.toISOString().split("T")[0],
+        medicationName: "Test",
+        scheduledTime: 1340,
+        actualTime: 1366,
+        difference: Math.floor(Math.random() * 121) - 60,
+      };
+      sampleData.push(event);
+      currentDate.setDate(currentDate.getDate() + 1);
+      startDate.setDate(currentDate.getDate());
+    }
+    setDoc(doc(firestorage, "StatisticsData", userId), { ConsumptionEvents: sampleData });
+    console.log("Sample data added");
+  }
+
   const getChartData = async (timeFrame) => {
     setIsLoading(true);
-    if (timeFrame === "Day") {
-      const chartData = await calculateDataDaily(consumptionEvents);
-      setChartData(chartData);
-    } else if (timeFrame === "Week") {
-      const chartData = await calculateDataWeekly(consumptionEvents);
-      setChartData(chartData);
-    } else {
-      const chartData = calculateDataMonthly(consumptionEvents);
-      setChartData(chartData);
-    }
-    setPieChartData(getPieChartData(chartData));
+    const chartData = calculateData(consumptionEvents, timeFrame);
+    const piechartData = getPieChartData(chartData);
+    setPieChartData(piechartData);
+    setChartData(chartData);
+
     setIsLoading(false);
   };
 
-  // Filter and calculate data based on a weekly time frame
-  function calculateDataWeekly(data) {
+  function calculateData(data, timeFrame) {
     const currentDate = new Date();
-    const weekStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
-    const filteredData = data.filter((event) => {
-      const eventDate = new Date(event.date);
-      return eventDate >= weekStartDate && eventDate <= currentDate;
-    });
-    const chartData = filteredData.map((event) => {
-      return { date: event.date, value: event.value };
-    });
-    return chartData;
-  }
+    if (timeFrame === "Day") {
+      // Filter and calculate data based on a daily time frame
+      const filteredData = data.filter((event) => event.date === currentDate.toISOString().split("T")[0]);
+      if (filteredData.length == 0) {
+        return DEFAULT_CHART_DATA;
+      } else {
+        const chartData = filteredData.map((event) => {
+          return { date: event.date, value: event.difference / 60 };
+        });
+        return chartData;
+      }
+    } else if (timeFrame === "1W") {
+      // Filter and calculate data based on a weekly time frame
+      const weekStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
+      const filteredData = data.filter((event) => {
+        const eventDate = new Date(event.date);
+        return eventDate >= weekStartDate && eventDate <= currentDate;
+      });
+      const chartData = filteredData.map((event) => {
+        return { date: event.date, value: event.difference / 60 };
+      });
+      return chartData;
+    } else if (timeFrame === "MTD") {
+      // Filter and calculate data based on a monthly time frame
+      const monthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      const filteredData = data.filter((event) => {
+        const eventDate = new Date(event.date);
+        return eventDate >= monthStartDate && eventDate <= currentDate;
+      });
+      const chartData = filteredData.map((event) => {
+        return { date: event.date, value: event.difference / 60 };
+      });
 
-  // Filter and calculate data based on a daily time frame
-  function calculateDataDaily(data) {
-    const currentDate = new Date().toISOString().split("T")[0];
-    const filteredData = data.filter((event) => event.date === currentDate);
-    const chartData = filteredData.map((event) => {
-      return { date: event.date, value: event.value };
-    });
-    return chartData;
-  }
+      return chartData;
+    } else {
+      // Filter and calculate data based on a monthly time frame
+      const monthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate());
+      const filteredData = data.filter((event) => {
+        const eventDate = new Date(event.date);
+        return eventDate >= monthStartDate && eventDate <= currentDate;
+      });
+      const chartData = filteredData.map((event) => {
+        return { date: event.date, value: event.difference / 60 };
+      });
 
-  // Filter and calculate data based on a monthly time frame
-  function calculateDataMonthly(data) {
-    const currentDate = new Date();
-    const monthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    const filteredData = data.filter((event) => {
-      const eventDate = new Date(event.date);
-      return eventDate >= monthStartDate && eventDate <= currentDate;
-    });
-    return filteredData;
+      return chartData;
+    }
   }
 
   const getPieChartData = (data) => {
-    setIsLoading(true);
     const { positiveCount, negativeCount } = data.reduce(
       (counts, { value }) => {
         if (value > 0.5 || value < -0.5) {
@@ -94,11 +139,10 @@ function PerformancePage({ navigation, consumptionEvents }) {
     const positivePercentage = (positiveCount / total) * 100;
     const negativePercentage = (negativeCount / total) * 100;
 
-    setPieChartData([
+    return [
       { value: positivePercentage, color: "rgb(20, 195, 142)" },
       { value: negativePercentage, color: "rgb(255, 74, 74)" },
-    ]);
-    setIsLoading(false);
+    ];
   };
 
   if (isLoading) {
@@ -153,23 +197,24 @@ function PerformancePage({ navigation, consumptionEvents }) {
           <LineChart
             areaChart
             data={chartData}
-            hideDataPoints
             isAnimated
             scrollToEnd
             adjustToWidth
+            hideDataPoints
             animationDuration={800}
             animateOnDataChange
             onDataChangeAnimationDuration={1000}
-            spacing={30}
+            spacing={spacing}
             color="black"
             startFillColor="#FF5C5C"
             endFillColor="#D1FFBD"
-            initialSpacing={0}
+            initialSpacing={10}
             yAxisColor="white"
             yAxisThickness={0}
             noOfSections={2}
             stepValue={1}
             height={100}
+            width={300}
             minValue={-2}
             maxValue={2}
             rulesType="solid"

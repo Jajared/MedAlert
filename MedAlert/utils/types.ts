@@ -63,11 +63,6 @@ export interface GuardianRequest {
   PhoneNumber: string;
   DeviceToken: string;
 }
-export interface ConsumptionDataSummary {
-  value: number;
-  date: string;
-}
-
 export interface ConsumptionEvent {
   date: string;
   medicationName: string;

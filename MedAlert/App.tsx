@@ -8,7 +8,7 @@ import AddMedicationDetails from "./pages/AddMedicationDetails";
 import AddMedicationSchedule from "./pages/AddMedicationSchedule";
 import MenuPage from "./pages/MenuPage";
 import UpdateAccountPage from "./pages/UpdateAccountPage";
-import { UserInformation, MedicationItemData, ScheduledItem, NotificationItem, ConsumptionDataSummary, ConsumptionEvent } from "./utils/types";
+import { UserInformation, MedicationItemData, ScheduledItem, NotificationItem, ConsumptionEvent } from "./utils/types";
 import { collection, doc, getDoc, updateDoc, getDocs } from "firebase/firestore";
 import { firestorage } from "./firebaseConfig";
 import { auth } from "./firebaseConfig";
@@ -471,7 +471,7 @@ export default function App() {
           {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} fetchData={fetchData} />}
         </Stack.Screen>
         <Stack.Screen name="Performance" options={{ headerShown: false }}>
-          {(props) => <PerformancePage {...props} consumptionEvents={consumptionEvents} />}
+          {(props) => <PerformancePage {...props} consumptionEvents={consumptionEvents} userId={userId} />}
         </Stack.Screen>
         <Stack.Screen name="Add Medication Type" options={{ headerShown: false }}>
           {(props) => <AddMedicationType {...props} />}
