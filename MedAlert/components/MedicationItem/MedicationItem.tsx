@@ -73,9 +73,8 @@ const styles = StyleSheet.create({
   timeSection: {
     flex: 1,
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 18,
     width: "90%",
-    marginBottom: 10,
     marginTop: 10,
   },
   icon: {

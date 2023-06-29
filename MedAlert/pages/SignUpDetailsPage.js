@@ -58,6 +58,18 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
       .catch((error) => {
         console.error("Error pushing data:", error);
       });
+    // Update statistics data in Firestore
+    const statisticsDataRef = doc(collection(firestorage, "StatisticsData"), userId);
+    const today = new Date();
+    setDoc(statisticsDataRef, {
+      ConsumptionEvents: [],
+    })
+      .then((docRef) => {
+        console.log("Data pushed successfully.");
+      })
+      .catch((error) => {
+        console.error("Error pushing data:", error);
+      });
     await setIsSignUpComplete(true);
     navigation.navigate("Home");
   };

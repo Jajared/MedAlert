@@ -68,7 +68,7 @@ export default function AddMedicationDetails({ navigation, route }) {
           </View>
           <View style={styles.purposeSection}>
             <Text style={styles.textHeader}>Purpose of Medication</Text>
-            <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Purpose: text.trim() })} value={state.Purpose} placeholder="Purpose" />
+            <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Purpose: text })} value={state.Purpose} placeholder="Purpose" />
           </View>
           <View style={styles.intakeSection}>
             <Text style={styles.textHeader}>Tablets per Intake</Text>
@@ -150,11 +150,11 @@ export default function AddMedicationDetails({ navigation, route }) {
           <BackNavBar navigation={navigation} title="Add Medication" />
           <View style={styles.nameSection}>
             <Text style={styles.textHeader}>Name of Medication</Text>
-            <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Name: text.trim() })} value={state.Name} placeholder="Name" />
+            <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Name: text })} value={state.Name} placeholder="Name" />
           </View>
           <View style={styles.purposeSection}>
             <Text style={styles.textHeader}>Purpose of Medication</Text>
-            <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Purpose: text.trim() })} value={state.Purpose} placeholder="Purpose" />
+            <TextInput style={styles.inputBox} onChangeText={(text) => setState({ ...state, Purpose: text })} value={state.Purpose} placeholder="Purpose" />
           </View>
           <View style={styles.intakeSection}>
             <Text style={styles.textHeader}>Volume per Intake (in ml)</Text>

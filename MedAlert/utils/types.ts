@@ -63,3 +63,10 @@ export interface GuardianRequest {
   PhoneNumber: string;
   DeviceToken: string;
 }
+export interface ConsumptionEvent {
+  date: string;
+  medicationName: string;
+  scheduledTime: number;
+  actualTime: number;
+  difference: number;
+}

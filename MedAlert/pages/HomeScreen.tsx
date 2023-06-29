@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     flex: 2,
   },
   bottomNavBar: {
-    flex: 1,
+    height: 60,
   },
   medicationSection: {
     flex: 7,

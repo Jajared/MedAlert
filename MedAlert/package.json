@@ -42,6 +42,7 @@
     "react-native-calendar-picker": "^6.1.5",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "~2.9.0",
+    "react-native-gifted-charts": "^1.2.42",
     "react-native-image-base64": "^0.1.4",
     "react-native-modal": "^13.0.1",
     "react-native-reanimated": "~2.14.4",
