@@ -66,58 +66,86 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
     const piechartData = getPieChartData(chartData);
     setPieChartData(piechartData);
     setChartData(chartData);
-
     setIsLoading(false);
   };
 
   function calculateData(data, timeFrame) {
-    const currentDate = new Date();
-    if (timeFrame === "Day") {
-      // Filter and calculate data based on a daily time frame
-      const filteredData = data.filter((event) => event.date === currentDate.toISOString().split("T")[0]);
-      if (filteredData.length == 0) {
-        return DEFAULT_CHART_DATA;
-      } else {
-        const chartData = filteredData.map((event) => {
-          return { date: event.date, value: event.difference / 60 };
+    try {
+      const currentDate = new Date();
+      if (timeFrame === "Day") {
+        // Filter and calculate data based on a daily time frame
+        const filteredData = data.filter((event) => event.date === currentDate.toISOString().split("T")[0]);
+        if (filteredData.length == 0) {
+          return DEFAULT_CHART_DATA;
+        } else {
+          const chartData = filteredData.map((event) => {
+            return { date: event.date, value: event.difference / 60 };
+          });
+          if (chartData.length < 2) {
+            chartData.unshift({ date: new Date().toISOString().split("T")[0], value: 0 });
+          }
+          return chartData;
+        }
+      } else if (timeFrame === "1W") {
+        // Filter and calculate data based on a weekly time frame
+        const weekStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
+        const filteredData = data.filter((event) => {
+          const eventDate = new Date(event.date);
+          return eventDate >= weekStartDate && eventDate <= currentDate;
         });
-        return chartData;
+        if (filteredData.length == 0) {
+          return DEFAULT_CHART_DATA;
+        } else {
+          const chartData = filteredData.map((event) => {
+            return { date: event.date, value: event.difference / 60 };
+          });
+          if (chartData.length < 2) {
+            chartData.unshift({ date: new Date().toISOString().split("T")[0], value: 0 });
+          }
+          return chartData;
+        }
+      } else if (timeFrame === "MTD") {
+        // Filter and calculate data based on a monthly time frame
+        const monthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const filteredData = data.filter((event) => {
+          const eventDate = new Date(event.date);
+          return eventDate >= monthStartDate && eventDate <= currentDate;
+        });
+        if (filteredData.length == 0) {
+          return DEFAULT_CHART_DATA;
+        } else {
+          const chartData = filteredData.map((event) => {
+            return { date: event.date, value: event.difference / 60 };
+          });
+          if (chartData.length < 2) {
+            chartData.unshift({ date: new Date().toISOString().split("T")[0], value: 0 });
+          }
+          return chartData;
+        }
+      } else {
+        // Filter and calculate data based on a monthly time frame
+        const monthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate());
+        const filteredData = data.filter((event) => {
+          const eventDate = new Date(event.date);
+          return eventDate >= monthStartDate && eventDate <= currentDate;
+        });
+        if (filteredData.length == 0) {
+          return DEFAULT_CHART_DATA;
+        } else {
+          const chartData = filteredData.map((event) => {
+            return { date: event.date, value: event.difference / 60 };
+          });
+          if (chartData.length < 2) {
+            chartData.unshift({ date: new Date().toISOString().split("T")[0], value: 0 });
+          }
+          return chartData;
+        }
       }
-    } else if (timeFrame === "1W") {
-      // Filter and calculate data based on a weekly time frame
-      const weekStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay());
-      const filteredData = data.filter((event) => {
-        const eventDate = new Date(event.date);
-        return eventDate >= weekStartDate && eventDate <= currentDate;
-      });
-      const chartData = filteredData.map((event) => {
-        return { date: event.date, value: event.difference / 60 };
-      });
-      return chartData;
-    } else if (timeFrame === "MTD") {
-      // Filter and calculate data based on a monthly time frame
-      const monthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-      const filteredData = data.filter((event) => {
-        const eventDate = new Date(event.date);
-        return eventDate >= monthStartDate && eventDate <= currentDate;
-      });
-      const chartData = filteredData.map((event) => {
-        return { date: event.date, value: event.difference / 60 };
-      });
-
-      return chartData;
-    } else {
-      // Filter and calculate data based on a monthly time frame
-      const monthStartDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate());
-      const filteredData = data.filter((event) => {
-        const eventDate = new Date(event.date);
-        return eventDate >= monthStartDate && eventDate <= currentDate;
-      });
-      const chartData = filteredData.map((event) => {
-        return { date: event.date, value: event.difference / 60 };
-      });
-
-      return chartData;
+    } catch (error) {
+      console.log("Error");
+      alert("Unable to get data");
+      setChartData(DEFAULT_CHART_DATA);
+      setPieChartData(DEFAULT_PIECHART_DATA);
     }
   }
 
@@ -203,7 +231,7 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
             hideDataPoints
             animationDuration={800}
             animateOnDataChange
-            onDataChangeAnimationDuration={1000}
+            onDataChangeAnimationDuration={800}
             spacing={spacing}
             color="black"
             startFillColor="#FF5C5C"

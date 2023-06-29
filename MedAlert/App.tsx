@@ -363,6 +363,7 @@ export default function App() {
         newConsumptionEvents.push(newEntry);
       }
     }
+    setConsumptionEvents(newConsumptionEvents);
     updateDoc(statisticsInfoRef.current, { ConsumptionEvents: newConsumptionEvents });
     setScheduledItems(newScheduledItems);
     updateDoc(medInfoRef.current, { ScheduledItems: newScheduledItems });
