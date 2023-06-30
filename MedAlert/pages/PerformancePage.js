@@ -95,9 +95,8 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
           const chartData = filteredData.map((event) => {
             return { date: toTime(event.actualTime), value: event.difference / 60 };
           });
-          if (chartData.length < 2) {
-            chartData.unshift({ date: new Date().toISOString().split("T")[0], value: 0 });
-          }
+          chartData.unshift({ date: "00:00", value: 0 });
+          chartData.push({ date: "23:59", value: 0 });
           return chartData;
         }
       } else if (timeFrame === "Week") {
