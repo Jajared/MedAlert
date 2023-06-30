@@ -136,7 +136,6 @@ const styles = StyleSheet.create({
     flex: 3,
     fontSize: 18,
     fontWeight: "bold",
-    padding: 10,
     textAlign: "center",
   },
 });

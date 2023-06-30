@@ -1,6 +1,6 @@
 import { SafeAreaView, StatusBar, View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
 import { LineChart, PieChart } from "react-native-gifted-charts";
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { getDoc, doc, updateDoc, setDoc } from "firebase/firestore";
 import { firestorage } from "../firebaseConfig";
 import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
@@ -15,6 +15,7 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
     { value: 100, color: "rgb(20, 195, 142)" },
     { value: 0, color: "rgb(255, 74, 74)" },
   ];
+
   const [chartData, setChartData] = useState(DEFAULT_CHART_DATA);
   const [piechartData, setPieChartData] = useState(DEFAULT_PIECHART_DATA);
   const [selectedTimeFrame, setTimeFrame] = useState("Day");
@@ -22,9 +23,10 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
   const [spacing, setSpacing] = useState(80);
   const timeFrames = ["Day", "Week", "Month"];
   const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     getChartData(selectedTimeFrame);
-  }, [selectedDate]);
+  }, [selectedDate, selectedTimeFrame]);
 
   const handleTimeFrameChange = useCallback((timeFrame) => {
     if (timeFrame === "Day") {
@@ -76,6 +78,12 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
     }
   };
 
+  function toTime(time) {
+    const hours = Math.floor(time / 60);
+    const minutes = time % 60;
+    return `${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
+  }
+
   function calculateData(data, timeFrame) {
     try {
       if (timeFrame === "Day") {
@@ -85,7 +93,7 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
           return DEFAULT_CHART_DATA;
         } else {
           const chartData = filteredData.map((event) => {
-            return { date: event.date, value: event.difference / 60 };
+            return { date: toTime(event.actualTime), value: event.difference / 60 };
           });
           if (chartData.length < 2) {
             chartData.unshift({ date: new Date().toISOString().split("T")[0], value: 0 });
@@ -106,9 +114,16 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
         const currentDate = new Date(weekStartDate);
         const chartData = [];
         while (currentDate <= weekEndDate) {
-          const date = currentDate.toISOString().split("T")[0];
-          const eventData = filteredData.find((event) => event.date === date);
-          const value = eventData ? eventData.difference / 60 : 0;
+          const date = currentDate.toLocaleDateString("en-US", { weekday: "short" }).split(",")[0];
+          const eventData = filteredData.filter((event) => {
+            const eventDate = new Date(event.date);
+            return eventDate.getDate() === currentDate.getDate();
+          });
+          let totalValue = 0;
+          eventData.forEach((event) => {
+            totalValue += event.difference / 60;
+          });
+          const value = eventData.length > 0 ? totalValue / eventData.length : 0;
           chartData.push({ date, value });
           currentDate.setDate(currentDate.getDate() + 1);
         }
@@ -122,17 +137,18 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
           return eventDate >= monthStartDate && eventDate <= monthEndDate;
         });
         const currentDate = new Date(monthStartDate);
-        console.log(currentDate);
-        console.log(monthEndDate);
         const chartData = [];
         while (currentDate <= monthEndDate) {
           const date = currentDate.toISOString().split("T")[0];
-          const eventData = filteredData.find((event) => event.date === date);
-          const value = eventData ? eventData.difference / 60 : 0;
+          const eventData = filteredData.filter((event) => event.date === date);
+          let totalValue = 0;
+          eventData.forEach((event) => {
+            totalValue += event.difference / 60;
+          });
+          const value = eventData.length > 0 ? totalValue / eventData.length : 0;
           chartData.push({ date, value });
           currentDate.setDate(currentDate.getDate() + 1);
         }
-        console.log(chartData);
         return chartData;
       }
     } catch (error) {
@@ -259,7 +275,7 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
                     style={{
                       height: 40,
                       width: 100,
-                      backgroundColor: items[0].value > 30 || items[0].value < -30 ? "#FF5C5C" : "#D1FFBD",
+                      backgroundColor: items[0].value > 0.5 || items[0].value < -0.5 ? "#FF5C5C" : "#D1FFBD",
                       borderRadius: 4,
                       justifyContent: "center",
                       alignItems: "center",
@@ -340,18 +356,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 10,
-    marginLeft: 10,
   },
   chartSection: {
     flex: 8,
     width: "100%",
     alignItems: "center",
+    justifyContent: "center",
     paddingHorizontal: 30,
   },
   chart: {
     flex: 1,
     width: "100%",
     alignItems: "center",
+    justifyContent: "center",
   },
   bottomNavBar: {
     height: 60,
