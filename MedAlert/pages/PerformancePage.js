@@ -17,7 +17,7 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
   ];
   const [chartData, setChartData] = useState(DEFAULT_CHART_DATA);
   const [piechartData, setPieChartData] = useState(DEFAULT_PIECHART_DATA);
-  const [selectedTimeFrame, setTimeFrame] = useState("Week");
+  const [selectedTimeFrame, setTimeFrame] = useState("Day");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [spacing, setSpacing] = useState(80);
   const timeFrames = ["Day", "Week", "Month"];
@@ -32,7 +32,7 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
     } else if (timeFrame === "Week") {
       setSpacing(50);
     } else if (timeFrame === "Month") {
-      setSpacing(20);
+      setSpacing(10);
     }
     getChartData(timeFrame);
   }, []);
@@ -60,12 +60,20 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
   }
 
   const getChartData = async (timeFrame) => {
-    setIsLoading(true);
-    const chartData = calculateData(consumptionEvents, timeFrame);
-    const piechartData = getPieChartData(chartData);
-    setPieChartData(piechartData);
-    setChartData(chartData);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const chartData = await calculateData(consumptionEvents, timeFrame);
+      const pieChartData = getPieChartData(chartData);
+      setPieChartData(pieChartData);
+      setChartData(chartData);
+    } catch (error) {
+      console.log("Error");
+      alert("Unable to get data");
+      setChartData(DEFAULT_CHART_DATA);
+      setPieChartData(DEFAULT_PIECHART_DATA);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   function calculateData(data, timeFrame) {
@@ -86,8 +94,11 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
         }
       } else if (timeFrame === "Week") {
         // Filter and calculate data based on a weekly time frame
-        const weekStartDate = selectedDate;
-        const weekEndDate = new Date(selectedDate.getTime() + 6 * 24 * 60 * 60 * 1000);
+        const weekStartDate = new Date(selectedDate.getTime());
+        const currentDay = weekStartDate.getDay();
+        const offset = currentDay === 0 ? -6 : 1 - currentDay; // Calculate the offset to get the Monday of the current week
+        weekStartDate.setDate(weekStartDate.getDate() + offset);
+        const weekEndDate = new Date(weekStartDate.getTime() + 6 * 24 * 60 * 60 * 1000);
         const filteredData = data.filter((event) => {
           const eventDate = new Date(event.date);
           return eventDate >= weekStartDate && eventDate <= weekEndDate;
@@ -101,7 +112,6 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
           chartData.push({ date, value });
           currentDate.setDate(currentDate.getDate() + 1);
         }
-        console.log(chartData);
         return chartData;
       } else if (timeFrame === "Month") {
         // Filter and calculate data based on a monthly time frame
@@ -112,6 +122,9 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
           return eventDate >= monthStartDate && eventDate <= monthEndDate;
         });
         const currentDate = new Date(monthStartDate);
+        console.log(currentDate);
+        console.log(monthEndDate);
+        const chartData = [];
         while (currentDate <= monthEndDate) {
           const date = currentDate.toISOString().split("T")[0];
           const eventData = filteredData.find((event) => event.date === date);

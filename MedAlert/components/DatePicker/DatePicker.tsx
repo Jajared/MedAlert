@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
 
 export default function DatePicker({ timeFrame, selectedDate, setSelectedDate }) {
-  console.log(selectedDate);
   const handlePrevious = () => {
     const previousDate = getPreviousDate(selectedDate);
     setSelectedDate(previousDate);
@@ -21,7 +20,7 @@ export default function DatePicker({ timeFrame, selectedDate, setSelectedDate })
       previousDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
     } else if (timeFrame === "Week") {
       previousDate = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-      previousDate.setDate(previousDate.getDate() - previousDate.getDay() + 1); // Set to Monday of the previous week
+      previousDate.setDate(previousDate.getDate() - previousDate.getDay() + 1);
     } else if (timeFrame === "Month") {
       previousDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, currentDate.getDate());
     }
@@ -46,8 +45,7 @@ export default function DatePicker({ timeFrame, selectedDate, setSelectedDate })
   };
 
   const formatDate = (date) => {
-    const monthNames = ["Jan", "Feb", "Mar", "Ap", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const formatDateAsDay = (date) => {
       const month = monthNames[date.getMonth()];
       const day = date.getDate();
@@ -81,8 +79,11 @@ export default function DatePicker({ timeFrame, selectedDate, setSelectedDate })
         formattedDate = formatDateAsDay(date);
         break;
       case "Week":
-        const startDate = new Date(date);
-        const endDate = new Date(date);
+        const startDate = new Date(date.getTime());
+        const currentDay = startDate.getDay();
+        const offset = currentDay === 0 ? -6 : 1 - currentDay; // Calculate the offset to get the Monday of the current week
+        startDate.setDate(startDate.getDate() + offset);
+        const endDate = new Date(startDate.getTime());
         endDate.setDate(startDate.getDate() + 6);
         formattedDate = formatDateAsWeek(startDate, endDate);
         break;
