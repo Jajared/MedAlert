@@ -2,7 +2,7 @@ import { sendPasswordResetEmail, fetchSignInMethodsForEmail } from "firebase/aut
 import { auth } from "../firebaseConfig";
 import { useState } from "react";
 import { SafeAreaView, Text, StyleSheet, TextInput, TouchableOpacity, TouchableWithoutFeedback, Keyboard } from "react-native";
-import BackNavBar from "../components/BackNavBar/BackNavBar";
+import BackNavBar from "../components/BackNavBar";
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function ResetPasswordPage({ navigation }) {

@@ -3,8 +3,8 @@ import { useCallback, useState } from "react";
 import medicationDb from "../assets/medicationDb.json";
 import filter from "lodash.filter";
 import { AntDesign, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
-import BackNavBar from "../components/BackNavBar/BackNavBar";
-import SearchItem from "../components/SearchItem/SearchItem";
+import BackNavBar from "../components/BackNavBar";
+import SearchItem from "../components/SearchItem";
 
 const medData = Array.from(Object.values(medicationDb));
 

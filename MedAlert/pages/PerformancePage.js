@@ -3,8 +3,8 @@ import { LineChart, PieChart } from "react-native-gifted-charts";
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { getDoc, doc, updateDoc, setDoc } from "firebase/firestore";
 import { firestorage } from "../firebaseConfig";
-import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
-import DatePicker from "../components/DatePicker/DatePicker";
+import BottomNavBar from "../components/BottomNavBar";
+import DatePicker from "../components/DatePicker";
 
 function PerformancePage({ navigation, consumptionEvents, userId }) {
   const DEFAULT_CHART_DATA = [

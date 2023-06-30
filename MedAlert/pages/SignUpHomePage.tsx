@@ -4,7 +4,7 @@ import { AntDesign, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { auth } from "../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import BackNavBar from "../components/BackNavBar/BackNavBar";
+import BackNavBar from "../components/BackNavBar";
 
 export default function SignUpHomePage({ navigation, onSignUpHome }) {
   const [email, setEmail] = useState<string>("");

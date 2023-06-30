@@ -1,5 +1,5 @@
 import { StyleSheet, Text, SafeAreaView, Image, View, TouchableOpacity, StatusBar } from "react-native";
-import BackNavBar from "../components/BackNavBar/BackNavBar";
+import BackNavBar from "../components/BackNavBar";
 
 export default function AddMedicationType({ navigation }) {
   return (

@@ -3,8 +3,8 @@ import { Swipeable } from "react-native-gesture-handler";
 
 export default function MedicationItem({ props, setAcknowledged }) {
   const medicationData = props.item;
-  const pillIcon = require("../../assets/pill-icon.png");
-  const syrupIcon = require("../../assets/syrup-icon.png");
+  const pillIcon = require("../assets/pill-icon.png");
+  const syrupIcon = require("../assets/syrup-icon.png");
   const rightActions = (progress, dragX) => {
     const scale = dragX.interpolate({
       inputRange: [-50, 0],

@@ -99,20 +99,18 @@ export default function DatePicker({ timeFrame, selectedDate, setSelectedDate })
   };
 
   return (
-    <View>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={handlePrevious} style={styles.buttonContainer}>
-          <Text style={styles.button}>{"<"}</Text>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={handlePrevious} style={styles.buttonContainer}>
+        <Text style={styles.button}>{"<"}</Text>
+      </TouchableOpacity>
+      <Text style={styles.time}>{formatDate(selectedDate)}</Text>
+      {getNextDate(selectedDate) <= new Date() ? (
+        <TouchableOpacity onPress={handleNext} style={styles.buttonContainer}>
+          <Text style={styles.button}>{">"}</Text>
         </TouchableOpacity>
-        <Text style={styles.time}>{formatDate(selectedDate)}</Text>
-        {getNextDate(selectedDate) <= new Date() ? (
-          <TouchableOpacity onPress={handleNext} style={styles.buttonContainer}>
-            <Text style={styles.button}>{">"}</Text>
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.buttonContainer}></View>
-        )}
-      </View>
+      ) : (
+        <View style={styles.buttonContainer}></View>
+      )}
     </View>
   );
 }

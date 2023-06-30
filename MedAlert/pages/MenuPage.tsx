@@ -1,5 +1,5 @@
 import { Text, SafeAreaView, StyleSheet, View, TouchableOpacity, StatusBar } from "react-native";
-import BackNavBar from "../components/BackNavBar/BackNavBar";
+import BackNavBar from "../components/BackNavBar";
 import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons, Feather } from "@expo/vector-icons";
 
 export default function ProfilePage({ navigation, userInformation, setIsNotificationReset, onSignOut }) {

@@ -1,8 +1,8 @@
 import { StyleSheet, SafeAreaView, View, StatusBar, RefreshControl, FlatList } from "react-native";
-import MedicationItem from "../components/MedicationItem/MedicationItem";
+import MedicationItem from "../components/MedicationItem";
 import { useState } from "react";
-import HomeNavBar from "../components/HomeNavBar/HomeNavBar";
-import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
+import HomeNavBar from "../components/HomeNavBar";
+import BottomNavBar from "../components/BottomNavBar";
 import { ScheduledItem } from "../utils/types";
 
 export default function HomeScreen({ navigation, scheduledItems, setAcknowledged, userName, fetchData }) {
