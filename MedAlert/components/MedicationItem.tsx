@@ -1,24 +1,11 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, Animated } from "react-native";
-import { Swipeable } from "react-native-gesture-handler";
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from "react-native";
+import { ScheduledItem } from "../utils/types";
 
-export default function MedicationItem({ props, setAcknowledged }) {
-  const medicationData = props.item;
+export default function MedicationItem({ props, setAcknowledged, deleteReminder }) {
+  const medicationData: ScheduledItem = props.item;
   const pillIcon = require("../assets/pill-icon.png");
   const syrupIcon = require("../assets/syrup-icon.png");
-  const rightActions = (progress, dragX) => {
-    const scale = dragX.interpolate({
-      inputRange: [-50, 0],
-      outputRange: [1, 0],
-      extrapolate: "clamp",
-    });
-    return (
-      <TouchableOpacity onPress={() => setAcknowledged(medicationData.id)}>
-        <View style={styles.rightAction}>
-          <Animated.Text style={[styles.actionText, { transform: [{ scale }] }]}>Consumed</Animated.Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
+
   function getIcon() {
     const type = medicationData.Type;
     if (type === "Pill") {
@@ -44,23 +31,45 @@ export default function MedicationItem({ props, setAcknowledged }) {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
   }
 
+  const getCurrentTime = () => {
+    const timeNow = new Date();
+    const minutes = timeNow.getHours() * 60 + timeNow.getMinutes();
+    return minutes;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Swipeable renderRightActions={rightActions}>
-        <View style={styles.itemContainer}>
-          <Text style={styles.timeSection}>{getTime()}</Text>
-          <View style={styles.textContainer}>
-            <Image source={getIcon()} style={styles.icon} />
+      <View style={styles.itemContainer}>
+        {getCurrentTime() >= medicationData.Instructions.FirstDosageTiming ? <Text style={[styles.timeSection, { color: "red" }]}>{getTime()}</Text> : <Text style={styles.timeSection}>{getTime()}</Text>}
+        <View style={styles.textContainer}>
+          <Image source={getIcon()} style={styles.icon} />
+          {getCurrentTime() >= medicationData.Instructions.FirstDosageTiming ? (
             <View style={styles.medicationInfo}>
-              <Text style={{ fontWeight: "bold", fontSize: 20 }}>{medicationData.Name}</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 18, color: "red" }}>{medicationData.Name}</Text>
+              <Text style={{ color: "red" }}>{medicationData.Purpose}</Text>
+              <Text style={{ color: "red" }}>
+                {medicationData.Instructions.TabletsPerIntake} {getUnits()}
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.medicationInfo}>
+              <Text style={{ fontWeight: "bold", fontSize: 18 }}>{medicationData.Name}</Text>
               <Text>{medicationData.Purpose}</Text>
               <Text>
                 {medicationData.Instructions.TabletsPerIntake} {getUnits()}
               </Text>
             </View>
+          )}
+          <View style={styles.buttonSection}>
+            <TouchableOpacity onPress={() => setAcknowledged(medicationData.id)}>
+              <Image source={require("../assets/checked-icon.png")} style={styles.logo}></Image>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => deleteReminder(medicationData.id)}>
+              <Image source={require("../assets/delete-icon.png")} style={styles.logo}></Image>
+            </TouchableOpacity>
           </View>
         </View>
-      </Swipeable>
+      </View>
     </SafeAreaView>
   );
 }
@@ -101,7 +110,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   medicationInfo: {
-    flex: 3,
+    flex: 2,
     marginLeft: 20,
   },
   rightAction: {
@@ -116,5 +125,16 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
     padding: 10,
+  },
+  logo: {
+    height: 25,
+    width: 25,
+    marginHorizontal: 15,
+  },
+  buttonSection: {
+    flex: 2,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

@@ -17,8 +17,12 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
   }
 
   function setVolumePerIntake() {
+    if (medicationItem.Type == "Liquid" && (parseInt(volume) < 0 || parseInt(volume) > 15)) {
+      alert("Please enter a volume that is between 0 ml and 15 ml");
+      return [{ ...medicationItem, Instructions: { ...medicationItem.Instructions } }, false];
+    }
     setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: parseInt(volume) } }));
-    return { ...medicationItem, Instructions: { ...medicationItem.Instructions, TabletsPerIntake: parseInt(volume) } };
+    return [{ ...medicationItem, Instructions: { ...medicationItem.Instructions, TabletsPerIntake: parseInt(volume) } }, true];
   }
 
   function handleSubmit() {
@@ -38,6 +42,7 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
       alert("Please enter a numeric value for Volume per Intake");
       return false;
     }
+
     return true;
   }
   if (medicationItem.Type == "Pill") {
@@ -69,7 +74,16 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
               }}
             />
             <Text style={styles.textHeader}>{medicationItem.Instructions.TabletsPerIntake}</Text>
-            <Button title="+" onPress={() => setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake + 1 } }))} />
+            <Button
+              title="+"
+              onPress={() => {
+                if (medicationItem.Instructions.TabletsPerIntake < 5) {
+                  setMedicationItem((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake + 1 } }));
+                } else {
+                  alert("Cannot be more than 5");
+                }
+              }}
+            />
           </View>
           <View style={styles.frequencySection}>
             <Text style={styles.textHeader}>Take this medication:</Text>
@@ -146,7 +160,7 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
                       setIsDeletionPopUpVisible(false);
                       navigation.navigate("Home");
                     }}
-                    style={[styles.button, { backgroundColor: "green" }]}
+                    style={styles.button}
                   >
                     <Text>YES</Text>
                   </TouchableOpacity>
@@ -154,7 +168,7 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
                     onPress={() => {
                       setIsDeletionPopUpVisible(false);
                     }}
-                    style={[styles.button, { backgroundColor: "red" }]}
+                    style={styles.button}
                   >
                     <Text>NO</Text>
                   </TouchableOpacity>
@@ -232,8 +246,8 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
             <CustomButton
               title="Continue Editing"
               onPress={() => {
-                const newItem = setVolumePerIntake();
-                if (handleSubmit()) {
+                const [newItem, ableToSet] = setVolumePerIntake();
+                if (handleSubmit() && ableToSet) {
                   navigation.navigate("Edit Medication Schedule", { medicationItem: newItem });
                 }
               }}
@@ -261,7 +275,7 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
                       setIsDeletionPopUpVisible(false);
                       navigation.navigate("Home");
                     }}
-                    style={[styles.button, { backgroundColor: "green" }]}
+                    style={styles.button}
                   >
                     <Text>YES</Text>
                   </TouchableOpacity>
@@ -269,7 +283,7 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
                     onPress={() => {
                       setIsDeletionPopUpVisible(false);
                     }}
-                    style={[styles.button, { backgroundColor: "red" }]}
+                    style={styles.button}
                   >
                     <Text>NO</Text>
                   </TouchableOpacity>
@@ -379,15 +393,17 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
+    marginTop: 10,
   },
   header: {
     fontSize: 16,
   },
   button: {
     color: "black",
+    backgroundColor: "#F4BFBF",
     fontWeight: "bold",
     borderWidth: 1,
-    borderColor: "black",
+    borderColor: "#F4BFBF",
     width: 80,
     alignItems: "center",
     marginHorizontal: 10,

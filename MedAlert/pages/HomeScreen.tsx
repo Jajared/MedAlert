@@ -5,7 +5,7 @@ import HomeNavBar from "../components/HomeNavBar";
 import BottomNavBar from "../components/BottomNavBar";
 import { ScheduledItem } from "../utils/types";
 
-export default function HomeScreen({ navigation, scheduledItems, setAcknowledged, userName, fetchData }) {
+export default function HomeScreen({ navigation, scheduledItems, setAcknowledged, userName, fetchData, deleteReminder }) {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   const handleRefresh = () => {
@@ -22,7 +22,7 @@ export default function HomeScreen({ navigation, scheduledItems, setAcknowledged
       </View>
       <View style={styles.medicationSection}>
         <Text style={styles.medSectHeader}>Upcoming Reminders</Text>
-        {scheduledItems && <FlatList data={scheduledItems.filter((data: ScheduledItem) => data.Acknowledged === false)} renderItem={(data) => <MedicationItem props={data} setAcknowledged={setAcknowledged} />} keyExtractor={(item: ScheduledItem) => item.notificationId} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />} />}
+        {scheduledItems && <FlatList data={scheduledItems.filter((data: ScheduledItem) => data.Acknowledged === false)} renderItem={(data) => <MedicationItem props={data} setAcknowledged={setAcknowledged} deleteReminder={deleteReminder} />} keyExtractor={(item: ScheduledItem) => item.notificationId} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />} />}
       </View>
       <View style={styles.bottomNavBar}>
         <BottomNavBar navigation={navigation} />
