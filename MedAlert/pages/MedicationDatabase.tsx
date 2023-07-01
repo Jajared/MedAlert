@@ -1,8 +1,8 @@
-import { View, SafeAreaView, StyleSheet, TextInput, FlatList, Text, TouchableOpacity, Image, StatusBar, ScrollView } from "react-native";
+import { View, SafeAreaView, StyleSheet, TextInput, FlatList, Text, TouchableOpacity, StatusBar, ScrollView } from "react-native";
 import { useCallback, useState } from "react";
 import medicationDb from "../assets/medicationDb.json";
 import filter from "lodash.filter";
-import { AntDesign, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import BackNavBar from "../components/BackNavBar";
 import SearchItem from "../components/SearchItem";
 

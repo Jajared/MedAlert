@@ -1,0 +1,415 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<LoginPage/> renders correctly 1`] = `
+<RCTSafeAreaView
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessible={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#fff",
+      "flex": 1,
+      "flexDirection": "column",
+      "justifyContent": "center",
+    }
+  }
+>
+  <Image
+    source={1}
+    style={
+      {
+        "flex": 7,
+        "marginVertical": 20,
+        "resizeMode": "contain",
+      }
+    }
+  />
+  <Text
+    style={
+      {
+        "alignSelf": "flex-start",
+        "flex": 1,
+        "fontSize": 25,
+        "fontWeight": "bold",
+        "marginLeft": 20,
+      }
+    }
+  >
+    Welcome! 👋
+  </Text>
+  <View
+    style={
+      {
+        "borderBottomColor": "grey",
+        "borderBottomWidth": 1,
+        "borderRadius": 10,
+        "color": "grey",
+        "flex": 1,
+        "flexDirection": "row",
+        "margin": 10,
+        "padding": 10,
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      selectable={false}
+      style={
+        [
+          {
+            "color": "black",
+            "fontSize": 20,
+          },
+          {
+            "alignSelf": "center",
+            "flex": 1,
+          },
+          {
+            "fontFamily": "anticon",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          {},
+        ]
+      }
+    >
+      
+    </Text>
+    <TextInput
+      onChangeText={[Function]}
+      placeholder="Email"
+      style={
+        {
+          "alignSelf": "center",
+          "color": "grey",
+          "flex": 9,
+        }
+      }
+      value=""
+    />
+  </View>
+  <View
+    style={
+      {
+        "borderBottomColor": "grey",
+        "borderBottomWidth": 1,
+        "borderRadius": 10,
+        "color": "grey",
+        "flex": 1,
+        "flexDirection": "row",
+        "margin": 10,
+        "padding": 10,
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      selectable={false}
+      style={
+        [
+          {
+            "color": "black",
+            "fontSize": 26,
+          },
+          {
+            "alignSelf": "center",
+            "flex": 1,
+          },
+          {
+            "fontFamily": "anticon",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          {},
+        ]
+      }
+    >
+      
+    </Text>
+    <TextInput
+      onChangeText={[Function]}
+      placeholder="Password"
+      secureTextEntry={true}
+      style={
+        {
+          "flex": 8,
+        }
+      }
+      value=""
+    />
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignSelf": "center",
+          "flex": 1,
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        selectable={false}
+        style={
+          [
+            {
+              "color": "gray",
+              "fontSize": 20,
+            },
+            undefined,
+            {
+              "fontFamily": "feather",
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+            },
+            {},
+          ]
+        }
+      >
+        
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "flex": 1,
+        "flexDirection": "row",
+        "justifyContent": "flex-end",
+        "margin": 10,
+        "width": "90%",
+      }
+    }
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "#FF014E",
+          }
+        }
+      >
+        Forgot Password?
+      </Text>
+    </View>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "flex": 2,
+        "margin": 10,
+        "opacity": 1,
+        "width": "90%",
+      }
+    }
+  >
+    <ViewManagerAdapter_ExpoLinearGradient
+      proxiedProperties={
+        {
+          "colors": [
+            4294944687,
+            4294902094,
+          ],
+          "endPoint": undefined,
+          "locations": undefined,
+          "startPoint": undefined,
+        }
+      }
+      style={
+        {
+          "borderRadius": 10,
+          "paddingHorizontal": 100,
+          "paddingVertical": 15,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "alignSelf": "center",
+            "color": "#fff",
+            "fontSize": 16,
+            "fontWeight": "bold",
+          }
+        }
+      >
+        Login
+      </Text>
+    </ViewManagerAdapter_ExpoLinearGradient>
+  </View>
+  <View
+    style={
+      {
+        "flex": 4,
+      }
+    }
+  />
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "flexDirection": "row",
+        "justifyContent": "center",
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "fontSize": 15,
+        }
+      }
+    >
+      Don't have any account?
+    </Text>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "opacity": 1,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "color": "#FF014E",
+            "fontSize": 15,
+          }
+        }
+      >
+         Sign Up
+      </Text>
+    </View>
+  </View>
+</RCTSafeAreaView>
+`;
