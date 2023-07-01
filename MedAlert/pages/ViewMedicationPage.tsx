@@ -44,6 +44,7 @@ export default function ViewMedicationPage({ navigation, allMedicationItems }) {
                     <Text>
                       {item.Instructions.TabletsPerIntake} {getUnits(item)}
                     </Text>
+                    <Image source={require("../assets/edit-icon.png")} style={styles.logo}></Image>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "row",
     backgroundColor: "#FAF6E0",
-    borderColor: "black",
+    borderColor: "#FAF6E0",
     borderWidth: 1,
     borderRadius: 15,
     margin: 15,
@@ -95,5 +96,10 @@ const styles = StyleSheet.create({
   },
   bottomNavBar: {
     height: 60,
+  },
+  logo: {
+    height: 15,
+    width: 15,
+    marginLeft: 180,
   },
 });
