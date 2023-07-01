@@ -1,5 +1,5 @@
 import { SafeAreaView, View, Text, StatusBar, StyleSheet } from "react-native";
-import BackNavBar from "../components/BackNavBar/BackNavBar";
+import BackNavBar from "../components/BackNavBar";
 
 export default function AboutPage({ navigation }) {
   return (

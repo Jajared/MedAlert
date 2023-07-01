@@ -1,10 +1,10 @@
 import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button, StatusBar, ActivityIndicator, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useState } from "react";
-import BackNavBar from "../components/BackNavBar/BackNavBar";
+import BackNavBar from "../components/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Entypo } from "@expo/vector-icons";
 import CameraComponent from "../components/CameraComponent/CameraComponent";
-import CustomButton from "../components/Buttons/CustomButton";
+import CustomButton from "../components/CustomButton";
 import { MedicationItemData } from "../utils/types";
 
 export default function AddMedicationDetails({ navigation, route }) {

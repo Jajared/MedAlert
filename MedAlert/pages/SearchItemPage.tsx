@@ -1,4 +1,4 @@
-import BackNavBar from "../components/BackNavBar/BackNavBar";
+import BackNavBar from "../components/BackNavBar";
 import { StyleSheet, TouchableOpacity, Text, View, SafeAreaView, StatusBar } from "react-native";
 
 export default function SearchItemPage({ route, navigation }) {

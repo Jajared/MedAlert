@@ -1,10 +1,10 @@
 import { Text, SafeAreaView, StyleSheet, View, Image, TextInput, TouchableOpacity, Button, StatusBar, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useState } from "react";
-import BackNavBar from "../components/BackNavBar/BackNavBar";
+import BackNavBar from "../components/BackNavBar";
 import CalendarPicker from "react-native-calendar-picker";
 import Modal from "react-native-modal";
 import * as React from "react";
-import CustomButton from "../components/Buttons/CustomButton";
+import CustomButton from "../components/CustomButton";
 import DropDownPicker from "react-native-dropdown-picker";
 
 export default function UpdateAccountPage({ navigation, userInformation, updateUserInformation }) {

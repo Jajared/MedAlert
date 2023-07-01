@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CustomButton /> renders correctly 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={false}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "flex": 2,
+      "justifyContent": "center",
+      "opacity": 1,
+    }
+  }
+>
+  <ViewManagerAdapter_ExpoLinearGradient
+    proxiedProperties={
+      {
+        "colors": [
+          4293750432,
+          4293692521,
+        ],
+        "endPoint": [
+          1,
+          0.5,
+        ],
+        "locations": undefined,
+        "startPoint": [
+          0,
+          0.5,
+        ],
+      }
+    }
+    style={
+      {
+        "borderRadius": 10,
+        "paddingHorizontal": 80,
+        "paddingVertical": 15,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "black",
+          "fontSize": 16,
+          "fontWeight": "bold",
+        }
+      }
+    />
+  </ViewManagerAdapter_ExpoLinearGradient>
+</View>
+`;

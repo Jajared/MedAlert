@@ -1,7 +1,7 @@
 import { MedicationItemData } from "../../utils/types";
+import { api_key } from "../../firebaseConfig";
 
-const VISION_API_KEY = "AIzaSyA630mEkGs-Zq9cMkIVWs9rfrLEZGOIKic";
-const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${VISION_API_KEY}`;
+const API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${api_key}`;
 
 // Also try DOCUMENT_TEXT_DETECTION instead of TEXT_DETECTION as per https://cloud.google.com/vision/docs/ocr
 function generateBody(image: string) {

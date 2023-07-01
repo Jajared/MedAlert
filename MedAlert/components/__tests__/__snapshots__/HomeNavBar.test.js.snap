@@ -1,0 +1,114 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<HomeNavBar/> renders correctly 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#fff",
+      "flex": 1,
+      "flexDirection": "column",
+      "justifyContent": "center",
+    }
+  }
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "flex": 1,
+        "flexDirection": "row",
+        "justifyContent": "flex-end",
+        "opacity": 1,
+        "paddingRight": 30,
+        "width": "100%",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      selectable={false}
+      style={
+        [
+          {
+            "color": "black",
+            "fontSize": 25,
+          },
+          undefined,
+          {
+            "fontFamily": "anticon",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          {},
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+  <Text
+    style={
+      {
+        "flex": 1,
+        "fontSize": 20,
+        "fontWeight": "300",
+        "width": "90%",
+      }
+    }
+  >
+    Hey 
+    !
+  </Text>
+  <Text
+    style={
+      {
+        "flex": 1,
+        "fontSize": 30,
+        "fontWeight": "bold",
+        "width": "90%",
+      }
+    }
+  >
+    Friday
+  </Text>
+  <Text
+    style={
+      {
+        "flex": 1,
+        "fontSize": 25,
+        "fontWeight": "bold",
+        "width": "90%",
+      }
+    }
+  >
+    Upcoming Reminders 
+  </Text>
+</View>
+`;

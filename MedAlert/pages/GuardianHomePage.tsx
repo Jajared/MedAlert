@@ -1,13 +1,13 @@
 import { SafeAreaView, Text, StyleSheet, StatusBar, View, TextInput, TouchableOpacity, FlatList, ScrollView } from "react-native";
 import { useState, useEffect } from "react";
 import { LinearGradient } from "expo-linear-gradient";
-import BackNavBar from "../components/BackNavBar/BackNavBar";
+import BackNavBar from "../components/BackNavBar";
 import { auth } from "../firebaseConfig";
 import { fetchSignInMethodsForEmail } from "firebase/auth";
 import { firestorage } from "../firebaseConfig";
 import { collection, getDocs, query, where, doc, arrayUnion, setDoc, getDoc, arrayRemove, updateDoc } from "firebase/firestore";
-import GuardianRequestItem from "../components/GuardianRequestItem/GuardianRequestItem";
-import GuardianInfoItem from "../components/GuardianInfoItem/GuardianInfoItem";
+import GuardianRequestItem from "../components/GuardianRequestItem";
+import GuardianInfoItem from "../components/GuardianInfoItem";
 import { GuardianInfo, GuardianRequest } from "../utils/types";
 
 export default function GuardianHomePage({ navigation, userId }) {

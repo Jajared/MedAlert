@@ -1,10 +1,10 @@
 import { SafeAreaView, StyleSheet, StatusBar, View, FlatList, ActivityIndicator } from "react-native";
-import BackNavBar from "../components/BackNavBar/BackNavBar";
+import BackNavBar from "../components/BackNavBar";
 import React, { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { firestorage } from "../firebaseConfig";
 import { ScheduledItem } from "../utils/types";
-import PatientMedicationItem from "../components/PatientMedicationItem/PatientMedicationItem";
+import PatientMedicationItem from "../components/PatientMedicationItem";
 
 export default function PatientMedicationPage({ navigation, route }) {
   const { guardianId, guardianName } = route.params;

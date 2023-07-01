@@ -1,6 +1,6 @@
 import { Text, SafeAreaView, View, StyleSheet, Image, TouchableOpacity, StatusBar } from "react-native";
-import BottomNavBar from "../components/BottomNavBar/BottomNavBar";
-import BackNavBar from "../components/BackNavBar/BackNavBar";
+import BottomNavBar from "../components/BottomNavBar";
+import BackNavBar from "../components/BackNavBar";
 import { FlatList } from "react-native";
 import { MedicationItemData } from "../utils/types";
 

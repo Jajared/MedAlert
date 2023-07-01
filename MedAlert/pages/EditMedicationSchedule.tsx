@@ -1,10 +1,10 @@
 import { StyleSheet, Text, SafeAreaView, View, Button, StatusBar, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useState } from "react";
-import BackNavBar from "../components/BackNavBar/BackNavBar";
+import BackNavBar from "../components/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MedicationItemData } from "../utils/types";
-import CustomButton from "../components/Buttons/CustomButton";
+import CustomButton from "../components/CustomButton";
 
 export default function EditMedicationSchedule({ navigation, route, allMedicationItems, setEdit }) {
   console.log({ ...route.params.medicationItem });

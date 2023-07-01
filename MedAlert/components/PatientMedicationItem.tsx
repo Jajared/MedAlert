@@ -2,8 +2,8 @@ import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
 
 export default function PatientMedicationItem({ props }) {
   const medicationData = props.item;
-  const pillIcon = require("../../assets/pill-icon.png");
-  const syrupIcon = require("../../assets/syrup-icon.png");
+  const pillIcon = require("../assets/pill-icon.png");
+  const syrupIcon = require("../assets/syrup-icon.png");
 
   function getIcon() {
     const type = medicationData.Type;

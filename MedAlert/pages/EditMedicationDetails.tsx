@@ -1,8 +1,8 @@
 import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button, Modal, StatusBar, Keyboard, TouchableWithoutFeedback } from "react-native";
-import BackNavBar from "../components/BackNavBar/BackNavBar";
+import BackNavBar from "../components/BackNavBar";
 import { useState } from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import CustomButton from "../components/Buttons/CustomButton";
+import CustomButton from "../components/CustomButton";
 import { MedicationItemData } from "../utils/types";
 
 export default function EditMedicationDetails({ navigation, allMedicationItems, deleteMedicationFromList, route }) {

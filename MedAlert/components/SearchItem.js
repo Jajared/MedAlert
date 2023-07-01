@@ -3,15 +3,15 @@ import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
 import { AntDesign, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 
 const dosageFormIcons = {
-  Tablet: <Image source={require("../../assets/medicationDB/tablet.png")} style={{ width: 24, height: 24 }} />,
-  Injection: <Image source={require("../../assets/medicationDB/injection.png")} style={{ width: 24, height: 24 }} />,
-  Capsule: <Image source={require("../../assets/medicationDB/capsule.png")} style={{ width: 24, height: 24 }} />,
-  Cream: <Image source={require("../../assets/medicationDB/cream.png")} style={{ width: 24, height: 24 }} />,
-  Solution: <Image source={require("../../assets/medicationDB/solution.png")} style={{ width: 24, height: 24 }} />,
-  Granule: <Image source={require("../../assets/medicationDB/capsule.png")} style={{ width: 24, height: 24 }} />,
-  Syrup: <Image source={require("../../assets/medicationDB/syrup.png")} style={{ width: 24, height: 24 }} />,
-  Ointment: <Image source={require("../../assets/medicationDB/ointment.png")} style={{ width: 24, height: 24 }} />,
-  Powder: <Image source={require("../../assets/medicationDB/powder.png")} style={{ width: 24, height: 24 }} />,
+  Tablet: <Image source={require("../assets/medicationDB/tablet.png")} style={{ width: 24, height: 24 }} />,
+  Injection: <Image source={require("../assets/medicationDB/injection.png")} style={{ width: 24, height: 24 }} />,
+  Capsule: <Image source={require("../assets/medicationDB/capsule.png")} style={{ width: 24, height: 24 }} />,
+  Cream: <Image source={require("../assets/medicationDB/cream.png")} style={{ width: 24, height: 24 }} />,
+  Solution: <Image source={require("../assets/medicationDB/solution.png")} style={{ width: 24, height: 24 }} />,
+  Granule: <Image source={require("../assets/medicationDB/capsule.png")} style={{ width: 24, height: 24 }} />,
+  Syrup: <Image source={require("../assets/medicationDB/syrup.png")} style={{ width: 24, height: 24 }} />,
+  Ointment: <Image source={require("../assets/medicationDB/ointment.png")} style={{ width: 24, height: 24 }} />,
+  Powder: <Image source={require("../assets/medicationDB/powder.png")} style={{ width: 24, height: 24 }} />,
 };
 
 export default class SearchItem extends PureComponent {
