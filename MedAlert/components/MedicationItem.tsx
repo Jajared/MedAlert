@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
   itemContainer: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: "#FAF6E0",
-    borderColor: "black",
+    backgroundColor: "#FAF0D7",
+    borderColor: "#FAF0D7",
     borderWidth: 1,
     borderRadius: 15,
     margin: 15,

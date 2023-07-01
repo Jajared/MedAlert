@@ -1,4 +1,4 @@
-import { StyleSheet, SafeAreaView, View, StatusBar, RefreshControl, FlatList } from "react-native";
+import { StyleSheet, SafeAreaView, View, StatusBar, RefreshControl, FlatList, Text } from "react-native";
 import MedicationItem from "../components/MedicationItem";
 import { useState } from "react";
 import HomeNavBar from "../components/HomeNavBar";
@@ -18,9 +18,12 @@ export default function HomeScreen({ navigation, scheduledItems, setAcknowledged
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <View style={styles.topNavBar}>
-        <HomeNavBar navigation={navigation} userName={userName} />
+        <HomeNavBar navigation={navigation} userName={userName} hasReminders={scheduledItems.filter((data: ScheduledItem) => data.Acknowledged === false).length == 0 ? false : true} />
       </View>
-      <View style={styles.medicationSection}>{scheduledItems && <FlatList data={scheduledItems.filter((data: ScheduledItem) => data.Acknowledged === false)} renderItem={(data) => <MedicationItem props={data} setAcknowledged={setAcknowledged} />} keyExtractor={(item: ScheduledItem) => item.notificationId} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />} />}</View>
+      <View style={styles.medicationSection}>
+        <Text style={styles.medSectHeader}>Upcoming Reminders</Text>
+        {scheduledItems && <FlatList data={scheduledItems.filter((data: ScheduledItem) => data.Acknowledged === false)} renderItem={(data) => <MedicationItem props={data} setAcknowledged={setAcknowledged} />} keyExtractor={(item: ScheduledItem) => item.notificationId} refreshControl={<RefreshControl refreshing={isRefreshing} onRefresh={handleRefresh} />} />}
+      </View>
       <View style={styles.bottomNavBar}>
         <BottomNavBar navigation={navigation} />
       </View>
@@ -43,7 +46,13 @@ const styles = StyleSheet.create({
     height: 60,
   },
   medicationSection: {
-    flex: 7,
+    flex: 4,
     width: "100%",
+    marginTop: 10,
+  },
+  medSectHeader: {
+    marginLeft: 10,
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
