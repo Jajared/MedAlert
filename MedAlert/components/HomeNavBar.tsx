@@ -1,15 +1,18 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-export default function HomeNavBar({ navigation, userName }) {
+export default function HomeNavBar({ navigation, userName, hasReminders }) {
+  const homeIcon = require("../assets/home-icon.png");
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate("Add Medication Type")} style={styles.addButton}>
         <AntDesign name="plus" size={25} color="black" />
       </TouchableOpacity>
-      <Text style={styles.userSection}>Hey {userName}!</Text>
-      <Text style={styles.daySection}>{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(new Date())}</Text>
-      <Text style={styles.upcomingRemindersSection}>Upcoming Reminders </Text>
+      <Text style={styles.userSection}>Hey {userName}! 😃</Text>
+      <View style={styles.homeContainer}>
+        <View style={styles.upcomingReminderSection}>{hasReminders ? <Text style={styles.upcomingRemindersText}>You have upcoming reminders for the day.</Text> : <Text style={styles.upcomingRemindersText}>You have no reminders for the day.</Text>}</View>
+        <Image source={homeIcon} style={styles.homeIcon} />
+      </View>
     </View>
   );
 }
@@ -26,19 +29,11 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "90%",
     fontSize: 20,
-    fontWeight: "300",
-  },
-  upcomingRemindersSection: {
-    flex: 1,
-    fontSize: 25,
     fontWeight: "bold",
-    width: "90%",
   },
-  daySection: {
-    flex: 1,
-    fontSize: 30,
-    fontWeight: "bold",
-    width: "90%",
+  upcomingRemindersText: {
+    fontSize: 20,
+    fontWeight: "400",
   },
   addButton: {
     flex: 1,
@@ -46,5 +41,25 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     paddingRight: 30,
     width: "100%",
+  },
+  homeContainer: {
+    flex: 3,
+    backgroundColor: "#FFD9C0",
+    flexDirection: "row",
+    borderColor: "#FFD9C0",
+    borderWidth: 10,
+    borderRadius: 12,
+    width: "95%",
+    padding: 10,
+  },
+  upcomingReminderSection: {
+    flex: 3,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  homeIcon: {
+    flex: 2,
+    width: "100%",
+    height: "100%",
   },
 });
