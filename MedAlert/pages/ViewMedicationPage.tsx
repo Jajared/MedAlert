@@ -44,6 +44,7 @@ export default function ViewMedicationPage({ navigation, allMedicationItems }) {
                     <Text>
                       {item.Instructions.TabletsPerIntake} {getUnits(item)}
                     </Text>
+                    <Image source={require("../assets/edit-icon.png")} style={styles.logo}></Image>
                   </View>
                 </TouchableOpacity>
               </View>
@@ -95,5 +96,10 @@ const styles = StyleSheet.create({
   },
   bottomNavBar: {
     height: 60,
+  },
+  logo: {
+    height: 15,
+    width: 15,
+    marginLeft: 180,
   },
 });
