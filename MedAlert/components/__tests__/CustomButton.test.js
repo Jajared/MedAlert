@@ -1,7 +1,7 @@
 import React from "react";
 import renderer from "react-test-renderer";
 
-import CustomButton from "../CustomButton";
+import CustomButton from "../NextButton";
 
 describe("<CustomButton />", () => {
   it("has 1 child", () => {

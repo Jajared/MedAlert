@@ -433,9 +433,10 @@ export default function App() {
   // Add medication item
   const addMedication = async (medicationData: MedicationItemData) => {
     try {
-      const newScheduledItems = await getNewScheduledItems(medicationData);
+      const newScheduledItem = await getNewScheduledItems(medicationData);
       const newMedicationItems = [...allMedicationItems, medicationData];
-      setScheduledItems(sortScheduledItems([...scheduledItems, ...newScheduledItems]));
+      const newScheduledItems = sortScheduledItems([...scheduledItems, ...newScheduledItem]);
+      setScheduledItems(newScheduledItems);
       setAllMedicationItems(newMedicationItems);
       // Update firebase
       await updateDoc(medInfoRef.current, {

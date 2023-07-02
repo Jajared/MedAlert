@@ -4,7 +4,7 @@ import BackNavBar from "../components/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Entypo } from "@expo/vector-icons";
 import CameraComponent from "../components/CameraComponent/CameraComponent";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../components/NextButton";
 import { MedicationItemData } from "../utils/types";
 
 export default function AddMedicationDetails({ navigation, route }) {
