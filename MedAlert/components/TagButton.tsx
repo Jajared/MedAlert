@@ -11,9 +11,13 @@ const TagButton = ({ title }) => {
     }
   }
 
+  function convertToTitleCase(str: string) {
+    return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
+  }
+
   return (
     <View style={[styles.buttonContainer, { backgroundColor: getColor(title) }]}>
-      <Text style={styles.buttonText}>{title.toLowerCase()}</Text>
+      <Text style={styles.buttonText}>{convertToTitleCase(title)}</Text>
     </View>
   );
 };
