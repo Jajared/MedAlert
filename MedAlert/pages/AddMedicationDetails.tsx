@@ -33,6 +33,10 @@ export default function AddMedicationDetails({ navigation, route }) {
       alert("Please enter a numeric value for Volume per Intake");
       return false;
     }
+    if (state.Type == "Liquid" && (state.Instructions.TabletsPerIntake < 0 || state.Instructions.TabletsPerIntake > 15)) {
+      alert("Please enter a volume that is between 0 ml and 15 ml");
+      return false;
+    }
     return true;
   }
 
@@ -83,7 +87,16 @@ export default function AddMedicationDetails({ navigation, route }) {
               }}
             />
             <Text style={styles.textHeader}>{state.Instructions.TabletsPerIntake}</Text>
-            <Button title="+" onPress={() => setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake + 1 } }))} />
+            <Button
+              title="+"
+              onPress={() => {
+                if (state.Instructions.TabletsPerIntake < 5) {
+                  setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, TabletsPerIntake: prevState.Instructions.TabletsPerIntake + 1 } }));
+                } else {
+                  alert("Cannot be more than 5");
+                }
+              }}
+            />
           </View>
           <View style={styles.frequencySection}>
             <Text style={styles.textHeader}>Take this medication:</Text>

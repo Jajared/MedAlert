@@ -346,6 +346,7 @@ export default function App() {
 
   // Acknowledge notification
   function setAcknowledged(id: number) {
+    console.log("Acknowledged");
     var newScheduledItems = [...scheduledItems];
     var newConsumptionEvents = [...consumptionEvents];
     var currentDate = new Date();
@@ -365,6 +366,18 @@ export default function App() {
     }
     setConsumptionEvents(newConsumptionEvents);
     updateDoc(statisticsInfoRef.current, { ConsumptionEvents: newConsumptionEvents });
+    setScheduledItems(newScheduledItems);
+    updateDoc(medInfoRef.current, { ScheduledItems: newScheduledItems });
+  }
+
+  function deleteReminder(id: number) {
+    console.log("Deleted");
+    var newScheduledItems = [...scheduledItems];
+    for (let i = 0; i < newScheduledItems.length; i++) {
+      if (newScheduledItems[i].id === id) {
+        newScheduledItems[i].Acknowledged = true;
+      }
+    }
     setScheduledItems(newScheduledItems);
     updateDoc(medInfoRef.current, { ScheduledItems: newScheduledItems });
   }
@@ -459,7 +472,7 @@ export default function App() {
             {(props) => <SignUpDetailsPage {...props} setIsSignUpComplete={setIsSignUpComplete} />}
           </Stack.Screen>
           <Stack.Screen name="Home" options={{ headerShown: false }}>
-            {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} fetchData={fetchData} />}
+            {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} fetchData={fetchData} deleteReminder={deleteReminder} />}
           </Stack.Screen>
         </Stack.Navigator>
       </NavigationContainer>
@@ -469,7 +482,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" options={{ headerShown: false }}>
-          {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} fetchData={fetchData} />}
+          {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} fetchData={fetchData} deleteReminder={deleteReminder} />}
         </Stack.Screen>
         <Stack.Screen name="Performance" options={{ headerShown: false }}>
           {(props) => <PerformancePage {...props} consumptionEvents={consumptionEvents} userId={userId} />}
