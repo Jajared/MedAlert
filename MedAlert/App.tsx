@@ -52,6 +52,7 @@ export default function App() {
   const [allMedicationItems, setAllMedicationItems] = useState<MedicationItemData[]>([]);
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
   const [consumptionEvents, setConsumptionEvents] = useState<ConsumptionEvent[]>([]);
+  const [favouriteMedications, setFavouriteMedications] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userId, setUserId] = useState("");
   const [isSignUpComplete, setIsSignUpComplete] = useState(false);
@@ -113,6 +114,7 @@ export default function App() {
       setAllMedicationItems(medInfoData.MedicationItems);
       setScheduledItems(medInfoData.ScheduledItems);
       setConsumptionEvents(statisticsInfoData.ConsumptionEvents);
+      setFavouriteMedications(userInfoData.Settings.FavouriteMedications);
       console.log("Data fetched successfully");
     } catch (error) {
       console.log("Error fetching data:", error);
@@ -455,6 +457,26 @@ export default function App() {
     }
   };
 
+  function addToFavourites(medicationName: string) {
+    console.log("Added to favourites");
+    var newFavouriteMedications = [...favouriteMedications, medicationName];
+    setFavouriteMedications(newFavouriteMedications);
+    const userRef = doc(firestorage, "UsersData", userId);
+    updateDoc(userRef, { Settings: { ...userInformation.Settings, FavouriteMedications: newFavouriteMedications } });
+  }
+
+  function removeFromFavourites(medicationName: string) {
+    console.log("Removed from favourites");
+    var newFavouriteMedications = favouriteMedications.filter((med) => med !== medicationName);
+    setFavouriteMedications(newFavouriteMedications);
+    const userRef = doc(firestorage, "UsersData", userId);
+    updateDoc(userRef, { Settings: { ...userInformation.Settings, FavouriteMedications: newFavouriteMedications } });
+  }
+
+  function isFavourite(medicationName: string) {
+    return favouriteMedications.includes(medicationName);
+  }
+
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -513,10 +535,10 @@ export default function App() {
           {(props) => <PatientMedicationPage {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Medication Database" options={{ headerShown: false }}>
-          {(props) => <MedicationDatabase {...props} settings={userInformation.Settings} userId={userId} />}
+          {(props) => <MedicationDatabase {...props} settings={userInformation.Settings} userId={userId} favouriteMedications={favouriteMedications} />}
         </Stack.Screen>
         <Stack.Screen name="Search Medication Item" options={{ headerShown: false }}>
-          {(props) => <SearchItemPage {...props} />}
+          {(props) => <SearchItemPage {...props} addToFavourites={addToFavourites} removeFromFavourites={removeFromFavourites} isFavourite={isFavourite} />}
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
           {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} />}

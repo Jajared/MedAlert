@@ -10,13 +10,12 @@ import SearchItem from "../components/SearchItem";
 
 const medData = Array.from(Object.values(medicationDb));
 
-export default function MedicationDatabase({ navigation, settings, userId }) {
+export default function MedicationDatabase({ navigation, settings, userId, favouriteMedications }) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedDosageForm, setSelectedDosageForm] = useState<string[]>([]);
   const [data, setData] = useState(medData);
   const [fullData, setFullData] = useState(medData);
   const [isFilterPopUpVisible, setIsFilterPopUpVisible] = useState<boolean>(false);
-  const [favouriteMedications, setFavouriteMedications] = useState<string[]>(settings.FavouriteMedications);
   const dosageFormTypes = ["Tablet", "Injection", "Capsule", "Cream", "Solution", "Granule", "Syrup", "Ointment", "Powder", "Spray", "Lotion"];
   const administrationRoutes = ["Oral", "Topical", "Intravenous", "Intramuscular", "Submucosal", "Dental", "Rectal", "Vaginal", "Cutaneous", "Intravitreous", "Conjunctival"];
   const handleSearchByName = (query: string) => {
@@ -58,13 +57,6 @@ export default function MedicationDatabase({ navigation, settings, userId }) {
   const getFavourites = () => {
     const favourites = fullData.filter((item) => favouriteMedications.some((med) => med === item.product_name));
     setData(favourites);
-  };
-
-  const addFavourite = async (medication: string) => {
-    const newFavourites = [...favouriteMedications, medication];
-    setFavouriteMedications(newFavourites);
-    const docRef = doc(firestorage, "UsersData", userId);
-    await updateDoc(docRef, { Settings: { ...settings, FavouriteMedications: newFavourites } });
   };
 
   return (

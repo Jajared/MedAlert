@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, Text, View, SafeAreaView, StatusBar } fro
 import TagButton from "../components/TagButton";
 import { AntDesign } from "@expo/vector-icons";
 
-export default function SearchItemPage({ route, navigation }) {
+export default function SearchItemPage({ route, navigation, addToFavourites, removeFromFavourites, isFavourite }) {
   const item = route.params.medicationDetails;
   const capitalizeWords = (str: string) => {
     const words = str.toLowerCase().split(" ");
@@ -14,9 +14,25 @@ export default function SearchItemPage({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title={item.product_name} />
-      <TouchableOpacity onPress={() => {}} style={{ position: "absolute", top: 50, right: 50 }}>
-        <AntDesign name="hearto" size={22} color="black" />
-      </TouchableOpacity>
+      {isFavourite(item.product_name) == false ? (
+        <TouchableOpacity
+          onPress={() => {
+            addToFavourites(item.product_name);
+          }}
+          style={{ position: "absolute", top: 50, right: 50 }}
+        >
+          <AntDesign name="hearto" size={22} color="black" />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          onPress={() => {
+            removeFromFavourites(item.product_name);
+          }}
+          style={{ position: "absolute", top: 50, right: 50 }}
+        >
+          <AntDesign name="heart" size={22} color="black" />
+        </TouchableOpacity>
+      )}
       <View style={styles.label}>
         <Text style={styles.header}>Product Name</Text>
         <Text style={styles.text}>{capitalizeWords(item.product_name)}</Text>
