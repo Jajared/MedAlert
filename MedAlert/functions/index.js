@@ -7,10 +7,50 @@ admin.initializeApp();
 const firestore = admin.firestore();
 
 exports.resetScheduledData = onSchedule("00 16 * * *", async () => {
-  function resetScheduledItems(scheduledItems) {
-    return scheduledItems.map((item) => {
-      ({ ...item, Acknowledged: false });
-    });
+  function getScheduledItems(allMedicationItems) {
+    var temp = [];
+    var count = 1;
+    for (let i = 0; i < allMedicationItems.length; i++) {
+      const timeInterval = 24 / allMedicationItems[i].Instructions.FrequencyPerDay;
+      for (let j = 0; j < allMedicationItems[i].Instructions.FrequencyPerDay; j++) {
+        temp.push({
+          ...allMedicationItems[i],
+          Acknowledged: false,
+          id: count,
+          Instructions: {
+            ...allMedicationItems[i].Instructions,
+            FirstDosageTiming: allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j > 24 * 60 ? allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j - 24 * 60 : allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j,
+          },
+        });
+        count++;
+      }
+    }
+    var result = sortScheduledItems(temp);
+    return result;
+  }
+  // Sort scheduled items in order of time
+  function sortScheduledItems(data) {
+    var scheduledItemsInOrder = [];
+    var lowestTime = 24 * 60;
+    var prevLowest = -1;
+    while (data.length != scheduledItemsInOrder.length) {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].Instructions.FirstDosageTiming < lowestTime && data[i].Instructions.FirstDosageTiming > prevLowest) {
+          lowestTime = data[i].Instructions.FirstDosageTiming;
+        }
+
+        if (i == data.length - 1) {
+          prevLowest = lowestTime;
+          for (let j = 0; j < data.length; j++) {
+            if (data[j].Instructions.FirstDosageTiming == lowestTime) {
+              scheduledItemsInOrder.push(data[j]);
+            }
+          }
+          lowestTime = 24 * 60;
+        }
+      }
+    }
+    return scheduledItemsInOrder;
   }
   try {
     firestore
@@ -18,9 +58,8 @@ exports.resetScheduledData = onSchedule("00 16 * * *", async () => {
       .get()
       .then((snapshot) => {
         snapshot.forEach((doc) => {
-          const scheduledItems = doc.data().ScheduledItems;
-          const newScheduledItems = resetScheduledItems(scheduledItems);
-          doc.ref.update({ ScheduledItems: newScheduledItems });
+          const medicationItems = doc.data().MedicationItems;
+          doc.ref.update({ ScheduledItems: getScheduledItems(medicationItems) });
         });
       });
     return null;
