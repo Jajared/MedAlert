@@ -44,7 +44,10 @@ export default function App() {
     DateOfBirth: "",
     EmailAddress: "",
     PhoneNumber: "",
-    DeviceToken: "",
+    Settings: {
+      DoseBoundary: 30,
+      FavouriteMedications: [],
+    },
   });
   const [allMedicationItems, setAllMedicationItems] = useState<MedicationItemData[]>([]);
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
@@ -197,7 +200,10 @@ export default function App() {
           DateOfBirth: "",
           EmailAddress: "",
           PhoneNumber: "",
-          DeviceToken: "",
+          Settings: {
+            DoseBoundary: 30,
+            FavouriteMedications: [],
+          },
         });
         console.log("Successfully signed out");
       });
@@ -486,7 +492,7 @@ export default function App() {
           {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} fetchData={fetchData} deleteReminder={deleteReminder} />}
         </Stack.Screen>
         <Stack.Screen name="Performance" options={{ headerShown: false }}>
-          {(props) => <PerformancePage {...props} consumptionEvents={consumptionEvents} userId={userId} />}
+          {(props) => <PerformancePage {...props} consumptionEvents={consumptionEvents} userId={userId} doseBoundary={userInformation.Settings.DoseBoundary} />}
         </Stack.Screen>
         <Stack.Screen name="Add Medication Type" options={{ headerShown: false }}>
           {(props) => <AddMedicationType {...props} />}

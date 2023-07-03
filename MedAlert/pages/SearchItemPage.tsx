@@ -25,7 +25,7 @@ export default function SearchItemPage({ route, navigation }) {
         <Text style={styles.header}>Dosage Form</Text>
         <View style={styles.buttonContainer}>
           {item.dosage_form.split(", ").map((form: string) => (
-            <TagButton title={form} />
+            <TagButton title={form} key={form} />
           ))}
         </View>
       </View>

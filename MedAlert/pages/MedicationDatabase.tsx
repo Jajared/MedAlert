@@ -51,11 +51,15 @@ export default function MedicationDatabase({ navigation }) {
     }
     return false;
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <BackNavBar navigation={navigation} title="Medication Database" />
-      <TouchableOpacity onPress={() => setIsFilterPopUpVisible(true)} style={styles.filterIcon}>
+      <BackNavBar navigation={navigation} title="Database" />
+      <TouchableOpacity onPress={() => {}} style={{ position: "absolute", top: 70, right: 70 }}>
+        <AntDesign name="hearto" size={22} color="black" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => setIsFilterPopUpVisible(true)} style={{ position: "absolute", top: 70, right: 30 }}>
         <AntDesign name="filter" size={24} color="black" />
       </TouchableOpacity>
       <View style={styles.searchBar}>
