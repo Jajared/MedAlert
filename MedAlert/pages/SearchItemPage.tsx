@@ -1,10 +1,11 @@
 import BackNavBar from "../components/BackNavBar";
 import { StyleSheet, TouchableOpacity, Text, View, SafeAreaView, StatusBar } from "react-native";
 import TagButton from "../components/TagButton";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function SearchItemPage({ route, navigation }) {
   const item = route.params.medicationDetails;
-  const capitalizeWords = (str) => {
+  const capitalizeWords = (str: string) => {
     const words = str.toLowerCase().split(" ");
     const capitalizedWords = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1));
     return capitalizedWords.join(" ");
@@ -13,6 +14,9 @@ export default function SearchItemPage({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title={item.product_name} />
+      <TouchableOpacity onPress={() => {}} style={{ position: "absolute", top: 50, right: 50 }}>
+        <AntDesign name="hearto" size={22} color="black" />
+      </TouchableOpacity>
       <View style={styles.label}>
         <Text style={styles.header}>Product Name</Text>
         <Text style={styles.text}>{capitalizeWords(item.product_name)}</Text>

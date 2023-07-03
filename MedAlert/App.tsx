@@ -492,7 +492,7 @@ export default function App() {
           {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} fetchData={fetchData} deleteReminder={deleteReminder} />}
         </Stack.Screen>
         <Stack.Screen name="Performance" options={{ headerShown: false }}>
-          {(props) => <PerformancePage {...props} consumptionEvents={consumptionEvents} userId={userId} doseBoundary={userInformation.Settings.DoseBoundary} />}
+          {(props) => <PerformancePage {...props} consumptionEvents={consumptionEvents} userId={userId} prevSettings={userInformation.Settings} />}
         </Stack.Screen>
         <Stack.Screen name="Add Medication Type" options={{ headerShown: false }}>
           {(props) => <AddMedicationType {...props} />}
@@ -513,7 +513,7 @@ export default function App() {
           {(props) => <PatientMedicationPage {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Medication Database" options={{ headerShown: false }}>
-          {(props) => <MedicationDatabase {...props} />}
+          {(props) => <MedicationDatabase {...props} settings={userInformation.Settings} userId={userId} />}
         </Stack.Screen>
         <Stack.Screen name="Search Medication Item" options={{ headerShown: false }}>
           {(props) => <SearchItemPage {...props} />}

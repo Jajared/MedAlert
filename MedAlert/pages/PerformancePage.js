@@ -8,7 +8,7 @@ import DatePicker from "../components/DatePicker";
 import { Feather, Entypo } from "@expo/vector-icons";
 import DropDownPicker from "react-native-dropdown-picker";
 
-function PerformancePage({ navigation, consumptionEvents, userId, doseBoundary }) {
+function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }) {
   const DEFAULT_CHART_DATA = [
     { date: new Date().toISOString().split("T")[0], value: 0 },
     { date: new Date().toISOString().split("T")[0], value: 0 },
@@ -26,12 +26,11 @@ function PerformancePage({ navigation, consumptionEvents, userId, doseBoundary }
   const timeFrames = ["Day", "Week", "Month"];
   const [isLoading, setIsLoading] = useState(false);
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
-  const [settings, setSettings] = useState({ doseBoundary: doseBoundary });
-  const [timeBoundary, setTimeBoundary] = useState(doseBoundary);
-
+  const [settings, setSettings] = useState({ ...prevSettings, DoseBoundary: prevSettings.DoseBoundary });
+  const [timeBoundary, setTimeBoundary] = useState(prevSettings.DoseBoundary);
   useEffect(() => {
     getChartData(selectedTimeFrame);
-  }, [selectedDate, selectedTimeFrame]);
+  }, [selectedDate, selectedTimeFrame, timeBoundary]);
 
   const handleTimeFrameChange = useCallback((timeFrame) => {
     if (timeFrame === "Day") {
@@ -188,6 +187,21 @@ function PerformancePage({ navigation, consumptionEvents, userId, doseBoundary }
     ];
   };
 
+  const updateSettings = async () => {
+    try {
+      setIsLoading(true);
+      const docRef = doc(firestorage, "UsersData", userId);
+      await updateDoc(docRef, { Settings: settings });
+      setTimeBoundary(settings.DoseBoundary);
+      console.log("Settings updated");
+    } catch (error) {
+      console.log("Error");
+      alert("Unable to update settings");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -196,7 +210,6 @@ function PerformancePage({ navigation, consumptionEvents, userId, doseBoundary }
     );
   }
 
-  console.log(timeBoundary);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -314,7 +327,7 @@ function PerformancePage({ navigation, consumptionEvents, userId, doseBoundary }
               <Text style={styles.header}>Settings</Text>
               <TouchableOpacity
                 onPress={() => {
-                  setSettings({ doseBoundary: doseBoundary });
+                  setSettings({ ...prevSettings });
                   setIsSettingsVisible(false);
                 }}
                 style={styles.closeFilter}
@@ -327,17 +340,21 @@ function PerformancePage({ navigation, consumptionEvents, userId, doseBoundary }
                 <Text style={styles.optionHeader}>Dose Boundary (in minutes)</Text>
                 <TextInput
                   style={styles.inputBox}
-                  value={doseBoundary}
-                  placeholder={doseBoundary.toString()}
+                  keyboardType="decimal-pad"
+                  placeholder={settings.DoseBoundary.toString()}
                   onChangeText={(text) => {
-                    setSettings({ doseBoundary: parseInt(text) });
+                    if (isNaN(text)) {
+                      alert("Please enter a number");
+                    } else {
+                      setSettings({ ...settings, DoseBoundary: parseInt(text) });
+                    }
                   }}
                 ></TextInput>
               </View>
               <View style={{ flex: 3 }}></View>
               <TouchableOpacity
                 onPress={() => {
-                  setTimeBoundary(settings.doseBoundary);
+                  updateSettings();
                   setIsSettingsVisible(false);
                 }}
                 style={styles.confirmButton}

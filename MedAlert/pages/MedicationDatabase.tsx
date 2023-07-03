@@ -2,18 +2,21 @@ import { View, SafeAreaView, StyleSheet, TextInput, FlatList, Text, TouchableOpa
 import { useCallback, useState } from "react";
 import medicationDb from "../assets/medicationDb.json";
 import filter from "lodash.filter";
+import { getDoc, doc, updateDoc, setDoc } from "firebase/firestore";
+import { firestorage } from "../firebaseConfig";
 import { MaterialCommunityIcons, AntDesign, Entypo } from "@expo/vector-icons";
 import BackNavBar from "../components/BackNavBar";
 import SearchItem from "../components/SearchItem";
 
 const medData = Array.from(Object.values(medicationDb));
 
-export default function MedicationDatabase({ navigation }) {
+export default function MedicationDatabase({ navigation, settings, userId }) {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedDosageForm, setSelectedDosageForm] = useState<string[]>([]);
   const [data, setData] = useState(medData);
   const [fullData, setFullData] = useState(medData);
   const [isFilterPopUpVisible, setIsFilterPopUpVisible] = useState<boolean>(false);
+  const [favouriteMedications, setFavouriteMedications] = useState<string[]>(settings.FavouriteMedications);
   const dosageFormTypes = ["Tablet", "Injection", "Capsule", "Cream", "Solution", "Granule", "Syrup", "Ointment", "Powder", "Spray", "Lotion"];
   const administrationRoutes = ["Oral", "Topical", "Intravenous", "Intramuscular", "Submucosal", "Dental", "Rectal", "Vaginal", "Cutaneous", "Intravitreous", "Conjunctival"];
   const handleSearchByName = (query: string) => {
@@ -52,11 +55,23 @@ export default function MedicationDatabase({ navigation }) {
     return false;
   };
 
+  const getFavourites = () => {
+    const favourites = fullData.filter((item) => favouriteMedications.some((med) => med === item.product_name));
+    setData(favourites);
+  };
+
+  const addFavourite = async (medication: string) => {
+    const newFavourites = [...favouriteMedications, medication];
+    setFavouriteMedications(newFavourites);
+    const docRef = doc(firestorage, "UsersData", userId);
+    await updateDoc(docRef, { Settings: { ...settings, FavouriteMedications: newFavourites } });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="Database" />
-      <TouchableOpacity onPress={() => {}} style={{ position: "absolute", top: 70, right: 70 }}>
+      <TouchableOpacity onPress={() => getFavourites()} style={{ position: "absolute", top: 70, right: 70 }}>
         <AntDesign name="hearto" size={22} color="black" />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => setIsFilterPopUpVisible(true)} style={{ position: "absolute", top: 70, right: 30 }}>
