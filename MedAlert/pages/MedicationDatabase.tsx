@@ -79,9 +79,7 @@ export default function MedicationDatabase({ navigation, settings, userId, favou
         <MaterialCommunityIcons name="magnify" size={20} color="black" style={{ flex: 1 }} />
         <TextInput placeholder="Search by name or active ingredient" clearButtonMode="always" autoCapitalize="none" autoCorrect={false} onChangeText={(query) => handleSearchByName(query)} style={{ flex: 8 }} />
       </View>
-      <View style={styles.data}>
-        <FlatList data={data} renderItem={({ item }) => <SearchItem item={item} navigation={navigation} />} keyExtractor={(item) => item.product_name + item.manufacturer} initialNumToRender={10} />
-      </View>
+      <View style={styles.data}>{data.length != 0 ? <FlatList data={data} renderItem={({ item }) => <SearchItem item={item} navigation={navigation} />} keyExtractor={(item) => item.product_name + item.manufacturer} initialNumToRender={10} /> : <Text style={styles.warnMessage}>You have no favourites</Text>}</View>
       <Modal visible={isFilterPopUpVisible} transparent={true} animationType="slide">
         <SafeAreaView style={styles.popUpContainer}>
           <View style={styles.popUp}>
@@ -274,6 +272,13 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     borderRadius: 10,
+    alignSelf: "center",
+    marginTop: 20,
+  },
+  warnMessage: {
+    fontSize: 16,
+    color: "grey",
+    fontWeight: "bold",
     alignSelf: "center",
     marginTop: 20,
   },

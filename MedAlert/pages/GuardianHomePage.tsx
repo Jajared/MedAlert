@@ -177,7 +177,7 @@ export default function GuardianHomePage({ navigation, userId }) {
           ))}
         </View>
         <View style={[styles.section, { flex: 2 }]}>
-          <View style={{ width: "100%" }}>{guardiansInfo && <FlatList data={guardiansInfo} renderItem={(data) => <GuardianInfoItem props={data} navigation={navigation} removeGuardian={removeGuardian} />} keyExtractor={(item) => item.Name} />}</View>
+          <View style={{ width: "100%" }}>{guardiansInfo.length != 0 ? <FlatList data={guardiansInfo} renderItem={(data) => <GuardianInfoItem props={data} navigation={navigation} removeGuardian={removeGuardian} />} keyExtractor={(item) => item.Name} /> : <Text style={styles.warnMessage}>You do not have any guardians</Text>}</View>
         </View>
       </SafeAreaView>
     );
@@ -200,7 +200,7 @@ export default function GuardianHomePage({ navigation, userId }) {
           ))}
         </View>
         <View style={[styles.section, { flex: 1 }]}>
-          <View style={{ width: "100%" }}>{guardiansRequests && <FlatList data={guardiansRequests} renderItem={(data) => <GuardianRequestItem props={data} acceptGuardianRequest={acceptGuardianRequest} rejectGuardianRequest={rejectGuardianRequest} />} keyExtractor={(item) => item.Name} />}</View>
+          <View style={{ width: "100%" }}>{guardiansRequests.length != 0 ? <FlatList data={guardiansRequests} renderItem={(data) => <GuardianRequestItem props={data} acceptGuardianRequest={acceptGuardianRequest} rejectGuardianRequest={rejectGuardianRequest} />} keyExtractor={(item) => item.Name} /> : <Text style={styles.warnMessage}>You do not have any requests</Text>}</View>
         </View>
       </SafeAreaView>
     );
@@ -366,5 +366,12 @@ const styles = StyleSheet.create({
   selectedFilterText: {
     color: "black",
     fontWeight: "bold",
+  },
+  warnMessage: {
+    fontSize: 16,
+    color: "grey",
+    fontWeight: "bold",
+    alignSelf: "center",
+    marginTop: 20,
   },
 });

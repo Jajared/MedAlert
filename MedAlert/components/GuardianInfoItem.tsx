@@ -29,7 +29,7 @@ export default function GuardianInfoItem({ props, navigation, removeGuardian }) 
                     removeGuardian(guardianInfo.UserId);
                     setDeleteModalVisible(false);
                   }}
-                  style={[styles.button, { backgroundColor: "green" }]}
+                  style={[styles.button, { backgroundColor: "#F4BFBF" }]}
                 >
                   <Text>YES</Text>
                 </TouchableOpacity>
@@ -37,7 +37,7 @@ export default function GuardianInfoItem({ props, navigation, removeGuardian }) 
                   onPress={() => {
                     setDeleteModalVisible(false);
                   }}
-                  style={[styles.button, { backgroundColor: "red" }]}
+                  style={[styles.button, { backgroundColor: "#F4BFBF" }]}
                 >
                   <Text>NO</Text>
                 </TouchableOpacity>

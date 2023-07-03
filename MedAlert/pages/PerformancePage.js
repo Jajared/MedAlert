@@ -1,12 +1,11 @@
-import { SafeAreaView, StatusBar, View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Modal, TextInput } from "react-native";
+import { SafeAreaView, StatusBar, View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Modal, TextInput, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { LineChart, PieChart } from "react-native-gifted-charts";
-import React, { useEffect, useState, useCallback, useRef } from "react";
-import { getDoc, doc, updateDoc, setDoc } from "firebase/firestore";
+import React, { useEffect, useState, useCallback } from "react";
+import { doc, updateDoc, setDoc } from "firebase/firestore";
 import { firestorage } from "../firebaseConfig";
 import BottomNavBar from "../components/BottomNavBar";
 import DatePicker from "../components/DatePicker";
 import { Feather, Entypo } from "@expo/vector-icons";
-import DropDownPicker from "react-native-dropdown-picker";
 
 function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }) {
   const DEFAULT_CHART_DATA = [
@@ -321,49 +320,51 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
         <BottomNavBar navigation={navigation} />
       </View>
       <Modal visible={isSettingsVisible} transparent={true} animationType="slide">
-        <SafeAreaView style={styles.popUpContainer}>
-          <View style={styles.popUp}>
-            <View style={styles.topBar}>
-              <Text style={styles.header}>Settings</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  setSettings({ ...prevSettings });
-                  setIsSettingsVisible(false);
-                }}
-                style={styles.closeFilter}
-              >
-                <Entypo name="cross" size={24} color="black" />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.optionsContainer}>
-              <View style={styles.settings}>
-                <Text style={styles.optionHeader}>Dose Boundary (in minutes)</Text>
-                <TextInput
-                  style={styles.inputBox}
-                  keyboardType="decimal-pad"
-                  placeholder={settings.DoseBoundary.toString()}
-                  onChangeText={(text) => {
-                    if (isNaN(text)) {
-                      alert("Please enter a number");
-                    } else {
-                      setSettings({ ...settings, DoseBoundary: parseInt(text) });
-                    }
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <SafeAreaView style={styles.popUpContainer}>
+            <View style={styles.popUp}>
+              <View style={styles.topBar}>
+                <Text style={styles.header}>Settings</Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    setSettings({ ...prevSettings });
+                    setIsSettingsVisible(false);
                   }}
-                ></TextInput>
+                  style={styles.closeFilter}
+                >
+                  <Entypo name="cross" size={24} color="black" />
+                </TouchableOpacity>
               </View>
-              <View style={{ flex: 3 }}></View>
-              <TouchableOpacity
-                onPress={() => {
-                  updateSettings();
-                  setIsSettingsVisible(false);
-                }}
-                style={styles.confirmButton}
-              >
-                <Text>Confirm</Text>
-              </TouchableOpacity>
+              <View style={styles.optionsContainer}>
+                <View style={styles.settings}>
+                  <Text style={styles.optionHeader}>Dose Boundary (in minutes)</Text>
+                  <TextInput
+                    style={styles.inputBox}
+                    keyboardType="decimal-pad"
+                    placeholder={settings.DoseBoundary.toString()}
+                    onChangeText={(text) => {
+                      if (isNaN(text)) {
+                        alert("Please enter a number");
+                      } else {
+                        setSettings({ ...settings, DoseBoundary: parseInt(text) });
+                      }
+                    }}
+                  ></TextInput>
+                </View>
+                <View style={{ flex: 3 }}></View>
+                <TouchableOpacity
+                  onPress={() => {
+                    updateSettings();
+                    setIsSettingsVisible(false);
+                  }}
+                  style={styles.confirmButton}
+                >
+                  <Text>Confirm</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        </SafeAreaView>
+          </SafeAreaView>
+        </TouchableWithoutFeedback>
       </Modal>
     </SafeAreaView>
   );

@@ -34,7 +34,7 @@ export default function PatientMedicationPage({ navigation, route }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <BackNavBar navigation={navigation} title={guardianName} />
+      <BackNavBar navigation={navigation} title={guardianName + "'s Medications"} />
       <View style={styles.medicationSection}>{scheduledItems && <FlatList data={scheduledItems.filter((data) => data.Acknowledged === false)} renderItem={(data) => <PatientMedicationItem props={data} />} keyExtractor={(item) => item.notificationId} />}</View>
     </SafeAreaView>
   );

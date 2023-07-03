@@ -31,7 +31,7 @@ export default function ViewMedicationPage({ navigation, allMedicationItems }) {
       <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="View Medications" />
       <View style={styles.medicationSection}>
-        {allMedicationItems && (
+        {allMedicationItems.length != 0 ? (
           <FlatList
             data={allMedicationItems}
             renderItem={({ item }) => (
@@ -51,6 +51,8 @@ export default function ViewMedicationPage({ navigation, allMedicationItems }) {
             )}
             keyExtractor={(item) => item.Name}
           />
+        ) : (
+          <Text style={styles.warnMessage}>You have no existing medication</Text>
         )}
       </View>
       <View style={styles.bottomNavBar}>
@@ -101,5 +103,12 @@ const styles = StyleSheet.create({
     height: 15,
     width: 15,
     marginLeft: 180,
+  },
+  warnMessage: {
+    fontSize: 16,
+    color: "grey",
+    fontWeight: "bold",
+    alignSelf: "center",
+    marginTop: 20,
   },
 });

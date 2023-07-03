@@ -30,21 +30,43 @@ export default function PatientMedicationItem({ props }) {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
   }
 
+  const getCurrentTime = () => {
+    const timeNow = new Date();
+    const minutes = timeNow.getHours() * 60 + timeNow.getMinutes();
+    return minutes;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.itemContainer}>
-        <Text style={styles.timeSection}>{getTime()}</Text>
-        <View style={styles.textContainer}>
-          <Image source={getIcon()} style={styles.icon} />
-          <View style={styles.medicationInfo}>
-            <Text style={{ fontWeight: "bold", fontSize: 20 }}>{medicationData.Name}</Text>
-            <Text>{medicationData.Purpose}</Text>
-            <Text>
-              {medicationData.Instructions.TabletsPerIntake} {getUnits()}
-            </Text>
+      {getCurrentTime() >= medicationData.Instructions.FirstDosageTiming ? (
+        <View style={styles.itemContainer}>
+          <Text style={[styles.timeSection, { color: "red" }]}>{getTime()}</Text>
+          <View style={styles.textContainer}>
+            <Image source={getIcon()} style={styles.icon} />
+            <View style={styles.medicationInfo}>
+              <Text style={{ fontWeight: "bold", fontSize: 20, color: "red" }}>{medicationData.Name}</Text>
+              <Text style={{ color: "red" }}>{medicationData.Purpose}</Text>
+              <Text style={{ color: "red" }}>
+                {medicationData.Instructions.TabletsPerIntake} {getUnits()}
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
+      ) : (
+        <View style={styles.itemContainer}>
+          <Text style={styles.timeSection}>{getTime()}</Text>
+          <View style={styles.textContainer}>
+            <Image source={getIcon()} style={styles.icon} />
+            <View style={styles.medicationInfo}>
+              <Text style={{ fontWeight: "bold", fontSize: 20 }}>{medicationData.Name}</Text>
+              <Text>{medicationData.Purpose}</Text>
+              <Text>
+                {medicationData.Instructions.TabletsPerIntake} {getUnits()}
+              </Text>
+            </View>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
