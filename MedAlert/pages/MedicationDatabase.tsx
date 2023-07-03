@@ -55,7 +55,13 @@ export default function MedicationDatabase({ navigation, settings, userId, favou
   };
 
   const getFavourites = () => {
-    const favourites = fullData.filter((item) => favouriteMedications.some((med) => med === item.product_name));
+    const favourites = fullData.filter((item) =>
+      favouriteMedications.some((med) => {
+        const medName = med.split(",")[0];
+        const medManufacturer = med.split(",")[1];
+        return medName === item.product_name && medManufacturer === item.manufacturer;
+      })
+    );
     setData(favourites);
   };
 

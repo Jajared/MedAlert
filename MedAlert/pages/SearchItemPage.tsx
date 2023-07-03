@@ -1,7 +1,7 @@
 import BackNavBar from "../components/BackNavBar";
 import { StyleSheet, TouchableOpacity, Text, View, SafeAreaView, StatusBar } from "react-native";
 import TagButton from "../components/TagButton";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 
 export default function SearchItemPage({ route, navigation, addToFavourites, removeFromFavourites, isFavourite }) {
   const item = route.params.medicationDetails;
@@ -13,29 +13,33 @@ export default function SearchItemPage({ route, navigation, addToFavourites, rem
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <BackNavBar navigation={navigation} title={item.product_name} />
-      {isFavourite(item.product_name) == false ? (
-        <TouchableOpacity
-          onPress={() => {
-            addToFavourites(item.product_name);
-          }}
-          style={{ position: "absolute", top: 50, right: 50 }}
-        >
-          <AntDesign name="hearto" size={22} color="black" />
+      <View style={styles.topBar}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          onPress={() => {
-            removeFromFavourites(item.product_name);
-          }}
-          style={{ position: "absolute", top: 50, right: 50 }}
-        >
-          <AntDesign name="heart" size={22} color="black" />
-        </TouchableOpacity>
-      )}
-      <View style={styles.label}>
-        <Text style={styles.header}>Product Name</Text>
-        <Text style={styles.text}>{capitalizeWords(item.product_name)}</Text>
+        {isFavourite(item.product_name + "," + item.manufacturer) == false ? (
+          <TouchableOpacity
+            onPress={() => {
+              addToFavourites(item.product_name + "," + item.manufacturer);
+            }}
+            style={styles.favouritesButton}
+          >
+            <AntDesign name="hearto" size={22} color="black" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              removeFromFavourites(item.product_name + "," + item.manufacturer);
+            }}
+            style={styles.favouritesButton}
+          >
+            <AntDesign name="heart" size={22} color="black" />
+          </TouchableOpacity>
+        )}
+      </View>
+
+      <View style={styles.productName}>
+        <Text style={{ fontWeight: "bold", fontSize: 22 }}>{capitalizeWords(item.product_name)}</Text>
       </View>
       <View style={styles.label}>
         <Text style={styles.header}>Manufacturer</Text>
@@ -72,11 +76,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
   },
+  backButton: {
+    flex: 1,
+    marginLeft: 40,
+    alignItems: "flex-start",
+    justifyContent: "center",
+  },
+  favouritesButton: {
+    flex: 1,
+    marginRight: 40,
+    alignItems: "flex-end",
+    justifyContent: "center",
+  },
+  topBar: {
+    flexDirection: "row",
+    marginVertical: 10,
+  },
   label: {
     width: "90%",
     flex: 1,
     flexDirection: "row",
-    marginTop: 10,
   },
   item: {
     width: "90%",
@@ -97,5 +116,11 @@ const styles = StyleSheet.create({
     flex: 2,
     alignItems: "flex-start",
     flexDirection: "row",
+  },
+  productName: {
+    width: "90%",
+    flex: 1,
+    alignItems: "flex-start",
+    justifyContent: "center",
   },
 });
