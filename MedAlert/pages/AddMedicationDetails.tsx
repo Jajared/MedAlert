@@ -4,13 +4,12 @@ import BackNavBar from "../components/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Entypo } from "@expo/vector-icons";
 import CameraComponent from "../components/CameraComponent/CameraComponent";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../components/NextButton";
 import { MedicationItemData } from "../utils/types";
 
 export default function AddMedicationDetails({ navigation, route }) {
   const [state, setState] = useState<MedicationItemData>({ Name: "", Type: route.params.Type, Purpose: "", Instructions: { TabletsPerIntake: 1, FrequencyPerDay: 0, Specifications: "", FirstDosageTiming: 540 } });
   const [showCamera, setShowCamera] = useState<boolean>(false);
-  const [selectedType, setSelectedType] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   function setFrequencyPerIntake(value: number) {

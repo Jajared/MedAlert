@@ -2,7 +2,7 @@ import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Butt
 import BackNavBar from "../components/BackNavBar";
 import { useState } from "react";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../components/NextButton";
 import { MedicationItemData } from "../utils/types";
 
 export default function EditMedicationDetails({ navigation, allMedicationItems, deleteMedicationFromList, route }) {
@@ -147,6 +147,7 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
               <Text style={styles.deleteBox}>DELETE MEDICATION</Text>
             </TouchableOpacity>
           </View>
+
           <Modal visible={isDeletionPopUpVisible} transparent={true} animationType="slide">
             <SafeAreaView style={styles.popUpContainer}>
               <View style={styles.popUp}>
@@ -262,6 +263,7 @@ export default function EditMedicationDetails({ navigation, allMedicationItems, 
               <Text style={styles.deleteBox}>DELETE MEDICATION</Text>
             </TouchableOpacity>
           </View>
+
           <Modal visible={isDeletionPopUpVisible} transparent={true} animationType="slide">
             <SafeAreaView style={styles.popUpContainer}>
               <View style={styles.popUp}>

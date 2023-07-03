@@ -4,7 +4,7 @@ import BackNavBar from "../components/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { MedicationItemData } from "../utils/types";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../components/NextButton";
 
 export default function EditMedicationSchedule({ navigation, route, allMedicationItems, setEdit }) {
   console.log({ ...route.params.medicationItem });

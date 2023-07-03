@@ -20,7 +20,10 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
     DateOfBirth: "",
     EmailAddress: route.params.EmailAddress,
     PhoneNumber: "",
-    DeviceToken: "",
+    Settings: {
+      DoseBoundary: 30,
+      FavouriteMedications: [],
+    },
   });
 
   const handleModal = () => setIsModalVisible(() => !isModalVisible);

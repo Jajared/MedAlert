@@ -4,7 +4,7 @@ import BackNavBar from "../components/BackNavBar";
 import CalendarPicker from "react-native-calendar-picker";
 import Modal from "react-native-modal";
 import * as React from "react";
-import CustomButton from "../components/CustomButton";
+import CustomButton from "../components/NextButton";
 import DropDownPicker from "react-native-dropdown-picker";
 
 export default function UpdateAccountPage({ navigation, userInformation, updateUserInformation }) {

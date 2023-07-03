@@ -141,14 +141,18 @@ export default function GuardianHomePage({ navigation, userId }) {
   // Add request
   const addRequest = async (guardianId: string) => {
     try {
-      // Update guardian side
-      const guardianInfoRef = doc(collection(firestorage, "GuardianInformation"), guardianId);
-      await setDoc(guardianInfoRef, { IncomingRequests: arrayUnion(userId) }, { merge: true });
+      if (guardianId == userId) {
+        alert("You cannot add yourself as a guardian!");
+      } else {
+        // Update guardian side
+        const guardianInfoRef = doc(collection(firestorage, "GuardianInformation"), guardianId);
+        await setDoc(guardianInfoRef, { IncomingRequests: arrayUnion(userId) }, { merge: true });
 
-      // Update user side
-      const userInfoRef = doc(collection(firestorage, "GuardianInformation"), userId);
-      await setDoc(userInfoRef, { OutgoingRequests: arrayUnion(guardianId) }, { merge: true });
-      alert("Successfully requested!");
+        // Update user side
+        const userInfoRef = doc(collection(firestorage, "GuardianInformation"), userId);
+        await setDoc(userInfoRef, { OutgoingRequests: arrayUnion(guardianId) }, { merge: true });
+        alert("Successfully requested!");
+      }
     } catch (error) {
       console.error("Error adding guardian request:", error);
     }

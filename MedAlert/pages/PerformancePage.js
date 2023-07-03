@@ -1,12 +1,14 @@
-import { SafeAreaView, StatusBar, View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import { SafeAreaView, StatusBar, View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Modal, TextInput } from "react-native";
 import { LineChart, PieChart } from "react-native-gifted-charts";
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { getDoc, doc, updateDoc, setDoc } from "firebase/firestore";
 import { firestorage } from "../firebaseConfig";
 import BottomNavBar from "../components/BottomNavBar";
 import DatePicker from "../components/DatePicker";
+import { Feather, Entypo } from "@expo/vector-icons";
+import DropDownPicker from "react-native-dropdown-picker";
 
-function PerformancePage({ navigation, consumptionEvents, userId }) {
+function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }) {
   const DEFAULT_CHART_DATA = [
     { date: new Date().toISOString().split("T")[0], value: 0 },
     { date: new Date().toISOString().split("T")[0], value: 0 },
@@ -18,15 +20,17 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
 
   const [chartData, setChartData] = useState(DEFAULT_CHART_DATA);
   const [piechartData, setPieChartData] = useState(DEFAULT_PIECHART_DATA);
-  const [selectedTimeFrame, setTimeFrame] = useState("Day");
+  const [selectedTimeFrame, setTimeFrame] = useState("Week");
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [spacing, setSpacing] = useState(80);
   const timeFrames = ["Day", "Week", "Month"];
   const [isLoading, setIsLoading] = useState(false);
-
+  const [isSettingsVisible, setIsSettingsVisible] = useState(false);
+  const [settings, setSettings] = useState({ ...prevSettings, DoseBoundary: prevSettings.DoseBoundary });
+  const [timeBoundary, setTimeBoundary] = useState(prevSettings.DoseBoundary);
   useEffect(() => {
     getChartData(selectedTimeFrame);
-  }, [selectedDate, selectedTimeFrame]);
+  }, [selectedDate, selectedTimeFrame, timeBoundary]);
 
   const handleTimeFrameChange = useCallback((timeFrame) => {
     if (timeFrame === "Day") {
@@ -159,9 +163,10 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
   }
 
   const getPieChartData = (data) => {
+    const boundary = timeBoundary / 60;
     const { positiveCount, negativeCount } = data.reduce(
       (counts, { value }) => {
-        if (value > 0.5 || value < -0.5) {
+        if (value > boundary || value < -boundary) {
           // 0.5hr (30 minutes) is the threshold
           counts.negativeCount++;
         } else {
@@ -182,6 +187,21 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
     ];
   };
 
+  const updateSettings = async () => {
+    try {
+      setIsLoading(true);
+      const docRef = doc(firestorage, "UsersData", userId);
+      await updateDoc(docRef, { Settings: settings });
+      setTimeBoundary(settings.DoseBoundary);
+      console.log("Settings updated");
+    } catch (error) {
+      console.log("Error");
+      alert("Unable to update settings");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -189,10 +209,19 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
       </View>
     );
   }
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
       <Text style={styles.pageHeader}>Consumption Pattern</Text>
+      <TouchableOpacity
+        style={styles.icon}
+        onPress={() => {
+          setIsSettingsVisible(true);
+        }}
+      >
+        <Feather name="settings" size={24} color="black" />
+      </TouchableOpacity>
       <View style={styles.filterSection}>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterBar}>
           {timeFrames.map((timeFrame) => (
@@ -288,10 +317,54 @@ function PerformancePage({ navigation, consumptionEvents, userId }) {
           />
         </View>
       </View>
-
       <View style={styles.bottomNavBar}>
         <BottomNavBar navigation={navigation} />
       </View>
+      <Modal visible={isSettingsVisible} transparent={true} animationType="slide">
+        <SafeAreaView style={styles.popUpContainer}>
+          <View style={styles.popUp}>
+            <View style={styles.topBar}>
+              <Text style={styles.header}>Settings</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  setSettings({ ...prevSettings });
+                  setIsSettingsVisible(false);
+                }}
+                style={styles.closeFilter}
+              >
+                <Entypo name="cross" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.optionsContainer}>
+              <View style={styles.settings}>
+                <Text style={styles.optionHeader}>Dose Boundary (in minutes)</Text>
+                <TextInput
+                  style={styles.inputBox}
+                  keyboardType="decimal-pad"
+                  placeholder={settings.DoseBoundary.toString()}
+                  onChangeText={(text) => {
+                    if (isNaN(text)) {
+                      alert("Please enter a number");
+                    } else {
+                      setSettings({ ...settings, DoseBoundary: parseInt(text) });
+                    }
+                  }}
+                ></TextInput>
+              </View>
+              <View style={{ flex: 3 }}></View>
+              <TouchableOpacity
+                onPress={() => {
+                  updateSettings();
+                  setIsSettingsVisible(false);
+                }}
+                style={styles.confirmButton}
+              >
+                <Text>Confirm</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </SafeAreaView>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -376,6 +449,70 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     alignItems: "center",
+  },
+  icon: {
+    position: "absolute",
+    top: 70,
+    right: 30,
+  },
+  popUpContainer: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  popUp: {
+    backgroundColor: "white",
+    width: "90%",
+    height: "60%",
+    borderRadius: 20,
+    padding: 20,
+  },
+  closeFilter: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  topBar: {
+    flexDirection: "row",
+  },
+  optionsContainer: {
+    flex: 1,
+    flexDirection: "column",
+    marginTop: 20,
+  },
+  settings: {
+    flex: 1,
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  optionHeader: {
+    flex: 2,
+    fontSize: 16,
+    alignSelf: "center",
+    justifyContent: "center",
+    marginRight: 10,
+  },
+  inputBox: {
+    flex: 3,
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    alignSelf: "center",
+    justifyContent: "center",
+  },
+  confirmButton: {
+    backgroundColor: "#baeaa6",
+    width: 100,
+    alignItems: "center",
+    marginHorizontal: 10,
+    padding: 10,
+    fontSize: 18,
+    borderRadius: 10,
+    alignSelf: "center",
+    marginTop: 20,
   },
 });
 

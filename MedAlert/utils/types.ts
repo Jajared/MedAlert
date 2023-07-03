@@ -4,7 +4,10 @@ export interface UserInformation {
   DateOfBirth: string;
   EmailAddress: string;
   PhoneNumber: string;
-  DeviceToken: string;
+  Settings: {
+    DoseBoundary: number;
+    FavouriteMedications: string[];
+  };
 }
 
 export interface ScheduledItem extends MedicationItemData {

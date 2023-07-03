@@ -12,7 +12,10 @@ export const userDataConverter = {
       DateOfBirth: data.DateOfBirth,
       EmailAddress: data.EmailAddress,
       PhoneNumber: data.PhoneNumber,
-      DeviceToken: data.DeviceToken,
+      Settings: {
+        DoseBoundary: data.Settings.DoseBoundary,
+        FavouriteMedications: data.Settings.FavouriteMedications,
+      },
     };
   },
 };

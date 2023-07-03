@@ -44,11 +44,15 @@ export default function App() {
     DateOfBirth: "",
     EmailAddress: "",
     PhoneNumber: "",
-    DeviceToken: "",
+    Settings: {
+      DoseBoundary: 30,
+      FavouriteMedications: [],
+    },
   });
   const [allMedicationItems, setAllMedicationItems] = useState<MedicationItemData[]>([]);
   const [scheduledItems, setScheduledItems] = useState<ScheduledItem[]>([]);
   const [consumptionEvents, setConsumptionEvents] = useState<ConsumptionEvent[]>([]);
+  const [favouriteMedications, setFavouriteMedications] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userId, setUserId] = useState("");
   const [isSignUpComplete, setIsSignUpComplete] = useState(false);
@@ -110,6 +114,7 @@ export default function App() {
       setAllMedicationItems(medInfoData.MedicationItems);
       setScheduledItems(medInfoData.ScheduledItems);
       setConsumptionEvents(statisticsInfoData.ConsumptionEvents);
+      setFavouriteMedications(userInfoData.Settings.FavouriteMedications);
       console.log("Data fetched successfully");
     } catch (error) {
       console.log("Error fetching data:", error);
@@ -197,7 +202,10 @@ export default function App() {
           DateOfBirth: "",
           EmailAddress: "",
           PhoneNumber: "",
-          DeviceToken: "",
+          Settings: {
+            DoseBoundary: 30,
+            FavouriteMedications: [],
+          },
         });
         console.log("Successfully signed out");
       });
@@ -433,9 +441,10 @@ export default function App() {
   // Add medication item
   const addMedication = async (medicationData: MedicationItemData) => {
     try {
-      const newScheduledItems = await getNewScheduledItems(medicationData);
+      const newScheduledItem = await getNewScheduledItems(medicationData);
       const newMedicationItems = [...allMedicationItems, medicationData];
-      setScheduledItems(sortScheduledItems([...scheduledItems, ...newScheduledItems]));
+      const newScheduledItems = sortScheduledItems([...scheduledItems, ...newScheduledItem]);
+      setScheduledItems(newScheduledItems);
       setAllMedicationItems(newMedicationItems);
       // Update firebase
       await updateDoc(medInfoRef.current, {
@@ -447,6 +456,26 @@ export default function App() {
       console.error("Error adding medication:", error);
     }
   };
+
+  function addToFavourites(medicationName: string) {
+    console.log("Added to favourites");
+    var newFavouriteMedications = [...favouriteMedications, medicationName];
+    setFavouriteMedications(newFavouriteMedications);
+    const userRef = doc(firestorage, "UsersData", userId);
+    updateDoc(userRef, { Settings: { ...userInformation.Settings, FavouriteMedications: newFavouriteMedications } });
+  }
+
+  function removeFromFavourites(medicationName: string) {
+    console.log("Removed from favourites");
+    var newFavouriteMedications = favouriteMedications.filter((med) => med !== medicationName);
+    setFavouriteMedications(newFavouriteMedications);
+    const userRef = doc(firestorage, "UsersData", userId);
+    updateDoc(userRef, { Settings: { ...userInformation.Settings, FavouriteMedications: newFavouriteMedications } });
+  }
+
+  function isFavourite(medicationName: string) {
+    return favouriteMedications.includes(medicationName);
+  }
 
   if (isLoading) {
     return (
@@ -485,7 +514,7 @@ export default function App() {
           {(props) => <HomeScreen {...props} scheduledItems={scheduledItems} setAcknowledged={setAcknowledged} userName={userInformation.Name} fetchData={fetchData} deleteReminder={deleteReminder} />}
         </Stack.Screen>
         <Stack.Screen name="Performance" options={{ headerShown: false }}>
-          {(props) => <PerformancePage {...props} consumptionEvents={consumptionEvents} userId={userId} />}
+          {(props) => <PerformancePage {...props} consumptionEvents={consumptionEvents} userId={userId} prevSettings={userInformation.Settings} />}
         </Stack.Screen>
         <Stack.Screen name="Add Medication Type" options={{ headerShown: false }}>
           {(props) => <AddMedicationType {...props} />}
@@ -506,10 +535,10 @@ export default function App() {
           {(props) => <PatientMedicationPage {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Medication Database" options={{ headerShown: false }}>
-          {(props) => <MedicationDatabase {...props} />}
+          {(props) => <MedicationDatabase {...props} settings={userInformation.Settings} userId={userId} favouriteMedications={favouriteMedications} />}
         </Stack.Screen>
         <Stack.Screen name="Search Medication Item" options={{ headerShown: false }}>
-          {(props) => <SearchItemPage {...props} />}
+          {(props) => <SearchItemPage {...props} addToFavourites={addToFavourites} removeFromFavourites={removeFromFavourites} isFavourite={isFavourite} />}
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
           {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} />}
