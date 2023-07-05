@@ -9,20 +9,17 @@ const firestore = admin.firestore();
 exports.resetScheduledData = onSchedule("00 16 * * *", async () => {
   function getScheduledItems(allMedicationItems) {
     var temp = [];
-    var count = 1;
     for (let i = 0; i < allMedicationItems.length; i++) {
       const timeInterval = 24 / allMedicationItems[i].Instructions.FrequencyPerDay;
       for (let j = 0; j < allMedicationItems[i].Instructions.FrequencyPerDay; j++) {
         temp.push({
           ...allMedicationItems[i],
           Acknowledged: false,
-          id: count,
           Instructions: {
             ...allMedicationItems[i].Instructions,
             FirstDosageTiming: allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j > 24 * 60 ? allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j - 24 * 60 : allMedicationItems[i].Instructions.FirstDosageTiming + timeInterval * 60 * j,
           },
         });
-        count++;
       }
     }
     var result = sortScheduledItems(temp);

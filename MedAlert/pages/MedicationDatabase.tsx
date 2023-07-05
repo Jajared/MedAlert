@@ -18,6 +18,8 @@ export default function MedicationDatabase({ navigation, settings, userId, favou
   const [isFilterPopUpVisible, setIsFilterPopUpVisible] = useState<boolean>(false);
   const dosageFormTypes = ["Tablet", "Injection", "Capsule", "Cream", "Solution", "Granule", "Syrup", "Ointment", "Powder", "Spray", "Lotion"];
   const administrationRoutes = ["Oral", "Topical", "Intravenous", "Intramuscular", "Submucosal", "Dental", "Rectal", "Vaginal", "Cutaneous", "Intravitreous", "Conjunctival"];
+  const [isFavouritesOnly, setIsFavouritesOnly] = useState<boolean>(false);
+
   const handleSearchByName = (query: string) => {
     setSearchQuery(query);
     const formattedQuery = query.toLowerCase();
@@ -62,16 +64,28 @@ export default function MedicationDatabase({ navigation, settings, userId, favou
         return medName === item.product_name && medManufacturer === item.manufacturer;
       })
     );
+    setIsFavouritesOnly(true);
     setData(favourites);
   };
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <BackNavBar navigation={navigation} title="Database" />
-      <TouchableOpacity onPress={() => getFavourites()} style={{ position: "absolute", top: 70, right: 70 }}>
-        <AntDesign name="hearto" size={22} color="black" />
-      </TouchableOpacity>
+      <BackNavBar navigation={navigation} title={isFavouritesOnly ? "Favourites" : "Database"} />
+      {isFavouritesOnly == false ? (
+        <TouchableOpacity onPress={() => getFavourites()} style={{ position: "absolute", top: 70, right: 70 }}>
+          <AntDesign name="hearto" size={22} color="black" />
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity
+          onPress={() => {
+            setIsFavouritesOnly(false);
+            setData(fullData);
+          }}
+          style={{ position: "absolute", top: 70, right: 70 }}
+        >
+          <AntDesign name="heart" size={22} color="black" />
+        </TouchableOpacity>
+      )}
       <TouchableOpacity onPress={() => setIsFilterPopUpVisible(true)} style={{ position: "absolute", top: 70, right: 30 }}>
         <AntDesign name="filter" size={24} color="black" />
       </TouchableOpacity>
