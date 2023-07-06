@@ -70,25 +70,27 @@ export default function MedicationDatabase({ navigation, settings, userId, favou
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <BackNavBar navigation={navigation} title={isFavouritesOnly ? "Favourites" : "Database"} />
-      {isFavouritesOnly == false ? (
-        <TouchableOpacity onPress={() => getFavourites()} style={{ position: "absolute", top: 70, right: 70 }}>
-          <AntDesign name="hearto" size={22} color="black" />
+      <View style={styles.headerBar}>
+        <BackNavBar navigation={navigation} title={isFavouritesOnly ? "Favourites" : "Database"} />
+        {isFavouritesOnly == false ? (
+          <TouchableOpacity onPress={() => getFavourites()} style={styles.headerFavouriteIcon}>
+            <AntDesign name="hearto" size={22} color="black" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => {
+              setIsFavouritesOnly(false);
+              setData(fullData);
+            }}
+            style={styles.headerFavouriteIcon}
+          >
+            <AntDesign name="heart" size={22} color="black" />
+          </TouchableOpacity>
+        )}
+        <TouchableOpacity onPress={() => setIsFilterPopUpVisible(true)} style={styles.headerFilterIcon}>
+          <AntDesign name="filter" size={24} color="black" />
         </TouchableOpacity>
-      ) : (
-        <TouchableOpacity
-          onPress={() => {
-            setIsFavouritesOnly(false);
-            setData(fullData);
-          }}
-          style={{ position: "absolute", top: 70, right: 70 }}
-        >
-          <AntDesign name="heart" size={22} color="black" />
-        </TouchableOpacity>
-      )}
-      <TouchableOpacity onPress={() => setIsFilterPopUpVisible(true)} style={{ position: "absolute", top: 70, right: 30 }}>
-        <AntDesign name="filter" size={24} color="black" />
-      </TouchableOpacity>
+      </View>
       <View style={styles.searchBar}>
         <MaterialCommunityIcons name="magnify" size={20} color="black" style={{ flex: 1 }} />
         <TextInput placeholder="Search by name or active ingredient" clearButtonMode="always" autoCapitalize="none" autoCorrect={false} onChangeText={(query) => handleSearchByName(query)} style={{ flex: 8 }} />
@@ -295,5 +297,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center",
     marginTop: 20,
+  },
+  headerBar: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  },
+  headerFilterIcon: {
+    position: "absolute",
+    right: 30,
+  },
+  headerFavouriteIcon: {
+    position: "absolute",
+    right: 70,
   },
 });

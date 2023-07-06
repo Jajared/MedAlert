@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-end",
     paddingRight: 30,
+    marginTop: 10,
     width: "100%",
   },
   homeContainer: {
