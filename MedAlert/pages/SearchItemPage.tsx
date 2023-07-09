@@ -10,6 +10,17 @@ export default function SearchItemPage({ route, navigation, addToFavourites, rem
     const capitalizedWords = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1));
     return capitalizedWords.join(" ");
   };
+  const dosage_forms = item.dosage_form.split(", ");
+  const displayAdd = () => {
+    return dosage_forms.includes("TABLET") || dosage_forms.includes("SYRUP") || dosage_forms.includes("CAPSULE");
+  };
+  const getMedicationType = () => {
+    if (dosage_forms.includes("TABLET") || dosage_forms.includes("CAPSULE")) {
+      return "Pill";
+    } else if (dosage_forms.includes("SYRUP")) {
+      return "Liquid";
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
@@ -17,6 +28,16 @@ export default function SearchItemPage({ route, navigation, addToFavourites, rem
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="black" />
         </TouchableOpacity>
+        {displayAdd() && (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Add Medication Details", { Type: getMedicationType(), addInfo: { name: item.product_name } });
+            }}
+            style={styles.addButton}
+          >
+            <Ionicons name="add-circle-outline" size={24} color="black" />
+          </TouchableOpacity>
+        )}
         {isFavourite(item.product_name + "," + item.manufacturer) == false ? (
           <TouchableOpacity
             onPress={() => {
@@ -37,7 +58,6 @@ export default function SearchItemPage({ route, navigation, addToFavourites, rem
           </TouchableOpacity>
         )}
       </View>
-
       <View style={styles.productName}>
         <Text style={{ fontWeight: "bold", fontSize: 22 }}>{capitalizeWords(item.product_name)}</Text>
       </View>
@@ -48,7 +68,7 @@ export default function SearchItemPage({ route, navigation, addToFavourites, rem
       <View style={styles.label}>
         <Text style={styles.header}>Dosage Form</Text>
         <View style={styles.buttonContainer}>
-          {item.dosage_form.split(", ").map((form: string) => (
+          {dosage_forms.map((form: string) => (
             <TagButton title={form} key={form} />
           ))}
         </View>
@@ -77,20 +97,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   backButton: {
-    flex: 1,
-    marginLeft: 40,
-    alignItems: "flex-start",
-    justifyContent: "center",
+    position: "absolute",
+    left: 30,
+  },
+  addButton: {
+    position: "absolute",
+    right: 80,
   },
   favouritesButton: {
-    flex: 1,
-    marginRight: 40,
-    alignItems: "flex-end",
-    justifyContent: "center",
+    position: "absolute",
+    right: 30,
   },
   topBar: {
     flexDirection: "row",
-    marginVertical: 10,
+    marginVertical: 20,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   label: {
     width: "90%",

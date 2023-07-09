@@ -1,5 +1,5 @@
 import { StyleSheet, Text, SafeAreaView, View, TouchableOpacity, TextInput, Button, StatusBar, ActivityIndicator, TouchableWithoutFeedback, Keyboard } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import BackNavBar from "../components/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Entypo } from "@expo/vector-icons";
@@ -8,9 +8,16 @@ import CustomButton from "../components/NextButton";
 import { MedicationItemData } from "../utils/types";
 
 export default function AddMedicationDetails({ navigation, route }) {
-  const [state, setState] = useState<MedicationItemData>({ Name: "", Type: route.params.Type, Purpose: "", Instructions: { TabletsPerIntake: 1, FrequencyPerDay: 0, Specifications: "", FirstDosageTiming: 540 } });
+  var [state, setState] = useState<MedicationItemData>({ Name: "", Type: route.params.Type, Purpose: "", Instructions: { TabletsPerIntake: 1, FrequencyPerDay: 0, Specifications: "", FirstDosageTiming: 540 } });
   const [showCamera, setShowCamera] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (route.params.addInfo) {
+      console.log("adding");
+      setState((prevState) => ({ ...prevState, Name: route.params.addInfo.name }));
+    }
+  }, [route.params.addInfo]);
 
   function setFrequencyPerIntake(value: number) {
     setState((prevState) => ({ ...prevState, Instructions: { ...prevState.Instructions, FrequencyPerDay: value } }));

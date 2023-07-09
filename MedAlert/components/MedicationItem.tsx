@@ -31,35 +31,26 @@ export default function MedicationItem({ props, setAcknowledged, deleteReminder 
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
   }
 
-  const getCurrentTime = () => {
+  const getBackgroundColor = () => {
     const timeNow = new Date();
     const minutes = timeNow.getHours() * 60 + timeNow.getMinutes();
-    return minutes;
+    return minutes >= medicationData.Instructions.FirstDosageTiming ? "#FF8989" : "#FAF0D7";
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.itemContainer}>
-        {getCurrentTime() >= medicationData.Instructions.FirstDosageTiming ? <Text style={[styles.timeSection, { color: "red" }]}>{getTime()}</Text> : <Text style={styles.timeSection}>{getTime()}</Text>}
+      <View style={[styles.itemContainer, { backgroundColor: getBackgroundColor() }]}>
+        <Text style={styles.timeSection}>{getTime()}</Text>
         <View style={styles.textContainer}>
           <Image source={getIcon()} style={styles.icon} />
-          {getCurrentTime() >= medicationData.Instructions.FirstDosageTiming ? (
-            <View style={styles.medicationInfo}>
-              <Text style={{ fontWeight: "bold", fontSize: 18, color: "red" }}>{medicationData.Name}</Text>
-              <Text style={{ color: "red" }}>{medicationData.Purpose}</Text>
-              <Text style={{ color: "red" }}>
-                {medicationData.Instructions.TabletsPerIntake} {getUnits()}
-              </Text>
-            </View>
-          ) : (
-            <View style={styles.medicationInfo}>
-              <Text style={{ fontWeight: "bold", fontSize: 18 }}>{medicationData.Name}</Text>
-              <Text>{medicationData.Purpose}</Text>
-              <Text>
-                {medicationData.Instructions.TabletsPerIntake} {getUnits()}
-              </Text>
-            </View>
-          )}
+
+          <View style={styles.medicationInfo}>
+            <Text style={{ fontWeight: "bold", fontSize: 18 }}>{medicationData.Name}</Text>
+            <Text>{medicationData.Purpose}</Text>
+            <Text>
+              {medicationData.Instructions.TabletsPerIntake} {getUnits()}
+            </Text>
+          </View>
           <View style={styles.buttonSection}>
             <TouchableOpacity onPress={() => setAcknowledged(medicationData.id)}>
               <Image source={require("../assets/checked-icon.png")} style={styles.logo}></Image>

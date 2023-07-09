@@ -6,6 +6,7 @@ import { firestorage } from "../firebaseConfig";
 import BottomNavBar from "../components/BottomNavBar";
 import DatePicker from "../components/DatePicker";
 import { Feather, Entypo } from "@expo/vector-icons";
+import BackNavBar from "../components/BackNavBar";
 
 function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }) {
   const DEFAULT_CHART_DATA = [
@@ -212,15 +213,18 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />
-      <Text style={styles.pageHeader}>Consumption Pattern</Text>
-      <TouchableOpacity
-        style={styles.icon}
-        onPress={() => {
-          setIsSettingsVisible(true);
-        }}
-      >
-        <Feather name="settings" size={24} color="black" />
-      </TouchableOpacity>
+      <View style={styles.headerBar}>
+        <BackNavBar navigation={navigation} title="Consumption Pattern" />
+        <TouchableOpacity
+          style={styles.settingsIcon}
+          onPress={() => {
+            setIsSettingsVisible(true);
+          }}
+        >
+          <Feather name="settings" size={24} color="black" />
+        </TouchableOpacity>
+      </View>
+
       <View style={styles.filterSection}>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.filterBar}>
           {timeFrames.map((timeFrame) => (
@@ -451,11 +455,6 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
   },
-  icon: {
-    position: "absolute",
-    top: 70,
-    right: 30,
-  },
   popUpContainer: {
     flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -514,6 +513,16 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignSelf: "center",
     marginTop: 20,
+  },
+  headerBar: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  },
+  settingsIcon: {
+    position: "absolute",
+    right: 30,
   },
 });
 
