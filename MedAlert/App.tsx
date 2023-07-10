@@ -25,6 +25,7 @@ import PerformancePage from "./pages/PerformancePage";
 import SignUpHomePage from "./pages/SignUpHomePage";
 import SignUpDetailsPage from "./pages/SignUpDetailsPage";
 import ViewMedicationPage from "./pages/ViewMedicationPage";
+import ChatBotPage from "./pages/ChatBotPage";
 import { DocumentReference } from "firebase/firestore";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
@@ -539,6 +540,9 @@ export default function App() {
         </Stack.Screen>
         <Stack.Screen name="Search Medication Item" options={{ headerShown: false }}>
           {(props) => <SearchItemPage {...props} addToFavourites={addToFavourites} removeFromFavourites={removeFromFavourites} isFavourite={isFavourite} />}
+        </Stack.Screen>
+        <Stack.Screen name="Chat Bot" options={{ headerShown: false }}>
+          {(props) => <ChatBotPage {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
           {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} />}

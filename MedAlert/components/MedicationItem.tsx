@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from "react-native";
 import { ScheduledItem } from "../utils/types";
+import TextTicker from "react-native-text-ticker";
 
 export default function MedicationItem({ props, setAcknowledged, deleteReminder }) {
   const medicationData: ScheduledItem = props.item;
@@ -45,8 +46,12 @@ export default function MedicationItem({ props, setAcknowledged, deleteReminder 
           <Image source={getIcon()} style={styles.icon} />
 
           <View style={styles.medicationInfo}>
-            <Text style={{ fontWeight: "bold", fontSize: 18 }}>{medicationData.Name}</Text>
-            <Text>{medicationData.Purpose}</Text>
+            <TextTicker style={{ fontWeight: "bold", fontSize: 18 }} duration={3000} loop bounceDelay={50} repeatSpacer={50} marqueeDelay={1000}>
+              {medicationData.Name}
+            </TextTicker>
+            <TextTicker duration={3000} loop bounceDelay={50} repeatSpacer={50} marqueeDelay={1000}>
+              {medicationData.Purpose}
+            </TextTicker>
             <Text>
               {medicationData.Instructions.TabletsPerIntake} {getUnits()}
             </Text>

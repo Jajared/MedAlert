@@ -87,7 +87,7 @@ export default function MedicationDatabase({ navigation, settings, userId, favou
             <AntDesign name="heart" size={22} color="black" />
           </TouchableOpacity>
         )}
-        <TouchableOpacity onPress={() => setIsFilterPopUpVisible(true)} style={styles.headerFilterIcon}>
+        <TouchableOpacity onPress={() => navigation.navigate("Chat Bot")} style={styles.headerFilterIcon}>
           <AntDesign name="filter" size={24} color="black" />
         </TouchableOpacity>
       </View>

@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, Image } from "react-native";
+import TextTicker from "react-native-text-ticker";
 
 export default function PatientMedicationItem({ props }) {
   const medicationData = props.item;
@@ -30,43 +31,31 @@ export default function PatientMedicationItem({ props }) {
     return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
   }
 
-  const getCurrentTime = () => {
+  const getBackgroundColor = () => {
     const timeNow = new Date();
     const minutes = timeNow.getHours() * 60 + timeNow.getMinutes();
-    return minutes;
+    return minutes >= medicationData.Instructions.FirstDosageTiming ? "#FF8989" : "#FAF0D7";
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {getCurrentTime() >= medicationData.Instructions.FirstDosageTiming ? (
-        <View style={styles.itemContainer}>
-          <Text style={[styles.timeSection, { color: "red" }]}>{getTime()}</Text>
-          <View style={styles.textContainer}>
-            <Image source={getIcon()} style={styles.icon} />
-            <View style={styles.medicationInfo}>
-              <Text style={{ fontWeight: "bold", fontSize: 20, color: "red" }}>{medicationData.Name}</Text>
-              <Text style={{ color: "red" }}>{medicationData.Purpose}</Text>
-              <Text style={{ color: "red" }}>
-                {medicationData.Instructions.TabletsPerIntake} {getUnits()}
-              </Text>
-            </View>
+      <View style={[styles.itemContainer, { backgroundColor: getBackgroundColor() }]}>
+        <Text style={styles.timeSection}>{getTime()}</Text>
+        <View style={styles.textContainer}>
+          <Image source={getIcon()} style={styles.icon} />
+          <View style={styles.medicationInfo}>
+            <TextTicker style={{ fontWeight: "bold", fontSize: 20, color: "black" }} duration={3000} loop bounceDelay={50} repeatSpacer={50} marqueeDelay={1000}>
+              {medicationData.Name}
+            </TextTicker>
+            <TextTicker style={{ color: "black" }} duration={3000} loop bounceDelay={50} repeatSpacer={50} marqueeDelay={1000}>
+              {medicationData.Purpose}
+            </TextTicker>
+            <Text style={{ color: "black" }}>
+              {medicationData.Instructions.TabletsPerIntake} {getUnits()}
+            </Text>
           </View>
         </View>
-      ) : (
-        <View style={styles.itemContainer}>
-          <Text style={styles.timeSection}>{getTime()}</Text>
-          <View style={styles.textContainer}>
-            <Image source={getIcon()} style={styles.icon} />
-            <View style={styles.medicationInfo}>
-              <Text style={{ fontWeight: "bold", fontSize: 20 }}>{medicationData.Name}</Text>
-              <Text>{medicationData.Purpose}</Text>
-              <Text>
-                {medicationData.Instructions.TabletsPerIntake} {getUnits()}
-              </Text>
-            </View>
-          </View>
-        </View>
-      )}
+      </View>
     </SafeAreaView>
   );
 }
@@ -79,9 +68,8 @@ const styles = StyleSheet.create({
   timeSection: {
     flex: 1,
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 18,
     width: "90%",
-    marginBottom: 10,
     marginTop: 10,
   },
   icon: {

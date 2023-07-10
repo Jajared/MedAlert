@@ -3,6 +3,7 @@ import BottomNavBar from "../components/BottomNavBar";
 import BackNavBar from "../components/BackNavBar";
 import { FlatList } from "react-native";
 import { MedicationItemData } from "../utils/types";
+import TextTicker from "react-native-text-ticker";
 
 export default function ViewMedicationPage({ navigation, allMedicationItems }) {
   const pillIcon = require("../assets/pill-icon.png");
@@ -39,8 +40,12 @@ export default function ViewMedicationPage({ navigation, allMedicationItems }) {
                 <TouchableOpacity onPress={() => navigation.navigate("Edit Medication Details", { medicationName: item.Name })} style={styles.itemContainer}>
                   <Image source={getIcon(item)} style={styles.icon} />
                   <View style={styles.medicationInfo}>
-                    <Text style={{ fontWeight: "bold", fontSize: 20 }}>{item.Name}</Text>
-                    <Text>{item.Purpose}</Text>
+                    <TextTicker style={{ fontWeight: "bold", fontSize: 20 }} duration={3000} loop bounceDelay={50} repeatSpacer={50} marqueeDelay={1000}>
+                      {item.Name}
+                    </TextTicker>
+                    <TextTicker duration={3000} loop bounceDelay={50} repeatSpacer={50} marqueeDelay={1000}>
+                      {item.Purpose}
+                    </TextTicker>
                     <Text>
                       {item.Instructions.TabletsPerIntake} {getUnits(item)}
                     </Text>
