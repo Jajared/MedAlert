@@ -4,7 +4,7 @@ import medicationDb from "../assets/medicationDb.json";
 import filter from "lodash.filter";
 import { getDoc, doc, updateDoc, setDoc } from "firebase/firestore";
 import { firestorage } from "../firebaseConfig";
-import { MaterialCommunityIcons, AntDesign, Entypo } from "@expo/vector-icons";
+import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import BackNavBar from "../components/BackNavBar";
 import SearchItem from "../components/SearchItem";
 
@@ -72,6 +72,9 @@ export default function MedicationDatabase({ navigation, settings, userId, favou
       <StatusBar barStyle="dark-content" />
       <View style={styles.headerBar}>
         <BackNavBar navigation={navigation} title={isFavouritesOnly ? "Favourites" : "Database"} />
+        <TouchableOpacity onPress={() => navigation.navigate("Chat Bot")} style={styles.chatBotIcon}>
+          <FontAwesome5 name="searchengin" size={22} color="black" />
+        </TouchableOpacity>
         {isFavouritesOnly == false ? (
           <TouchableOpacity onPress={() => getFavourites()} style={styles.headerFavouriteIcon}>
             <AntDesign name="hearto" size={22} color="black" />
@@ -87,7 +90,7 @@ export default function MedicationDatabase({ navigation, settings, userId, favou
             <AntDesign name="heart" size={22} color="black" />
           </TouchableOpacity>
         )}
-        <TouchableOpacity onPress={() => navigation.navigate("Chat Bot")} style={styles.headerFilterIcon}>
+        <TouchableOpacity onPress={() => setIsFilterPopUpVisible(true)} style={styles.headerFilterIcon}>
           <AntDesign name="filter" size={24} color="black" />
         </TouchableOpacity>
       </View>
@@ -307,6 +310,10 @@ const styles = StyleSheet.create({
   headerFilterIcon: {
     position: "absolute",
     right: 30,
+  },
+  chatBotIcon: {
+    position: "absolute",
+    left: 30,
   },
   headerFavouriteIcon: {
     position: "absolute",

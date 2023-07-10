@@ -9,7 +9,7 @@ import AddMedicationSchedule from "./pages/AddMedicationSchedule";
 import MenuPage from "./pages/MenuPage";
 import UpdateAccountPage from "./pages/UpdateAccountPage";
 import { UserInformation, MedicationItemData, ScheduledItem, NotificationItem, ConsumptionEvent } from "./utils/types";
-import { collection, doc, getDoc, updateDoc, getDocs } from "firebase/firestore";
+import { collection, doc, getDoc, updateDoc, getDocs, setDoc } from "firebase/firestore";
 import { firestorage } from "./firebaseConfig";
 import { auth } from "./firebaseConfig";
 import { userDataConverter } from "./converters/userDataConverter";
@@ -542,7 +542,7 @@ export default function App() {
           {(props) => <SearchItemPage {...props} addToFavourites={addToFavourites} removeFromFavourites={removeFromFavourites} isFavourite={isFavourite} />}
         </Stack.Screen>
         <Stack.Screen name="Chat Bot" options={{ headerShown: false }}>
-          {(props) => <ChatBotPage {...props} />}
+          {(props) => <ChatBotPage {...props} gender={userInformation.Gender} dateOfBirth={userInformation.DateOfBirth} />}
         </Stack.Screen>
         <Stack.Screen name="Update Account" options={{ headerShown: false }}>
           {(props) => <UpdateAccountPage {...props} userInformation={userInformation} updateUserInformation={updateUserInformation} />}
