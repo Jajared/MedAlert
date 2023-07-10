@@ -3,8 +3,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import Symptoms from "../assets/symptoms.json";
+import axios from "axios";
 
-const key = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImUwOTM0MTEyQHUubnVzLmVkdSIsInJvbGUiOiJVc2VyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvc2lkIjoiMTI2MDQiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3ZlcnNpb24iOiIyMDAiLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL2xpbWl0IjoiOTk5OTk5OTk5IiwiaHR0cDovL2V4YW1wbGUub3JnL2NsYWltcy9tZW1iZXJzaGlwIjoiUHJlbWl1bSIsImh0dHA6Ly9leGFtcGxlLm9yZy9jbGFpbXMvbGFuZ3VhZ2UiOiJlbi1nYiIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZXhwaXJhdGlvbiI6IjIwOTktMTItMzEiLCJodHRwOi8vZXhhbXBsZS5vcmcvY2xhaW1zL21lbWJlcnNoaXBzdGFydCI6IjIwMjMtMDctMTAiLCJpc3MiOiJodHRwczovL3NhbmRib3gtYXV0aHNlcnZpY2UucHJpYWlkLmNoIiwiYXVkIjoiaHR0cHM6Ly9oZWFsdGhzZXJ2aWNlLnByaWFpZC5jaCIsImV4cCI6MTY4OTAwMzg2NywibmJmIjoxNjg4OTk2NjY3fQ.zEMZt7DYY3Smywv8ClY7hOCHqz0nzx7IHDWqPZXdZz8";
 const conditions = {
   "Abdominal pain": /abdominal\s?pain/i,
   Anxiety: /anxiety/i,
@@ -41,7 +41,7 @@ const conditions = {
   "Missed period": /missed\s?period/i,
   Nausea: /nausea/i,
   "Neck pain": /neck\s?pain/i,
-  Nervousness: /nervousness/i,
+  Nervousness: /nervousness|nervous/i,
   "Night cough": /night\s?cough/i,
   "Pain in the limbs": /pain\s?in\s?the\s?limbs/i,
   "Pain on swallowing": /pain\s?on\s?swallowing/i,
@@ -51,27 +51,28 @@ const conditions = {
   "Runny nose": /runny\s?nose/i,
   "Shortness of breath": /shortness\s?of\s?breath/i,
   "Skin rash": /skin\s?rash/i,
-  Sleeplessness: /sleeplessness/i,
-  Sneezing: /sneezing/i,
+  Sleeplessness: /sleeplessness|cannot\s?sleep|can't\s?sleep|insomnia/i,
+  Sneezing: /sneezing|sneeze/i,
   "Sore throat": /sore\s?throat/i,
   Sputum: /sputum/i,
   "Stomach burning": /stomach\s?burning/i,
   "Stuffy nose": /stuffy\s?nose/i,
-  Sweating: /sweating/i,
+  Sweating: /sweating|sweat/i,
   "Swollen glands in the armpits": /swollen\s?glands\s?in\s?the\s?armpits/i,
   "Swollen glands on the neck": /swollen\s?glands\s?on\s?the\s?neck/i,
   Tears: /tears/i,
-  Tiredness: /tiredness/i,
+  Tiredness: /tiredness|tired/i,
   "Tremor at rest": /tremor\s?at\s?rest/i,
-  "Unconsciousness, short": /unconsciousness,\s?short/i,
-  Vomiting: /vomiting/i,
-  "Vomiting blood": /vomiting\s?blood/i,
-  Weakness: /weakness/i,
+  "Unconsciousness, short": /unconscious|faint/i,
+  Vomiting: /vomiting|vomit/i,
+  "Vomiting blood": /(vomiting\s?blood)|(vomit\s?blood)/i,
+  Weakness: /weakness|weak/i,
   "Weight gain": /weight\s?gain/i,
-  Wheezing: /wheezing/i,
+  Wheezing: /wheezing|wheez/i,
 };
 export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
   const [messages, setMessages] = useState([]);
+  const [token, setToken] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const yearOfBirth = dateOfBirth.substring(6, 10);
   const sex = gender == "Prefer not to say" ? "Male" : gender;
@@ -93,14 +94,33 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
   }, []);
 
   const fetchDiagnosis = async (symptoms: Number[]) => {
-    const url = "https://sandbox-healthservice.priaid.ch/diagnosis?token=" + key + "&language=en-gb&symptoms=" + "[" + symptoms + "]" + "&gender=" + sex + "&year_of_birth=" + yearOfBirth;
+    const api_key = "e0934112@u.nus.edu";
+    const requested_uri = `https://sandbox-authservice.priaid.ch/login`;
+    const hashed_credentials = "uBePDtDiyNMY1pujSGFrtg==";
+    if (token == "") {
+      try {
+        const response = await axios.post(requested_uri, null, {
+          headers: {
+            Authorization: `Bearer ${api_key}:${hashed_credentials}`,
+          },
+        });
+        setToken(response.data.Token);
+        console.log("Token set");
+      } catch (error) {
+        console.error(error);
+        return;
+      }
+    }
+    console.log(token);
+    const url = "https://sandbox-healthservice.priaid.ch/diagnosis?token=" + token + "&language=en-gb&symptoms=" + "[" + symptoms + "]" + "&gender=" + sex + "&year_of_birth=" + yearOfBirth;
     const response = await fetch(url);
     const data = await response.json();
     console.log(data);
+    return [];
   };
 
   // Main Algorithm
-  const getDiagnosis = (replyText) => {
+  const getDiagnosis = async (replyText) => {
     const matches = [];
     for (const condition in conditions) {
       if (Object.hasOwnProperty.call(conditions, condition)) {
@@ -115,24 +135,32 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
       const symptomId = Symptoms.find((symptom) => symptom.Name === matchedSymptom).ID;
       symptomsIds.push(symptomId);
     }
-    const diagnosis = fetchDiagnosis(symptomsIds);
-    return matches;
+    if (symptomsIds.length === 0) {
+      return [];
+    } else {
+      const diagnosis = await fetchDiagnosis(symptomsIds);
+      return diagnosis;
+    }
   };
 
-  const onSend = useCallback((messages = []) => {
+  const onSend = async (messages = []) => {
     setMessages((previousMessages) => GiftedChat.append(previousMessages, messages));
     const replyText = messages[0].text;
     setIsTyping(true);
-    const diagnosis = getDiagnosis(replyText);
-    var response = {};
-    if (diagnosis.length === 0) {
-      response = { _id: Math.round(Math.random() * 1000000), text: "Sorry, we do not have any possible diagnosis for the given symptoms", createdAt: new Date(), user: doctor };
-    } else {
-      response = { _id: Math.round(Math.random() * 1000000), text: "These are some possible diagnosis for your given symptoms\n", createdAt: new Date(), user: doctor };
+    try {
+      const diagnosis = await getDiagnosis(replyText);
+      var response = {};
+      if (diagnosis.length === 0) {
+        response = { _id: Math.round(Math.random() * 1000000), text: "Sorry, we do not have any possible diagnosis for the given symptoms", createdAt: new Date(), user: doctor };
+      } else {
+        response = { _id: Math.round(Math.random() * 1000000), text: "These are some possible diagnosis for your given symptoms\n", createdAt: new Date(), user: doctor };
+      }
+      setMessages((previousMessages) => GiftedChat.append(previousMessages, [response]));
+    } catch (error) {
+      console.error(error);
     }
-    setMessages((previousMessages) => GiftedChat.append(previousMessages, [response]));
     setIsTyping(false);
-  }, []);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
