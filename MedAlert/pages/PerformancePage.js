@@ -288,7 +288,6 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
         <View style={styles.chart}>
           {hasNoData && <Text style={{ color: "lightgray", position: "absolute", top: 40, left: "47%" }}>No data</Text>}
           <LineChart
-            areaChart
             data={chartData}
             isAnimated
             hideDataPoints
@@ -296,9 +295,8 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
             animateOnDataChange
             onDataChangeAnimationDuration={800}
             spacing={spacing}
-            color="black"
-            startFillColor="#FF5C5C"
-            endFillColor="#D1FFBD"
+            color="orange"
+            thickness={2}
             initialSpacing={10}
             yAxisColor="white"
             yAxisThickness={0}

@@ -31,7 +31,7 @@ async function callGoogleVisionAsync(image: string, setIsLoading: (isLoading: bo
     const timeoutId = setTimeout(() => {
       abortController.abort();
       setIsLoading(false);
-      alert("Unable to detect medication details. Please try again.");
+      return;
     }, 20000);
 
     const body = generateBody(image); //pass in our image for the payload

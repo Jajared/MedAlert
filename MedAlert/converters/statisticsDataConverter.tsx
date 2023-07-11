@@ -1,4 +1,4 @@
-import { ConsumptionDataSummary, ConsumptionEvent } from "../utils/types";
+import { ConsumptionEvent } from "../utils/types";
 
 interface FirestoreData {
   ConsumptionEvents: ConsumptionEvent[];

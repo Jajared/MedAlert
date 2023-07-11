@@ -44,9 +44,7 @@ const styles = StyleSheet.create({
   },
 
   typeContainer: {
-    backgroundColor: "#FAF6E0",
-    borderColor: "black",
-    borderWidth: 1,
+    backgroundColor: "#FAF0D7",
     borderRadius: 15,
     margin: 15,
     alignItems: "center",
