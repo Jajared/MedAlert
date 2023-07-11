@@ -4,6 +4,7 @@ import { SafeAreaView, StyleSheet, View } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import Symptoms from "../assets/symptoms.json";
 import axios from "axios";
+import { symptom_checker_api_key, hashed_credentials } from "../firebaseConfig";
 
 const conditions = {
   "Abdominal pain": /(abdominal\s?pain)|(stomach\s?ache)/i,
@@ -94,14 +95,12 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
     getToken();
   }, []);
   const getToken = async () => {
-    const api_key = "e0934112@u.nus.edu";
     const requested_uri = `https://sandbox-authservice.priaid.ch/login`;
-    const hashed_credentials = "uBePDtDiyNMY1pujSGFrtg==";
     if (token == "") {
       try {
         const response = await axios.post(requested_uri, null, {
           headers: {
-            Authorization: `Bearer ${api_key}:${hashed_credentials}`,
+            Authorization: `Bearer ${symptom_checker_api_key}:${hashed_credentials}`,
           },
         });
         setToken(response.data.Token);
@@ -165,7 +164,7 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
           const issue = diagnosis.at(length);
           diagnosisText += `${length}. ${issue.Name} (${Math.round(issue.Accuracy)}%)\n`;
         }
-        response = { _id: Math.round(Math.random() * 1000000), text: `These are some possible diagnosis for your given symptoms:\n${diagnosisText}\n⚠️This is not an official diagnosis. Please consult a doctor for professional advice`, createdAt: new Date(), user: doctor };
+        response = { _id: Math.round(Math.random() * 1000000), text: `Here are some possible diagnosis for your given symptoms:\n${diagnosisText}\n⚠️This is not an official diagnosis. Please consult a doctor for professional advice`, createdAt: new Date(), user: doctor };
       }
       setMessages((previousMessages) => GiftedChat.append(previousMessages, [response]));
     } catch (error) {
