@@ -67,7 +67,7 @@ function parseText(text: string) {
   const cleanedMedicationName = medicationName.charAt(0).toUpperCase() + medicationName.slice(1).toLowerCase();
 
   // Extract dosage per intake
-  const dosageIntakeRegex = /take (\d+|[A-Z]+) tab/i;
+  const dosageIntakeRegex = /take (\d+|[A-Z]+) (tab|cap)/i;
   const dosageIntakeMatch = text.match(dosageIntakeRegex);
   const dosageIntake = dosageIntakeMatch ? dosageIntakeMatch[1] : "";
   const numberMapping = {
