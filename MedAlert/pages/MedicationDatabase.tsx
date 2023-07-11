@@ -72,9 +72,6 @@ export default function MedicationDatabase({ navigation, settings, userId, favou
       <StatusBar barStyle="dark-content" />
       <View style={styles.headerBar}>
         <BackNavBar navigation={navigation} title={isFavouritesOnly ? "Favourites" : "Database"} />
-        <TouchableOpacity onPress={() => navigation.navigate("Chat Bot")} style={styles.chatBotIcon}>
-          <FontAwesome5 name="searchengin" size={22} color="black" />
-        </TouchableOpacity>
         {isFavouritesOnly == false ? (
           <TouchableOpacity onPress={() => getFavourites()} style={styles.headerFavouriteIcon}>
             <AntDesign name="hearto" size={22} color="black" />
@@ -310,10 +307,6 @@ const styles = StyleSheet.create({
   headerFilterIcon: {
     position: "absolute",
     right: 30,
-  },
-  chatBotIcon: {
-    position: "absolute",
-    left: 30,
   },
   headerFavouriteIcon: {
     position: "absolute",

@@ -79,7 +79,7 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
   const doctor = {
     _id: 2,
     name: "Doctor",
-    avatar: require("../assets/jamal.png"),
+    avatar: require("../assets/doctor.png"),
   };
 
   useEffect(() => {
@@ -91,9 +91,9 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
         user: doctor,
       },
     ]);
+    getToken();
   }, []);
-
-  const fetchDiagnosis = async (symptoms: Number[]) => {
+  const getToken = async () => {
     const api_key = "e0934112@u.nus.edu";
     const requested_uri = `https://sandbox-authservice.priaid.ch/login`;
     const hashed_credentials = "uBePDtDiyNMY1pujSGFrtg==";
@@ -111,12 +111,19 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
         return;
       }
     }
-    console.log(token);
+  };
+
+  const fetchDiagnosis = async (symptoms: Number[]) => {
     const url = "https://sandbox-healthservice.priaid.ch/diagnosis?token=" + token + "&language=en-gb&symptoms=" + "[" + symptoms + "]" + "&gender=" + sex + "&year_of_birth=" + yearOfBirth;
     const response = await fetch(url);
     const data = await response.json();
-    console.log(data);
-    return [];
+    const result = [];
+    for (const diagnosis of data) {
+      const issue = diagnosis.Issue;
+      const { Accuracy, ID, Icd, IcdName, Name, ProfName, Ranking } = issue;
+      result.push({ Accuracy: Accuracy, Name: Name });
+    }
+    return result;
   };
 
   // Main Algorithm
@@ -153,7 +160,12 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
       if (diagnosis.length === 0) {
         response = { _id: Math.round(Math.random() * 1000000), text: "Sorry, we do not have any possible diagnosis for the given symptoms", createdAt: new Date(), user: doctor };
       } else {
-        response = { _id: Math.round(Math.random() * 1000000), text: "These are some possible diagnosis for your given symptoms\n", createdAt: new Date(), user: doctor };
+        var diagnosisText = "";
+        for (var length = 1; length < diagnosis.length; length++) {
+          const issue = diagnosis.at(length);
+          diagnosisText += `${length}. ${issue.Name} (${Math.round(issue.Accuracy)}%)\n`;
+        }
+        response = { _id: Math.round(Math.random() * 1000000), text: `These are some possible diagnosis for your given symptoms:\n${diagnosisText}\n⚠️This is not an official diagnosis. Please consult a doctor for professional advice`, createdAt: new Date(), user: doctor };
       }
       setMessages((previousMessages) => GiftedChat.append(previousMessages, [response]));
     } catch (error) {

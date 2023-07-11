@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   upcomingRemindersText: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "400",
   },
   addButton: {

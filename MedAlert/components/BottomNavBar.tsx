@@ -58,13 +58,14 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 13,
     color: "gray",
   },
   selectedIcon: {
     color: "black",
   },
   selectedText: {
+    fontSize: 13,
     color: "black",
   },
 });

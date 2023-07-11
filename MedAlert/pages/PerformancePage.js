@@ -10,8 +10,9 @@ import BackNavBar from "../components/BackNavBar";
 
 function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }) {
   const DEFAULT_CHART_DATA = [
-    { date: new Date().toISOString().split("T")[0], value: 0 },
-    { date: new Date().toISOString().split("T")[0], value: 0 },
+    { date: "00:00", value: 0 },
+    { date: "12:00", value: 0 },
+    { date: "23:59", value: 0 },
   ];
   const DEFAULT_PIECHART_DATA = [
     { value: 100, color: "rgb(20, 195, 142)" },
@@ -28,6 +29,7 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
   const [settings, setSettings] = useState({ ...prevSettings, DoseBoundary: prevSettings.DoseBoundary });
   const [timeBoundary, setTimeBoundary] = useState(prevSettings.DoseBoundary);
+  const [hasNoData, setHasNoData] = useState(false);
   useEffect(() => {
     getChartData(selectedTimeFrame);
   }, [selectedDate, selectedTimeFrame, timeBoundary]);
@@ -94,8 +96,10 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
         // Filter and calculate data based on a daily time frame
         const filteredData = data.filter((event) => event.date === selectedDate.toISOString().split("T")[0]);
         if (filteredData.length == 0) {
+          setHasNoData(true);
           return DEFAULT_CHART_DATA;
         } else {
+          setHasNoData(false);
           const chartData = filteredData.map((event) => {
             return { date: toTime(event.actualTime), value: event.difference / 60 };
           });
@@ -104,6 +108,7 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
           return chartData;
         }
       } else if (timeFrame === "Week") {
+        setHasNoData(false);
         // Filter and calculate data based on a weekly time frame
         const weekStartDate = new Date(selectedDate.getTime());
         const currentDay = weekStartDate.getDay();
@@ -116,6 +121,9 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
         });
         const currentDate = new Date(weekStartDate);
         const chartData = [];
+        if (filteredData.length == 0) {
+          setHasNoData(true);
+        }
         while (currentDate <= weekEndDate) {
           const date = currentDate.toLocaleDateString("en-US", { weekday: "short" }).split(",")[0];
           const eventData = filteredData.filter((event) => {
@@ -130,8 +138,10 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
           chartData.push({ date, value });
           currentDate.setDate(currentDate.getDate() + 1);
         }
+
         return chartData;
       } else if (timeFrame === "Month") {
+        setHasNoData(false);
         // Filter and calculate data based on a monthly time frame
         const monthStartDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
         const monthEndDate = new Date(selectedDate.getFullYear(), selectedDate.getMonth() + 1, 0);
@@ -139,6 +149,9 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
           const eventDate = new Date(event.date);
           return eventDate >= monthStartDate && eventDate <= monthEndDate;
         });
+        if (filteredData.length == 0) {
+          setHasNoData(true);
+        }
         const currentDate = new Date(monthStartDate);
         const chartData = [];
         while (currentDate <= monthEndDate) {
@@ -201,7 +214,6 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
       setIsLoading(false);
     }
   };
-
   if (isLoading) {
     return (
       <View style={styles.container}>
@@ -247,18 +259,26 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
       <View style={styles.chartSection}>
         <View style={styles.chart}>
           <PieChart
-            data={piechartData}
+            data={hasNoData ? [{ value: 100, color: "grey" }] : piechartData}
             donut
             radius={90}
             innerRadius={60}
             innerCircleColor={"white"}
             centerLabelComponent={() => {
-              return (
-                <View style={{ justifyContent: "center", alignItems: "center" }}>
-                  <Text style={{ fontSize: 22, color: "black", fontWeight: "bold" }}>{piechartData[0].value.toFixed(0)}%</Text>
-                  <Text style={{ fontSize: 14, color: "black" }}>On Time</Text>
-                </View>
-              );
+              if (hasNoData) {
+                return (
+                  <View style={{ justifyContent: "center", alignItems: "center" }}>
+                    <Text style={{ fontSize: 22, color: "lightgray", fontWeight: "bold" }}>No Data</Text>
+                  </View>
+                );
+              } else {
+                return (
+                  <View style={{ justifyContent: "center", alignItems: "center" }}>
+                    <Text style={{ fontSize: 22, color: "black", fontWeight: "bold" }}>{piechartData[0].value.toFixed(0)}%</Text>
+                    <Text style={{ fontSize: 14, color: "black" }}>On Time</Text>
+                  </View>
+                );
+              }
             }}
           />
         </View>
@@ -266,6 +286,7 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
       <View style={[styles.chartSection, { marginBottom: 40 }]}>
         <Text style={styles.header}>Trend</Text>
         <View style={styles.chart}>
+          {hasNoData && <Text style={{ color: "lightgray", position: "absolute", top: 40, left: "47%" }}>No data</Text>}
           <LineChart
             areaChart
             data={chartData}
@@ -400,7 +421,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   filterSection: {
-    flex: 1,
+    flex: 1.2,
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
@@ -413,7 +434,7 @@ const styles = StyleSheet.create({
   filterItem: {
     paddingHorizontal: 15,
     paddingVertical: 8,
-    borderRadius: 20,
+    borderRadius: 10,
     marginRight: 10,
     backgroundColor: "#E0E0E0",
   },
@@ -436,7 +457,6 @@ const styles = StyleSheet.create({
   },
   chartSection: {
     flex: 8,
-    width: "100%",
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 30,

@@ -52,9 +52,9 @@ export default function MedicationItem({ props, setAcknowledged, deleteReminder 
             <TextTicker duration={3000} loop bounceDelay={50} repeatSpacer={50} marqueeDelay={1000}>
               {medicationData.Purpose}
             </TextTicker>
-            <Text>
+            <TextTicker duration={3000} loop bounceDelay={50} repeatSpacer={50} marqueeDelay={1000}>
               {medicationData.Instructions.TabletsPerIntake} {getUnits()}
-            </Text>
+            </TextTicker>
           </View>
           <View style={styles.buttonSection}>
             <TouchableOpacity onPress={() => setAcknowledged(medicationData.id)}>
