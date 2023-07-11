@@ -8,8 +8,8 @@ export default function BottomNavBar({ navigation }) {
     <View style={styles.container}>
       <View style={styles.iconSection}>
         <TouchableOpacity onPress={() => navigation.navigate("Chat Bot")}>
-          <FontAwesome5 name="searchengin" size={26} style={[styles.icon, currentRoute === "View All Medications" && styles.selectedIcon]} />
-          <Text style={[styles.text, currentRoute === "View All Medications" && styles.selectedText]}>Diagnosis</Text>
+          <FontAwesome5 name="searchengin" size={26} style={[styles.icon, currentRoute === "Chat Bot" && styles.selectedIcon]} />
+          <Text style={[styles.text, currentRoute === "Chat Bot" && styles.selectedText]}>Diagnosis</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.iconSection}>

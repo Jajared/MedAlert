@@ -176,7 +176,7 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <BackNavBar navigation={navigation} title="Chat Bot" />
+      <BackNavBar navigation={navigation} title="DocBot" />
       <View style={styles.content}>
         <GiftedChat
           messages={messages}
