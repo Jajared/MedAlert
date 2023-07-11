@@ -7,9 +7,9 @@ export default function BottomNavBar({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.iconSection}>
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
-          <Entypo name="home" size={26} style={[styles.icon, currentRoute === "Home" && styles.selectedIcon]} />
-          <Text style={[styles.text, currentRoute === "Home" && styles.selectedText]}>Home</Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Chat Bot")}>
+          <FontAwesome5 name="searchengin" size={26} style={[styles.icon, currentRoute === "View All Medications" && styles.selectedIcon]} />
+          <Text style={[styles.text, currentRoute === "View All Medications" && styles.selectedText]}>Diagnosis</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.iconSection}>
@@ -18,6 +18,18 @@ export default function BottomNavBar({ navigation }) {
           <Text style={[styles.text, currentRoute === "View All Medications" && styles.selectedText]}>Medications</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.iconSection}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <Entypo name="home" size={26} style={[styles.icon, currentRoute === "Home" && styles.selectedIcon]} />
+          <Text style={[styles.text, currentRoute === "Home" && styles.selectedText]}>Home</Text>
+        </TouchableOpacity>
+      </View>
+      {/* <View>
+      <TouchableOpacity onPress={() => navigation.navigate("Chat Bot")}>
+          <FontAwesome5 name="searchengin" size={26} color="gray" />
+          <Text style = {[styles.text, currentRoute === "Chat Bot" && styles.selectedText]}>Find Conditions</Text>
+        </TouchableOpacity>
+      </View> */}
       <View style={styles.iconSection}>
         <TouchableOpacity onPress={() => navigation.navigate("Performance")}>
           <AntDesign name="areachart" size={26} style={[styles.icon, currentRoute === "Performance" && styles.selectedIcon]} />

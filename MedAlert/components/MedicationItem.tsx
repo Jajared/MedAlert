@@ -46,7 +46,7 @@ export default function MedicationItem({ props, setAcknowledged, deleteReminder 
           <Image source={getIcon()} style={styles.icon} />
 
           <View style={styles.medicationInfo}>
-            <TextTicker style={{ fontWeight: "bold", fontSize: 18 }} duration={3000} loop bounceDelay={50} repeatSpacer={50} marqueeDelay={1000}>
+            <TextTicker style={{ fontWeight: "bold", fontSize: 16 }} duration={3000} loop bounceDelay={50} repeatSpacer={50} marqueeDelay={1000}>
               {medicationData.Name}
             </TextTicker>
             <TextTicker duration={3000} loop bounceDelay={50} repeatSpacer={50} marqueeDelay={1000}>

@@ -6,9 +6,9 @@ import Symptoms from "../assets/symptoms.json";
 import axios from "axios";
 
 const conditions = {
-  "Abdominal pain": /abdominal\s?pain/i,
-  Anxiety: /anxiety/i,
-  "Back pain": /back\s?pain/i,
+  "Abdominal pain": /(abdominal\s?pain)|(stomach\s?ache)/i,
+  Anxiety: /anxiety|anxious|nervous|nervousness|anxiousness/i,
+  "Back pain": /back\s?(pain|ache)/i,
   "Burning eyes": /burning\s?eyes/i,
   "Burning in the throat": /(burning\s?in\s?the\s?throat)|(throat\s?burn)/i,
   "Cheek swelling": /cheek\s?swelling/i,
