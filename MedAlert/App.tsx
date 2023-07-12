@@ -561,7 +561,7 @@ export default function App() {
           {(props) => <AddMedicationSchedule {...props} addMedication={addMedication} />}
         </Stack.Screen>
         <Stack.Screen name="Profile Page" options={{ headerShown: false }}>
-          {(props) => <MenuPage {...props} userInformation={userInformation} setIsNotificationReset={setIsNotificationReset} onSignOut={handleSignOut} />}
+          {(props) => <MenuPage {...props} onSignOut={handleSignOut} />}
         </Stack.Screen>
         <Stack.Screen name="Guardian Home" options={{ headerShown: false }}>
           {(props) => <GuardianHomePage {...props} userId={userId} />}
@@ -591,7 +591,7 @@ export default function App() {
           {(props) => <EditMedicationDetails {...props} allMedicationItems={allMedicationItems} deleteMedicationFromList={deleteMedicationFromList} />}
         </Stack.Screen>
         <Stack.Screen name="Edit Medication Schedule" options={{ headerShown: false }}>
-          {(props) => <EditMedicationSchedule {...props} allMedicationItems={allMedicationItems} setEdit={setEdit} />}
+          {(props) => <EditMedicationSchedule {...props} setEdit={setEdit} />}
         </Stack.Screen>
         <Stack.Screen name="View All Medications" options={{ headerShown: false }}>
           {(props) => <ViewMedicationPage {...props} allMedicationItems={allMedicationItems} />}

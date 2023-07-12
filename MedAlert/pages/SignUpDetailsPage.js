@@ -12,8 +12,6 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
   const userId = route.params.userId;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [dropDownOpen, setDropDownOpen] = useState(false);
-  const [imageUri, setImageUri] = useState(null);
-  const [selectedDOB, setSelectedDOB] = useState(null);
   const [personalDetails, setPersonalDetails] = useState({
     Name: "",
     Gender: "",
@@ -29,7 +27,6 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
   function onDateChange(date) {
     var newDate = (date.date() < 10 ? "0" + date.date() : date.date()) + "/" + (date.month() < 10 ? "0" + +(parseInt(date.month()) + 1) : parseInt(date.month()) + 1) + "/" + date.year();
-    setSelectedDOB(date);
     setPersonalDetails({ ...personalDetails, DateOfBirth: newDate });
   }
 

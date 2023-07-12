@@ -2,7 +2,7 @@ import { Text, SafeAreaView, StyleSheet, View, TouchableOpacity, StatusBar } fro
 import BackNavBar from "../components/BackNavBar";
 import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons, Feather } from "@expo/vector-icons";
 
-export default function ProfilePage({ navigation, userInformation, setIsNotificationReset, onSignOut }) {
+export default function ProfilePage({ navigation, onSignOut }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" />

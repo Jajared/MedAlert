@@ -1,4 +1,3 @@
-import BackNavBar from "../components/BackNavBar";
 import { StyleSheet, TouchableOpacity, Text, View, SafeAreaView, StatusBar } from "react-native";
 import TagButton from "../components/TagButton";
 import { AntDesign, Ionicons } from "@expo/vector-icons";

@@ -11,43 +11,11 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
   const [state, setState] = useState({ ...userInformation });
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [dropDownOpen, setDropDownOpen] = useState(false);
-  const [selectedDOB, setSelectedDOB] = useState(null);
   const handleModal = () => setIsModalVisible(() => !isModalVisible);
   function onDateChange(date) {
     var newDate = (date.date() < 10 ? "0" + date.date() : date.date()) + "/" + (date.month() < 10 ? "0" + +(parseInt(date.month()) + 1) : parseInt(date.month()) + 1) + "/" + date.year();
-    setSelectedDOB(date);
     setState({ ...state, DateOfBirth: newDate });
   }
-
-  const validateEmail = (email) => {
-    // Regular expression for email validation
-    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    return emailRegex.test(email);
-  };
-
-  const isEmailValid = validateEmail(state.EmailAddress);
-
-  /** const handleProfilePictureChange = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (permissionResult.granted === false) {
-      alert("Permission to access camera roll is required!");
-      return;
-    }
-
-    const pickerResult = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 0,
-      base64: true,
-    });
-    if (!pickerResult.canceled) {
-      const base64Image = "data:image/png;base64," + pickerResult.assets[0].base64;
-      setProfilePicture(`data:image/png;base64,${base64Image}`);
-      updateProfilePicture(base64Image);
-    }
-  }; */
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>

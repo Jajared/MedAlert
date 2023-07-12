@@ -6,9 +6,8 @@ import CustomButton from "../components/NextButton";
 import { MedicationItemData } from "../utils/types";
 
 export default function EditMedicationDetails({ navigation, allMedicationItems, deleteMedicationFromList, route }) {
-  const [medicationItems, setMedicationItems] = useState<MedicationItemData[]>(allMedicationItems);
   const { medicationName } = route.params;
-  const [medicationItem, setMedicationItem] = useState<MedicationItemData>(medicationItems.filter((item: MedicationItemData) => item.Name === medicationName)[0]);
+  const [medicationItem, setMedicationItem] = useState<MedicationItemData>(allMedicationItems.filter((item: MedicationItemData) => item.Name === medicationName)[0]);
   const [isDeletionPopUpVisible, setIsDeletionPopUpVisible] = useState<boolean>(false);
   const [volume, setVolume] = useState<string>(medicationItem.Instructions.TabletsPerIntake.toString());
 

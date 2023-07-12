@@ -1,6 +1,6 @@
 import BackNavBar from "../components/BackNavBar";
-import React, { useState, useCallback, useEffect } from "react";
-import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import React, { useState, useEffect } from "react";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import Symptoms from "../assets/symptoms.json";
 import axios from "axios";

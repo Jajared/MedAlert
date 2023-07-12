@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
-import { AntDesign, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 
 const dosageFormIcons = {
   Tablet: <Image source={require("../assets/medicationDB/tablet.png")} style={{ width: 24, height: 24 }} />,
