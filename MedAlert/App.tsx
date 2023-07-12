@@ -453,13 +453,11 @@ export default function App() {
         MedicationItems: newMedicationItems,
         ScheduledItems: newScheduledItems,
       });
-      for (const purpose of medicationPurpose) {
-        const medRecRef = doc(firestorage, "MedicationRecommendations", "allEvents");
-        const medRecSnapshot = await getDoc(medRecRef);
-        const medRecData = medRecSnapshot.data();
-        const newMedRecData = [...medRecData.all, { Name: medicationData.Name, Symptom: purpose }];
-        await updateDoc(medRecRef, { all: newMedRecData });
-      }
+      const medRecRef = doc(firestorage, "MedicationRecommendations", "allEvents");
+      const medRecSnapshot = await getDoc(medRecRef);
+      const medRecData = medRecSnapshot.data();
+      const newMedRecData = [...medRecData.all, { Name: medicationData.Name, ...medicationPurpose }];
+      await updateDoc(medRecRef, { all: newMedRecData });
 
       console.log("Medication added successfully.");
     } catch (error) {
@@ -480,12 +478,14 @@ export default function App() {
       "Skin rash": /skin\s?rash/i,
       "Sore throat": /sore\s?throat/i,
     };
-    const matches = [];
+    const matches = {};
     for (const condition in conditions) {
       if (Object.hasOwnProperty.call(conditions, condition)) {
         const regex = conditions[condition];
         if (purpose.match(regex)) {
-          matches.push(condition);
+          matches[condition] = true;
+        } else {
+          matches[condition] = false;
         }
       }
     }

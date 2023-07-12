@@ -1,6 +1,6 @@
 import BackNavBar from "../components/BackNavBar";
 import React, { useState, useCallback, useEffect } from "react";
-import { SafeAreaView, StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import Symptoms from "../assets/symptoms.json";
 import axios from "axios";
@@ -158,16 +158,23 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
     setIsTyping(true);
     try {
       const diagnosis = await getDiagnosis(replyText);
+      const medication = await getMedications(replyText);
       var response = {};
       if (diagnosis.length === 0) {
         response = { _id: Math.round(Math.random() * 1000000), text: "Sorry, we do not have any possible diagnosis for the given symptoms", createdAt: new Date(), user: doctor };
       } else {
         var diagnosisText = "";
-        for (var length = 1; length < diagnosis.length; length++) {
+        for (var length = 0; length < diagnosis.length; length++) {
           const issue = diagnosis.at(length);
-          diagnosisText += `${length}. ${issue.Name} (${Math.round(issue.Accuracy)}%)\n`;
+          diagnosisText += `${length + 1}. ${issue.Name} (${Math.round(issue.Accuracy)}%)\n`;
         }
-        response = { _id: Math.round(Math.random() * 1000000), text: `Here are some possible diagnosis for your given symptoms:\n${diagnosisText}\n\n⚠️This is not an official diagnosis. Please consult a doctor for professional advice`, createdAt: new Date(), user: doctor };
+        var medicationText = "";
+        if (medication == "") {
+          medicationText = "No medications found";
+        } else {
+          medicationText = `Here are some medications that others are taking for your symptoms:\n${medication}`;
+        }
+        response = { _id: Math.round(Math.random() * 1000000), text: `Here are some possible diagnosis for your given symptoms:\n${diagnosisText}\n${medicationText}\n\n⚠️This is not an official diagnosis. Please consult a doctor for professional advice`, createdAt: new Date(), user: doctor };
       }
       setMessages((previousMessages) => GiftedChat.append(previousMessages, [response]));
     } catch (error) {
@@ -176,8 +183,8 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
     setIsTyping(false);
   };
 
-  function trainModel() {
-    /** const conditions = {
+  async function getMedications(replyText) {
+    const conditions = {
       Pain: /(back|neck|muscle)?\s?(pain|ache)/i,
       Cough: /cough/i,
       Eye: /(eye\s?redness)|(itching\s?eyes)/i,
@@ -188,20 +195,33 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
       "Runny nose": /runny\s?nose/i,
       "Skin rash": /skin\s?rash/i,
       "Sore throat": /sore\s?throat/i,
-    }; */
+    };
+    const matches = {};
+    for (const condition in conditions) {
+      if (Object.hasOwnProperty.call(conditions, condition)) {
+        const regex = conditions[condition];
+        if (replyText.match(regex)) {
+          matches[condition] = true;
+        } else {
+          matches[condition] = false;
+        }
+      }
+    }
     async function getData() {
       const ref = doc(firestorage, "MedicationRecommendations", "allEvents");
       const snapshot = await getDoc(ref);
       const allEvents = snapshot.data().all;
       return allEvents;
     }
-    const trainingData = getData();
+    if (Object.values(matches).every((value) => value === false)) {
+      return "";
+    }
+    const trainingData = await getData();
     var class_Name = "Name";
     var features = ["Pain", "Cough", "Eye", "Fever", "Headache", "Heartburn", "Nausea", "Runny nose", "Skin rash", "Sore throat"];
     var dt = new DecisionTree(trainingData, class_Name, features);
-    console.log(dt.predict({ Pain: true, Cough: false, Eye: false, Fever: true, Headache: true, Heartburn: false, Nausea: false, "Runny nose": false, "Skin rash": false, "Sore throat": true }));
-    console.log(dt.evaluate(trainingData));
-    return dt;
+    var result = dt.predict(matches);
+    return result;
   }
 
   return (
