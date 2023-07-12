@@ -445,6 +445,7 @@ export default function App() {
       const newScheduledItem = await getNewScheduledItems(medicationData);
       const newMedicationItems = [...allMedicationItems, medicationData];
       const newScheduledItems = sortScheduledItems([...scheduledItems, ...newScheduledItem]);
+      const medicationPurpose = await parsePurpose(medicationData.Purpose);
       setScheduledItems(newScheduledItems);
       setAllMedicationItems(newMedicationItems);
       // Update firebase
@@ -452,10 +453,43 @@ export default function App() {
         MedicationItems: newMedicationItems,
         ScheduledItems: newScheduledItems,
       });
+      const medRecRef = doc(firestorage, "MedicationRecommendations", "allEvents");
+      const medRecSnapshot = await getDoc(medRecRef);
+      const medRecData = medRecSnapshot.data();
+      const newMedRecData = [...medRecData.all, { Name: medicationData.Name, ...medicationPurpose }];
+      await updateDoc(medRecRef, { all: newMedRecData });
+
       console.log("Medication added successfully.");
     } catch (error) {
       console.error("Error adding medication:", error);
     }
+  };
+
+  const parsePurpose = async (purpose: string) => {
+    const conditions = {
+      Pain: /(back|neck|muscle)?\s?(pain|ache)/i,
+      Cough: /cough/i,
+      Eye: /(eye\s?redness)|(itching\s?eyes)/i,
+      Fever: /fever/i,
+      Headache: /head\s?ache/i,
+      Heartburn: /(heart|stomach)\s?burn/i,
+      Nausea: /nausea/i,
+      "Runny nose": /runny\s?nose/i,
+      "Skin rash": /skin\s?rash/i,
+      "Sore throat": /sore\s?throat/i,
+    };
+    const matches = {};
+    for (const condition in conditions) {
+      if (Object.hasOwnProperty.call(conditions, condition)) {
+        const regex = conditions[condition];
+        if (purpose.match(regex)) {
+          matches[condition] = true;
+        } else {
+          matches[condition] = false;
+        }
+      }
+    }
+    return matches;
   };
 
   function addToFavourites(medicationName: string) {
@@ -527,7 +561,7 @@ export default function App() {
           {(props) => <AddMedicationSchedule {...props} addMedication={addMedication} />}
         </Stack.Screen>
         <Stack.Screen name="Profile Page" options={{ headerShown: false }}>
-          {(props) => <MenuPage {...props} userInformation={userInformation} setIsNotificationReset={setIsNotificationReset} onSignOut={handleSignOut} />}
+          {(props) => <MenuPage {...props} onSignOut={handleSignOut} />}
         </Stack.Screen>
         <Stack.Screen name="Guardian Home" options={{ headerShown: false }}>
           {(props) => <GuardianHomePage {...props} userId={userId} />}
@@ -557,7 +591,7 @@ export default function App() {
           {(props) => <EditMedicationDetails {...props} allMedicationItems={allMedicationItems} deleteMedicationFromList={deleteMedicationFromList} />}
         </Stack.Screen>
         <Stack.Screen name="Edit Medication Schedule" options={{ headerShown: false }}>
-          {(props) => <EditMedicationSchedule {...props} allMedicationItems={allMedicationItems} setEdit={setEdit} />}
+          {(props) => <EditMedicationSchedule {...props} setEdit={setEdit} />}
         </Stack.Screen>
         <Stack.Screen name="View All Medications" options={{ headerShown: false }}>
           {(props) => <ViewMedicationPage {...props} allMedicationItems={allMedicationItems} />}

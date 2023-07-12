@@ -1,10 +1,8 @@
 import { View, SafeAreaView, StyleSheet, TextInput, FlatList, Text, TouchableOpacity, StatusBar, ScrollView, Modal } from "react-native";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import medicationDb from "../assets/medicationDb.json";
 import filter from "lodash.filter";
-import { getDoc, doc, updateDoc, setDoc } from "firebase/firestore";
-import { firestorage } from "../firebaseConfig";
-import { FontAwesome5, AntDesign, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign, Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import BackNavBar from "../components/BackNavBar";
 import SearchItem from "../components/SearchItem";
 

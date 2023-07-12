@@ -1,4 +1,4 @@
-import { StyleSheet, Text, SafeAreaView, View, Button, StatusBar, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { StyleSheet, Text, SafeAreaView, View, StatusBar, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useState } from "react";
 import BackNavBar from "../components/BackNavBar";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -6,7 +6,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { MedicationItemData } from "../utils/types";
 import CustomButton from "../components/NextButton";
 
-export default function EditMedicationSchedule({ navigation, route, allMedicationItems, setEdit }) {
+export default function EditMedicationSchedule({ navigation, route, setEdit }) {
   const [medicationItem, setMedicationItem] = useState<MedicationItemData>({ ...route.params.medicationItem });
   const [date, setDate] = useState<Date>(new Date(2023, 1, 1, medicationItem.Instructions.FirstDosageTiming / 60, medicationItem.Instructions.FirstDosageTiming - (medicationItem.Instructions.FirstDosageTiming / 60) * 60, 0));
   const onChange = (event, selectedDate: Date) => {
