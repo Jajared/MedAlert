@@ -4,8 +4,11 @@ import { SafeAreaView, StyleSheet, View } from "react-native";
 import { GiftedChat } from "react-native-gifted-chat";
 import Symptoms from "../assets/symptoms.json";
 import axios from "axios";
+import { doc, getDoc } from "firebase/firestore";
+import { firestorage } from "../firebaseConfig";
 import { symptom_checker_api_key, hashed_credentials } from "../firebaseConfig";
 
+var DecisionTree = require("decision-tree");
 const conditions = {
   "Abdominal pain": /(abdominal\s?pain)|(stomach\s?ache)/i,
   Anxiety: /anxiety|anxious|nervous|nervousness|anxiousness/i,
@@ -164,7 +167,7 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
           const issue = diagnosis.at(length);
           diagnosisText += `${length}. ${issue.Name} (${Math.round(issue.Accuracy)}%)\n`;
         }
-        response = { _id: Math.round(Math.random() * 1000000), text: `Here are some possible diagnosis for your given symptoms:\n${diagnosisText}\n⚠️This is not an official diagnosis. Please consult a doctor for professional advice`, createdAt: new Date(), user: doctor };
+        response = { _id: Math.round(Math.random() * 1000000), text: `Here are some possible diagnosis for your given symptoms:\n${diagnosisText}\n\n⚠️This is not an official diagnosis. Please consult a doctor for professional advice`, createdAt: new Date(), user: doctor };
       }
       setMessages((previousMessages) => GiftedChat.append(previousMessages, [response]));
     } catch (error) {
@@ -172,6 +175,34 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
     }
     setIsTyping(false);
   };
+
+  function trainModel() {
+    /** const conditions = {
+      Pain: /(back|neck|muscle)?\s?(pain|ache)/i,
+      Cough: /cough/i,
+      Eye: /(eye\s?redness)|(itching\s?eyes)/i,
+      Fever: /fever/i,
+      Headache: /head\s?ache/i,
+      Heartburn: /(heart|stomach)\s?burn/i,
+      Nausea: /nausea/i,
+      "Runny nose": /runny\s?nose/i,
+      "Skin rash": /skin\s?rash/i,
+      "Sore throat": /sore\s?throat/i,
+    }; */
+    async function getData() {
+      const ref = doc(firestorage, "MedicationRecommendations", "allEvents");
+      const snapshot = await getDoc(ref);
+      const allEvents = snapshot.data().all;
+      return allEvents;
+    }
+    const trainingData = getData();
+    var class_Name = "Name";
+    var features = ["Pain", "Cough", "Eye", "Fever", "Headache", "Heartburn", "Nausea", "Runny nose", "Skin rash", "Sore throat"];
+    var dt = new DecisionTree(trainingData, class_Name, features);
+    console.log(dt.predict({ Pain: true, Cough: false, Eye: false, Fever: true, Headache: true, Heartburn: false, Nausea: false, "Runny nose": false, "Skin rash": false, "Sore throat": true }));
+    console.log(dt.evaluate(trainingData));
+    return dt;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
