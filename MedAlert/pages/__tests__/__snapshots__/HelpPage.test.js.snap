@@ -1,0 +1,196 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HelpPage renders correctly 1`] = `
+<RCTSafeAreaView
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#fff",
+      "flex": 1,
+      "flexDirection": "column",
+      "width": "100%",
+    }
+  }
+  testID="HelpPage"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#fff",
+        "flexDirection": "row",
+        "height": 50,
+        "justifyContent": "center",
+        "paddingHorizontal": 16,
+        "width": "100%",
+      }
+    }
+    testID="BackNavBar"
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "marginLeft": -20,
+          "opacity": 1,
+        }
+      }
+      testID="BackButton"
+    >
+      <Text />
+    </View>
+    <Text
+      style={
+        {
+          "fontSize": 20,
+          "fontWeight": "bold",
+          "marginLeft": 16,
+        }
+      }
+    >
+      Help
+    </Text>
+  </View>
+  <Text
+    style={
+      {
+        "alignSelf": "flex-start",
+        "fontSize": 16,
+        "marginLeft": 30,
+      }
+    }
+  >
+    Feel free to contact us at:
+  </Text>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FAF0D7",
+        "borderColor": "#FAF0D7",
+        "borderRadius": 15,
+        "borderWidth": 1,
+        "flexDirection": "row",
+        "height": 100,
+        "margin": 15,
+        "width": "90%",
+      }
+    }
+  >
+    <Image
+      source={1}
+      style={
+        {
+          "height": 60,
+          "marginLeft": 20,
+          "resizeMode": "contain",
+          "width": 60,
+        }
+      }
+    />
+    <View
+      style={
+        {
+          "flex": 2,
+          "paddingHorizontal": 15,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "fontSize": 16,
+            "fontWeight": "bold",
+          }
+        }
+      >
+        Jared Wong Jing Jie
+      </Text>
+      <Text>
+        Y2 Computer Science Student
+      </Text>
+      <Text>
+        E0934112@u.nus.edu
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#FAF0D7",
+        "borderColor": "#FAF0D7",
+        "borderRadius": 15,
+        "borderWidth": 1,
+        "flexDirection": "row",
+        "height": 100,
+        "margin": 15,
+        "width": "90%",
+      }
+    }
+  >
+    <Image
+      source={1}
+      style={
+        {
+          "height": 60,
+          "marginLeft": 20,
+          "resizeMode": "contain",
+          "width": 60,
+        }
+      }
+    />
+    <View
+      style={
+        {
+          "flex": 2,
+          "paddingHorizontal": 15,
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "fontSize": 16,
+            "fontWeight": "bold",
+          }
+        }
+      >
+        Priscilia Pang Qing Wei
+      </Text>
+      <Text>
+        Y2 Business Analytics Student
+      </Text>
+      <Text>
+        E0968980@u.nus.edu
+      </Text>
+    </View>
+  </View>
+</RCTSafeAreaView>
+`;

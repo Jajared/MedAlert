@@ -3,7 +3,7 @@ import BackNavBar from "../components/BackNavBar";
 
 export default function HelpPage({ navigation }) {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} testID="HelpPage">
       <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="Help" />
       <Text style={{ fontSize: 16, alignSelf: "flex-start", marginLeft: 30 }}>Feel free to contact us at:</Text>

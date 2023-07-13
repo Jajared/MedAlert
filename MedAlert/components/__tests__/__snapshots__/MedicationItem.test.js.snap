@@ -1,0 +1,466 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MedicationItem renders correctly 1`] = `
+<RCTSafeAreaView
+  style={
+    {
+      "backgroundColor": "#fff",
+      "flex": 1,
+    }
+  }
+  testID="MedicationItem"
+>
+  <View
+    style={
+      [
+        {
+          "alignItems": "center",
+          "backgroundColor": "#FAF0D7",
+          "borderColor": "#FAF0D7",
+          "borderRadius": 15,
+          "borderWidth": 1,
+          "flex": 1,
+          "flexDirection": "column",
+          "height": 100,
+          "margin": 15,
+          "width": "90%",
+        },
+        {
+          "backgroundColor": "#FF8989",
+        },
+      ]
+    }
+  >
+    <Text
+      style={
+        {
+          "flex": 1,
+          "fontSize": 18,
+          "fontWeight": "bold",
+          "marginTop": 10,
+          "width": "90%",
+        }
+      }
+    >
+      12:01 AM
+    </Text>
+    <View
+      style={
+        {
+          "flex": 3,
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Image
+        style={
+          {
+            "flex": 1,
+            "height": "80%",
+            "marginLeft": 10,
+            "resizeMode": "contain",
+            "width": "80%",
+          }
+        }
+      />
+      <View
+        style={
+          {
+            "flex": 2,
+            "marginLeft": 20,
+          }
+        }
+      >
+        <View
+          style={
+            [
+              {
+                "overflow": "hidden",
+              },
+              {
+                "flex": undefined,
+              },
+            ]
+          }
+        >
+          <Text
+            animationType="auto"
+            bounce={true}
+            bounceDelay={50}
+            bounceSpeed={50}
+            duration={3000}
+            easing={[Function]}
+            isInteraction={true}
+            loop={true}
+            marqueeDelay={1000}
+            marqueeOnMount={true}
+            numberOfLines={1}
+            scrollSpeed={150}
+            style={
+              [
+                {
+                  "fontSize": 16,
+                  "fontWeight": "bold",
+                },
+                {
+                  "opacity": 0,
+                },
+              ]
+            }
+            useNativeDriver={true}
+          >
+            test
+          </Text>
+          <RCTScrollView
+            display="flex"
+            horizontal={true}
+            onContentSizeChange={[Function]}
+            onScrollBeginDrag={[Function]}
+            onScrollEndDrag={[Function]}
+            scrollEnabled={false}
+            scrollEventThrottle={16}
+            showsHorizontalScrollIndicator={false}
+            style={
+              [
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                false,
+              ]
+            }
+          >
+            <View>
+              <Text
+                animationType="auto"
+                bounce={true}
+                bounceDelay={50}
+                bounceSpeed={50}
+                collapsable={false}
+                duration={3000}
+                easing={[Function]}
+                forwardedRef={[Function]}
+                isInteraction={true}
+                loop={true}
+                marqueeDelay={1000}
+                marqueeOnMount={true}
+                numberOfLines={1}
+                scrollSpeed={150}
+                style={
+                  {
+                    "fontSize": 16,
+                    "fontWeight": "bold",
+                    "transform": [
+                      {
+                        "translateX": 0,
+                      },
+                    ],
+                    "width": null,
+                  }
+                }
+                useNativeDriver={true}
+              >
+                test
+              </Text>
+            </View>
+          </RCTScrollView>
+        </View>
+        <View
+          style={
+            [
+              {
+                "overflow": "hidden",
+              },
+              {
+                "flex": undefined,
+              },
+            ]
+          }
+        >
+          <Text
+            animationType="auto"
+            bounce={true}
+            bounceDelay={50}
+            bounceSpeed={50}
+            duration={3000}
+            easing={[Function]}
+            isInteraction={true}
+            loop={true}
+            marqueeDelay={1000}
+            marqueeOnMount={true}
+            numberOfLines={1}
+            scrollSpeed={150}
+            style={
+              [
+                {},
+                {
+                  "opacity": 0,
+                },
+              ]
+            }
+            useNativeDriver={true}
+          >
+            test
+          </Text>
+          <RCTScrollView
+            display="flex"
+            horizontal={true}
+            onContentSizeChange={[Function]}
+            onScrollBeginDrag={[Function]}
+            onScrollEndDrag={[Function]}
+            scrollEnabled={false}
+            scrollEventThrottle={16}
+            showsHorizontalScrollIndicator={false}
+            style={
+              [
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                false,
+              ]
+            }
+          >
+            <View>
+              <Text
+                animationType="auto"
+                bounce={true}
+                bounceDelay={50}
+                bounceSpeed={50}
+                collapsable={false}
+                duration={3000}
+                easing={[Function]}
+                forwardedRef={[Function]}
+                isInteraction={true}
+                loop={true}
+                marqueeDelay={1000}
+                marqueeOnMount={true}
+                numberOfLines={1}
+                scrollSpeed={150}
+                style={
+                  {
+                    "transform": [
+                      {
+                        "translateX": 0,
+                      },
+                    ],
+                    "width": null,
+                  }
+                }
+                useNativeDriver={true}
+              >
+                test
+              </Text>
+            </View>
+          </RCTScrollView>
+        </View>
+        <View
+          style={
+            [
+              {
+                "overflow": "hidden",
+              },
+              {
+                "flex": undefined,
+              },
+            ]
+          }
+        >
+          <Text
+            animationType="auto"
+            bounce={true}
+            bounceDelay={50}
+            bounceSpeed={50}
+            duration={3000}
+            easing={[Function]}
+            isInteraction={true}
+            loop={true}
+            marqueeDelay={1000}
+            marqueeOnMount={true}
+            numberOfLines={1}
+            scrollSpeed={150}
+            style={
+              [
+                {},
+                {
+                  "opacity": 0,
+                },
+              ]
+            }
+            useNativeDriver={true}
+          >
+            1
+             
+            ml per Intake
+          </Text>
+          <RCTScrollView
+            display="flex"
+            horizontal={true}
+            onContentSizeChange={[Function]}
+            onScrollBeginDrag={[Function]}
+            onScrollEndDrag={[Function]}
+            scrollEnabled={false}
+            scrollEventThrottle={16}
+            showsHorizontalScrollIndicator={false}
+            style={
+              [
+                {
+                  "bottom": 0,
+                  "left": 0,
+                  "position": "absolute",
+                  "right": 0,
+                  "top": 0,
+                },
+                false,
+              ]
+            }
+          >
+            <View>
+              <Text
+                animationType="auto"
+                bounce={true}
+                bounceDelay={50}
+                bounceSpeed={50}
+                collapsable={false}
+                duration={3000}
+                easing={[Function]}
+                forwardedRef={[Function]}
+                isInteraction={true}
+                loop={true}
+                marqueeDelay={1000}
+                marqueeOnMount={true}
+                numberOfLines={1}
+                scrollSpeed={150}
+                style={
+                  {
+                    "transform": [
+                      {
+                        "translateX": 0,
+                      },
+                    ],
+                    "width": null,
+                  }
+                }
+                useNativeDriver={true}
+              >
+                1
+                 
+                ml per Intake
+              </Text>
+            </View>
+          </RCTScrollView>
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flex": 2,
+            "flexDirection": "row",
+            "justifyContent": "center",
+          }
+        }
+      >
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "opacity": 1,
+            }
+          }
+          testID="AcknowledgeButton"
+        >
+          <Image
+            source={1}
+            style={
+              {
+                "height": 25,
+                "marginHorizontal": 15,
+                "width": 25,
+              }
+            }
+          />
+        </View>
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "opacity": 1,
+            }
+          }
+          testID="DeleteButton"
+        >
+          <Image
+            source={1}
+            style={
+              {
+                "height": 25,
+                "marginHorizontal": 15,
+                "width": 25,
+              }
+            }
+          />
+        </View>
+      </View>
+    </View>
+  </View>
+</RCTSafeAreaView>
+`;

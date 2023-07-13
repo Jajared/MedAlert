@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BackNavBar renders correctly 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#fff",
+      "flexDirection": "row",
+      "height": 50,
+      "justifyContent": "center",
+      "paddingHorizontal": 16,
+      "width": "100%",
+    }
+  }
+  testID="BackNavBar"
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "marginLeft": -20,
+        "opacity": 1,
+      }
+    }
+    testID="BackButton"
+  >
+    <Text />
+  </View>
+  <Text
+    style={
+      {
+        "fontSize": 20,
+        "fontWeight": "bold",
+        "marginLeft": 16,
+      }
+    }
+  >
+    Test
+  </Text>
+</View>
+`;

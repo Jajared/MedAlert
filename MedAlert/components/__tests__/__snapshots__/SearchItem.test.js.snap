@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchItem renders correctly 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "backgroundColor": "white",
+      "borderBottomColor": "#E0E0E0",
+      "borderBottomWidth": 2,
+      "flex": 1,
+      "flexDirection": "row",
+      "opacity": 1,
+      "padding": 10,
+    }
+  }
+  testID="SearchItem"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <Text />
+  </View>
+  <View
+    style={
+      {
+        "flex": 7,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "fontSize": 15,
+          "fontWeight": "bold",
+          "marginBottom": 5,
+        }
+      }
+    >
+      Test Product
+    </Text>
+    <Text
+      style={
+        {
+          "fontSize": 12,
+        }
+      }
+    >
+      Test Manufacturer
+    </Text>
+  </View>
+</View>
+`;

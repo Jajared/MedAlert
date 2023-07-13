@@ -1,0 +1,159 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GuardianInfoItem renders correctly 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "opacity": 1,
+    }
+  }
+  testID="GuardianInfoItem"
+>
+  <RCTSafeAreaView
+    style={
+      {
+        "alignItems": "center",
+        "borderBottomColor": "#EAEAEA",
+        "borderBottomWidth": 1,
+        "flexDirection": "row",
+        "paddingHorizontal": 15,
+        "paddingVertical": 10,
+      }
+    }
+  >
+    <Text />
+    <View
+      style={
+        {
+          "alignItems": "flex-start",
+          "flex": 3,
+          "flexDirection": "column",
+          "justifyContent": "flex-start",
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "flex": 3,
+            "fontSize": 16,
+            "fontWeight": "bold",
+            "marginRight": 10,
+          }
+        }
+      >
+        test
+      </Text>
+      <Text
+        style={
+          {
+            "color": "#888",
+            "flex": 4,
+            "fontSize": 14,
+          }
+        }
+      >
+        test@gmail.com
+      </Text>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flex": 2,
+          "flexDirection": "row",
+          "justifyContent": "center",
+        }
+      }
+    >
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "#BCBCBC",
+            "borderRadius": 10,
+            "justifyContent": "center",
+            "opacity": 1,
+            "paddingHorizontal": 10,
+            "paddingVertical": 5,
+          }
+        }
+        testID="RemoveButton"
+      >
+        <Text
+          style={
+            {
+              "color": "black",
+              "fontSize": 14,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Remove
+        </Text>
+      </View>
+    </View>
+    <Modal
+      animationType="slide"
+      hardwareAccelerated={false}
+      testID="DeleteModal"
+      transparent={true}
+      visible={false}
+    />
+  </RCTSafeAreaView>
+</View>
+`;

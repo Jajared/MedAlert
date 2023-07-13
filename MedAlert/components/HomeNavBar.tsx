@@ -4,8 +4,8 @@ import { AntDesign } from "@expo/vector-icons";
 export default function HomeNavBar({ navigation, userName, hasReminders }) {
   const homeIcon = require("../assets/home-icon.png");
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate("Add Medication Type")} style={styles.addButton}>
+    <View style={styles.container} testID="HomeNavBar">
+      <TouchableOpacity onPress={() => navigation.navigate("Add Medication Type")} style={styles.addButton} testID="AddButton">
         <AntDesign name="plus" size={25} color="black" />
       </TouchableOpacity>
       <Text style={styles.userSection}>Hey {userName}! 😃</Text>

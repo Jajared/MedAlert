@@ -3,8 +3,8 @@ import { Ionicons } from "@expo/vector-icons";
 
 export default function BackNavBar({ title, navigation }) {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+    <View style={styles.container} testID="BackNavBar">
+      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton} testID="BackButton">
         <Ionicons name="arrow-back" size={24} color="black" />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
