@@ -12,6 +12,8 @@ const dosageFormIcons = {
   Syrup: <Image source={require("../assets/medicationDB/syrup.png")} style={{ width: 24, height: 24 }} />,
   Ointment: <Image source={require("../assets/medicationDB/ointment.png")} style={{ width: 24, height: 24 }} />,
   Powder: <Image source={require("../assets/medicationDB/powder.png")} style={{ width: 24, height: 24 }} />,
+  Spray: <Image source={require("../assets/medicationDB/spray.png")} style={{ width: 24, height: 24 }} />,
+  Lotion: <Image source={require("../assets/medicationDB/lotion.png")} style={{ width: 24, height: 24 }} />,
 };
 
 export default class SearchItem extends PureComponent {

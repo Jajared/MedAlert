@@ -109,7 +109,7 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
         setToken(response.data.Token);
         console.log("Token set");
       } catch (error) {
-        console.error(error);
+        alert("Unable to launch chatbot. Please try again later\n" + error);
         return;
       }
     }
@@ -170,7 +170,7 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
         }
         var medicationText = "";
         if (medication == "") {
-          medicationText = "No medications found";
+          medicationText = "No medication recommendations found";
         } else {
           medicationText = `Here are some medications that others are taking for your symptoms:\n${medication}`;
         }

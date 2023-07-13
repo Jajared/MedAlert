@@ -300,12 +300,12 @@ function PerformancePage({ navigation, consumptionEvents, userId, prevSettings }
             initialSpacing={10}
             yAxisColor="white"
             yAxisThickness={0}
-            noOfSections={2}
+            noOfSections={3}
             stepValue={1}
             height={100}
             width={300}
-            minValue={-2}
-            maxValue={2}
+            minValue={-3}
+            maxValue={3}
             rulesType="solid"
             rulesColor="lightgray"
             yAxisLabelSuffix=" hr"

@@ -2,14 +2,14 @@ import { SafeAreaView, View, StyleSheet, Text, TextInput, TouchableOpacity, Butt
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import { doc, collection, setDoc } from "firebase/firestore";
-import { firestorage, storage } from "../firebaseConfig";
+import { firestorage, storage, auth } from "../firebaseConfig";
 import DropDownPicker from "react-native-dropdown-picker";
 import CalendarPicker from "react-native-calendar-picker";
-
-/**https://firebasestorage.googleapis.com/v0/b/medalert-386812.appspot.com/o/profilePictures%2FcLNeJdkRJkfEzLMugJipcamAWwb2?alt=media&token=e2ea4d15-ec26-410e-b584-3aac020bfe15 */
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 export default function SignUpDetailsPage({ navigation, route, setIsSignUpComplete }) {
-  const userId = route.params.userId;
+  const emailAddress = route.params.EmailAddress;
+  const password = route.params.Password;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [dropDownOpen, setDropDownOpen] = useState(false);
   const [personalDetails, setPersonalDetails] = useState({
@@ -31,47 +31,57 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
   }
 
   const handleFormSubmit = async () => {
-    const userInfoRef = doc(collection(firestorage, "UsersData"), userId);
-    // Update user information in Firestore
-    await setDoc(userInfoRef, { ...personalDetails })
-      .then((docRef) => {
-        console.log("Data pushed successfully.");
-      })
-      .catch((error) => {
-        console.error("Error pushing data:", error);
-      });
-    // Update medication information in Firestore
-    const medInfoRef = doc(collection(firestorage, "MedicationInformation"), userId);
-    setDoc(medInfoRef, { MedicationItems: [], ScheduledItems: [] })
-      .then((docRef) => {
-        console.log("Data pushed successfully.");
-      })
-      .catch((error) => {
-        console.error("Error pushing data:", error);
-      });
-    // Update guardian information in Firestore
-    const guardianInfoRef = doc(collection(firestorage, "GuardianInformation"), userId);
-    setDoc(guardianInfoRef, { IncomingRequests: [], OutgoingRequests: [], Guardians: [] })
-      .then((docRef) => {
-        console.log("Data pushed successfully.");
-      })
-      .catch((error) => {
-        console.error("Error pushing data:", error);
-      });
-    // Update statistics data in Firestore
-    const statisticsDataRef = doc(collection(firestorage, "StatisticsData"), userId);
-    const today = new Date();
-    setDoc(statisticsDataRef, {
-      ConsumptionEvents: [],
-    })
-      .then((docRef) => {
-        console.log("Data pushed successfully.");
-      })
-      .catch((error) => {
-        console.error("Error pushing data:", error);
-      });
-    await setIsSignUpComplete(true);
-    navigation.navigate("Home");
+    createUserWithEmailAndPassword(auth, emailAddress, password).then(async (userCredential) => {
+      const user = userCredential.user;
+      const userId = user.uid;
+
+      const createNewProfile = async (userId) => {
+        console.log(userId);
+        const userInfoRef = doc(collection(firestorage, "UsersData"), userId);
+        // Update user information in Firestore
+        await setDoc(userInfoRef, { ...personalDetails })
+          .then((docRef) => {
+            console.log("Data pushed successfully.");
+          })
+          .catch((error) => {
+            console.error("Error pushing data:", error);
+          });
+        // Update medication information in Firestore
+        const medInfoRef = doc(collection(firestorage, "MedicationInformation"), userId);
+        setDoc(medInfoRef, { MedicationItems: [], ScheduledItems: [] })
+          .then((docRef) => {
+            console.log("Data pushed successfully.");
+          })
+          .catch((error) => {
+            console.error("Error pushing data:", error);
+          });
+        // Update guardian information in Firestore
+        const guardianInfoRef = doc(collection(firestorage, "GuardianInformation"), userId);
+        setDoc(guardianInfoRef, { IncomingRequests: [], OutgoingRequests: [], Guardians: [] })
+          .then((docRef) => {
+            console.log("Data pushed successfully.");
+          })
+          .catch((error) => {
+            console.error("Error pushing data:", error);
+          });
+        // Update statistics data in Firestore
+        const statisticsDataRef = doc(collection(firestorage, "StatisticsData"), userId);
+        setDoc(statisticsDataRef, {
+          ConsumptionEvents: [],
+        })
+          .then((docRef) => {
+            console.log("Data pushed successfully.");
+          })
+          .catch((error) => {
+            console.error("Error pushing data:", error);
+          });
+      };
+
+      await createNewProfile(userId);
+      await setIsSignUpComplete(true);
+      console.log("Profile created");
+      navigation.navigate("Home");
+    });
   };
 
   return (

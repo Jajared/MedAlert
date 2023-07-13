@@ -9,6 +9,7 @@ import { collection, getDocs, query, where, doc, arrayUnion, setDoc, getDoc, arr
 import GuardianRequestItem from "../components/GuardianRequestItem";
 import GuardianInfoItem from "../components/GuardianInfoItem";
 import { GuardianInfo, GuardianRequest } from "../utils/types";
+import NextButton from "../components/NextButton";
 
 export default function GuardianHomePage({ navigation, userId }) {
   const [addGuardianEmail, setAddGuardianEmail] = useState<string>("");
@@ -226,11 +227,10 @@ export default function GuardianHomePage({ navigation, userId }) {
           <Text style={styles.title}>Add a guardian!</Text>
           <Text style={styles.header}>Allow other existing users to track your medication schedule. Simply enter their registered email!</Text>
           <TextInput placeholder="Enter a registered email" onChangeText={(text) => setAddGuardianEmail(text)} style={styles.editBox}></TextInput>
-          <TouchableOpacity onPress={handleFormSubmit} style={styles.buttonContainer}>
-            <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
-              <Text style={styles.buttonText}>Confirm</Text>
-            </LinearGradient>
-          </TouchableOpacity>
+          <View style={styles.buttonContainer}>
+            <NextButton title="Confirm" onPress={handleFormSubmit} />
+          </View>
+          <View style={{ flex: 3 }} />
         </SafeAreaView>
       </SafeAreaView>
     );

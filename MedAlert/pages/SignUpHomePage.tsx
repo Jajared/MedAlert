@@ -6,7 +6,7 @@ import { auth } from "../firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import BackNavBar from "../components/BackNavBar";
 
-export default function SignUpHomePage({ navigation, onSignUpHome }) {
+export default function SignUpHomePage({ navigation }) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -50,16 +50,7 @@ export default function SignUpHomePage({ navigation, onSignUpHome }) {
       <TouchableOpacity
         onPress={() => {
           if (isValidEmail() && isValidPassword()) {
-            createUserWithEmailAndPassword(auth, email, password)
-              .then((userCredential) => {
-                const user = userCredential.user;
-                const userId = user.uid;
-                onSignUpHome(userId);
-                navigation.replace("Sign Up Details", { userId: userId, EmailAddress: email.toLowerCase() });
-              })
-              .catch((error) => {
-                alert(error);
-              });
+            navigation.replace("Sign Up Details", { EmailAddress: email.toLowerCase(), Password: password });
           } else {
             alert("Invalid email or password");
           }

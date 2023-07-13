@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { FontAwesome5, Entypo, AntDesign } from "@expo/vector-icons";
+import { FontAwesome5, Entypo, AntDesign, Ionicons } from "@expo/vector-icons";
 import { useRoute } from "@react-navigation/native";
 
 export default function BottomNavBar({ navigation }) {
@@ -8,13 +8,13 @@ export default function BottomNavBar({ navigation }) {
     <View style={styles.container}>
       <View style={styles.iconSection}>
         <TouchableOpacity onPress={() => navigation.navigate("Chat Bot")}>
-          <FontAwesome5 name="searchengin" size={26} style={[styles.icon, currentRoute === "Chat Bot" && styles.selectedIcon]} />
-          <Text style={[styles.text, currentRoute === "Chat Bot" && styles.selectedText]}>Diagnosis</Text>
+          <Ionicons name="chatbox-ellipses-outline" size={26} style={[styles.icon, currentRoute === "Chat Bot" && styles.selectedIcon]} />
+          <Text style={[styles.text, currentRoute === "Chat Bot" && styles.selectedText]}>DocBot</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.iconSection}>
         <TouchableOpacity onPress={() => navigation.navigate("View All Medications")}>
-          <FontAwesome5 name="pills" size={26} style={[styles.icon, currentRoute === "View All Medications" && styles.selectedIcon]} />
+          <FontAwesome5 name="pills" size={24} style={[styles.icon, currentRoute === "View All Medications" && styles.selectedIcon]} />
           <Text style={[styles.text, currentRoute === "View All Medications" && styles.selectedText]}>Medications</Text>
         </TouchableOpacity>
       </View>
@@ -24,12 +24,6 @@ export default function BottomNavBar({ navigation }) {
           <Text style={[styles.text, currentRoute === "Home" && styles.selectedText]}>Home</Text>
         </TouchableOpacity>
       </View>
-      {/* <View>
-      <TouchableOpacity onPress={() => navigation.navigate("Chat Bot")}>
-          <FontAwesome5 name="searchengin" size={26} color="gray" />
-          <Text style = {[styles.text, currentRoute === "Chat Bot" && styles.selectedText]}>Find Conditions</Text>
-        </TouchableOpacity>
-      </View> */}
       <View style={styles.iconSection}>
         <TouchableOpacity onPress={() => navigation.navigate("Performance")}>
           <AntDesign name="areachart" size={26} style={[styles.icon, currentRoute === "Performance" && styles.selectedIcon]} />

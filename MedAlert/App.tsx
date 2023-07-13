@@ -92,7 +92,6 @@ export default function App() {
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
       setExpoPushToken(token);
     } else {
       alert("Must use physical device for Push Notifications");
@@ -158,11 +157,6 @@ export default function App() {
       };
     }
   }, [userId, isSignUpComplete]);
-
-  // Sign up handler
-  const handleSignUpHome = (userId: string) => {
-    setUserId(userId);
-  };
 
   // Login handler
   const handleLogin = async (email: string, password: string) => {
@@ -453,12 +447,17 @@ export default function App() {
         MedicationItems: newMedicationItems,
         ScheduledItems: newScheduledItems,
       });
-      const medRecRef = doc(firestorage, "MedicationRecommendations", "allEvents");
-      const medRecSnapshot = await getDoc(medRecRef);
-      const medRecData = medRecSnapshot.data();
-      const newMedRecData = [...medRecData.all, { Name: medicationData.Name, ...medicationPurpose }];
-      await updateDoc(medRecRef, { all: newMedRecData });
-
+      if (
+        !Object.values(medicationPurpose)
+          .map((value) => value === false)
+          .every(Boolean)
+      ) {
+        const medRecRef = doc(firestorage, "MedicationRecommendations", "allEvents");
+        const medRecSnapshot = await getDoc(medRecRef);
+        const medRecData = medRecSnapshot.data();
+        const newMedRecData = [...medRecData.all, { Name: medicationData.Name, ...medicationPurpose }];
+        await updateDoc(medRecRef, { all: newMedRecData });
+      }
       console.log("Medication added successfully.");
     } catch (error) {
       console.error("Error adding medication:", error);
@@ -530,7 +529,7 @@ export default function App() {
             {(props) => <ResetPasswordPage {...props} />}
           </Stack.Screen>
           <Stack.Screen name="Sign Up Home" options={{ headerShown: false }}>
-            {(props) => <SignUpHomePage {...props} onSignUpHome={handleSignUpHome} />}
+            {(props) => <SignUpHomePage {...props} />}
           </Stack.Screen>
           <Stack.Screen name="Sign Up Details" options={{ headerShown: false }}>
             {(props) => <SignUpDetailsPage {...props} setIsSignUpComplete={setIsSignUpComplete} />}
@@ -600,7 +599,7 @@ export default function App() {
           {(props) => <LoginPage {...props} onLogin={handleLogin} />}
         </Stack.Screen>
         <Stack.Screen name="Sign Up Home" options={{ headerShown: false }}>
-          {(props) => <SignUpHomePage {...props} onSignUpHome={handleSignUpHome} />}
+          {(props) => <SignUpHomePage {...props} />}
         </Stack.Screen>
         <Stack.Screen name="Sign Up Details" options={{ headerShown: false }}>
           {(props) => <SignUpDetailsPage {...props} setIsSignUpComplete={setIsSignUpComplete} />}
