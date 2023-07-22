@@ -1,0 +1,118 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HomeNavBar renders correctly 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#fff",
+      "flex": 1,
+      "flexDirection": "column",
+      "justifyContent": "center",
+    }
+  }
+  testID="HomeNavBar"
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "flex": 1,
+        "flexDirection": "row",
+        "justifyContent": "flex-end",
+        "marginTop": 10,
+        "opacity": 1,
+        "paddingRight": 30,
+        "width": "100%",
+      }
+    }
+    testID="AddButton"
+  >
+    <Text />
+  </View>
+  <Text
+    style={
+      {
+        "flex": 1,
+        "fontSize": 20,
+        "fontWeight": "bold",
+        "width": "90%",
+      }
+    }
+  >
+    Hey 
+    ! 😃
+  </Text>
+  <View
+    style={
+      {
+        "backgroundColor": "#FFD9C0",
+        "borderColor": "#FFD9C0",
+        "borderRadius": 12,
+        "borderWidth": 10,
+        "flex": 3,
+        "flexDirection": "row",
+        "padding": 10,
+        "width": "95%",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flex": 3,
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Text
+        style={
+          {
+            "fontSize": 18,
+            "fontWeight": "400",
+          }
+        }
+      >
+        You have no reminders for the day.
+      </Text>
+    </View>
+    <Image
+      source={1}
+      style={
+        {
+          "flex": 2,
+          "height": "100%",
+          "width": "100%",
+        }
+      }
+    />
+  </View>
+</View>
+`;

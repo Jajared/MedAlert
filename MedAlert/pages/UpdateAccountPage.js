@@ -38,7 +38,7 @@ export default function UpdateAccountPage({ navigation, userInformation, updateU
               <Text style={styles.text}> Email Address: </Text>
             </View>
             <View style={styles.editBox}>
-              <Text>{state.EmailAddress}</Text>
+              <Text style={{ color: "#999999" }}>{state.EmailAddress}</Text>
             </View>
           </View>
 
@@ -110,22 +110,18 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
   },
-
   mainSection: {
     flex: 5,
     width: "70%",
   },
-
   subSection: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-
   title: {
     alignItems: "center",
   },
-
   editBox: {
     height: 50,
     borderWidth: 1,
@@ -139,11 +135,9 @@ const styles = StyleSheet.create({
   emptySection: {
     flex: 1,
   },
-
   text: {
     fontWeight: "bold",
   },
-
   calendar: {
     width: "100%",
     backgroundColor: "#fff",

@@ -39,7 +39,7 @@ export default function MedicationItem({ props, setAcknowledged, deleteReminder 
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} testID="MedicationItem">
       <View style={[styles.itemContainer, { backgroundColor: getBackgroundColor() }]}>
         <Text style={styles.timeSection}>{getTime()}</Text>
         <View style={styles.textContainer}>
@@ -57,10 +57,10 @@ export default function MedicationItem({ props, setAcknowledged, deleteReminder 
             </TextTicker>
           </View>
           <View style={styles.buttonSection}>
-            <TouchableOpacity onPress={() => setAcknowledged(medicationData.id)}>
+            <TouchableOpacity onPress={() => setAcknowledged(medicationData.id)} testID="AcknowledgeButton">
               <Image source={require("../assets/checked-icon.png")} style={styles.logo}></Image>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => deleteReminder(medicationData.id)}>
+            <TouchableOpacity onPress={() => deleteReminder(medicationData.id)} testID="DeleteButton">
               <Image source={require("../assets/delete-icon.png")} style={styles.logo}></Image>
             </TouchableOpacity>
           </View>

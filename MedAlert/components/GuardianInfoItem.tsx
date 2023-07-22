@@ -7,7 +7,7 @@ export default function GuardianInfoItem({ props, navigation, removeGuardian }) 
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
 
   return (
-    <TouchableOpacity onPress={() => navigation.navigate("Patient Medication", { guardianId: guardianInfo.UserId, guardianName: guardianInfo.Name })}>
+    <TouchableOpacity onPress={() => navigation.navigate("Patient Medication", { guardianId: guardianInfo.UserId, guardianName: guardianInfo.Name })} testID="GuardianInfoItem">
       <SafeAreaView style={styles.itemContainer}>
         {guardianInfo.Gender == "Female" ? <MaterialCommunityIcons name="face-woman-profile" size={24} color="black" style={{ flex: 1 }} /> : <MaterialCommunityIcons name="face-man-profile" size={24} color="black" style={{ flex: 1 }} />}
         <View style={styles.infoContainer}>
@@ -15,11 +15,11 @@ export default function GuardianInfoItem({ props, navigation, removeGuardian }) 
           <Text style={styles.email}>{guardianInfo.EmailAddress}</Text>
         </View>
         <View style={styles.actionContainer}>
-          <TouchableOpacity style={styles.removeButton} onPress={() => setDeleteModalVisible(true)}>
+          <TouchableOpacity style={styles.removeButton} onPress={() => setDeleteModalVisible(true)} testID="RemoveButton">
             <Text style={styles.removeText}>Remove</Text>
           </TouchableOpacity>
         </View>
-        <Modal visible={isDeleteModalVisible} transparent={true} animationType="slide">
+        <Modal visible={isDeleteModalVisible} transparent={true} animationType="slide" testID="DeleteModal">
           <SafeAreaView style={styles.popUpContainer}>
             <View style={styles.popUp}>
               <Text style={styles.header}>Are you sure that you want to remove this guardian?</Text>

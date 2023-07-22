@@ -14,7 +14,7 @@ export default function LoginPage({ navigation, onLogin }) {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.container} testID="LoginPage">
         <StatusBar barStyle="dark-content" />
         <Image source={require("../assets/medalert_icon.png")} style={styles.logo}></Image>
         <Text style={styles.title}>Welcome! 👋</Text>
@@ -30,7 +30,7 @@ export default function LoginPage({ navigation, onLogin }) {
           </TouchableOpacity>
         </View>
         <View style={styles.optionsBar}>
-          <TouchableOpacity onPress={() => navigation.navigate("Reset Password")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Reset Password")} testID="ForgetButton">
             <Text style={{ color: "#FF014E" }}>Forgot Password?</Text>
           </TouchableOpacity>
         </View>
@@ -49,6 +49,7 @@ export default function LoginPage({ navigation, onLogin }) {
             }
           }}
           style={styles.buttonContainer}
+          testID="LoginButton"
         >
           <LinearGradient colors={["#FFA7AF", "#FF014E"]} style={styles.gradient}>
             <Text style={styles.buttonText}>Login</Text>
@@ -57,7 +58,7 @@ export default function LoginPage({ navigation, onLogin }) {
         <View style={styles.emptySection}></View>
         <View style={styles.signUpSection}>
           <Text style={{ fontSize: 15 }}>Don't have any account?</Text>
-          <TouchableOpacity onPress={() => navigation.navigate("Sign Up Home")}>
+          <TouchableOpacity onPress={() => navigation.navigate("Sign Up Home")} testID="SignUpButton">
             <Text style={{ color: "#FF014E", fontSize: 15 }}> Sign Up</Text>
           </TouchableOpacity>
         </View>

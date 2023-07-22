@@ -1,0 +1,151 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AboutPage renders correctly 1`] = `
+<RCTSafeAreaView
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#fff",
+      "flex": 1,
+      "flexDirection": "column",
+      "width": "100%",
+    }
+  }
+  testID="AboutPage"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#fff",
+        "flexDirection": "row",
+        "height": 50,
+        "justifyContent": "center",
+        "paddingHorizontal": 16,
+        "width": "100%",
+      }
+    }
+    testID="BackNavBar"
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "marginLeft": -20,
+          "opacity": 1,
+        }
+      }
+      testID="BackButton"
+    >
+      <Text />
+    </View>
+    <Text
+      style={
+        {
+          "fontSize": 20,
+          "fontWeight": "bold",
+          "marginLeft": 16,
+        }
+      }
+    >
+      About
+    </Text>
+  </View>
+  <View
+    style={
+      {
+        "flex": 2,
+        "width": "90%",
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#5A5A5A",
+          "fontSize": 16,
+        }
+      }
+    >
+      Forgetting to take medication is a common problem, especially in a country like Singapore, which has so many people diagnosed with chronic illnesses (such as diabetes and hypertension) who rely on medication every single day. Various medications must be consumed at various frequencies which makes consumption tracking tedious and confusing.
+
+MedAlert aims to provide a user-friendly solution for individuals to manage their medication schedules efficiently.
+    </Text>
+  </View>
+  <View
+    style={
+      {
+        "flex": 2,
+        "width": "90%",
+      }
+    }
+  >
+    <Text>
+      References:
+    </Text>
+    <View
+      style={
+        {
+          "flexDirection": "row",
+        }
+      }
+    >
+      <Image
+        source={1}
+        style={
+          {
+            "flex": 1,
+            "height": 120,
+            "margin": 10,
+            "resizeMode": "contain",
+          }
+        }
+      />
+      <Image
+        source={1}
+        style={
+          {
+            "flex": 1,
+            "height": 120,
+            "margin": 10,
+            "resizeMode": "contain",
+          }
+        }
+      />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "flex": 1,
+      }
+    }
+  />
+</RCTSafeAreaView>
+`;

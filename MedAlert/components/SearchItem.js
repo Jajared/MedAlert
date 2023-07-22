@@ -33,7 +33,7 @@ export default class SearchItem extends PureComponent {
   render() {
     const { item, navigation } = this.props;
     return (
-      <TouchableOpacity onPress={() => navigation.navigate("Search Medication Item", { medicationDetails: item })} style={styles.searchItem}>
+      <TouchableOpacity onPress={() => navigation.navigate("Search Medication Item", { medicationDetails: item })} style={styles.searchItem} testID="SearchItem">
         <View style={styles.searchItemIcon}>{this.getDosageFormIcon(item.dosage_form)}</View>
         <View style={styles.searchItemText}>
           <Text style={styles.searchItemTitle}>{item.product_name}</Text>
