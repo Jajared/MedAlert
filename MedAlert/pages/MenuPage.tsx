@@ -4,11 +4,11 @@ import { MaterialCommunityIcons, MaterialIcons, AntDesign, Ionicons, Feather } f
 
 export default function ProfilePage({ navigation, onSignOut }) {
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} testID="MenuPage">
       <StatusBar barStyle="dark-content" />
       <BackNavBar navigation={navigation} title="Menu" />
       <View style={styles.mainSettingsSection}>
-        <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Update Account")}>
+        <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Update Account")} testID="UpdateAccountButton">
           <MaterialCommunityIcons name="account" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Update Account</Text>
@@ -16,7 +16,7 @@ export default function ProfilePage({ navigation, onSignOut }) {
           </View>
           <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Guardian Home")}>
+        <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Guardian Home")} testID="GuardianButton">
           <MaterialIcons name="supervisor-account" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Saved Guardian</Text>
@@ -24,7 +24,7 @@ export default function ProfilePage({ navigation, onSignOut }) {
           </View>
           <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Medication Database")}>
+        <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Medication Database")} testID="MedicationDatabaseButton">
           <AntDesign name="database" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
             <Text style={styles.settingsTitle}>Medication Database</Text>
@@ -34,11 +34,11 @@ export default function ProfilePage({ navigation, onSignOut }) {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.settingsItem}
-          onPress={() => {
-            onSignOut().then(() => {
-              navigation.navigate("Login");
-            });
+          onPress={async () => {
+            await onSignOut();
+            navigation.navigate("Login");
           }}
+          testID="LogoutButton"
         >
           <Ionicons name="exit-outline" size={30} color="black" style={{ flex: 1 }} />
           <View style={styles.settingInfo}>
@@ -51,14 +51,14 @@ export default function ProfilePage({ navigation, onSignOut }) {
       <View style={styles.moreSettingsSection}>
         <Text style={{ fontSize: 15, fontWeight: "bold", flex: 1 }}>More</Text>
         <View style={styles.moreSettingsContainer}>
-          <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Help")}>
+          <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("Help")} testID="HelpButton">
             <MaterialIcons name="support-agent" size={24} color="black" style={{ flex: 1 }} />
             <View style={styles.settingInfo}>
               <Text style={styles.settingsTitle}>Help & Support</Text>
             </View>
             <Feather name="arrow-right" size={24} color="black" style={{ flex: 1 }} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("About")}>
+          <TouchableOpacity style={styles.settingsItem} onPress={() => navigation.navigate("About")} testID="AboutButton">
             <Ionicons name="ios-heart-circle" size={24} color="black" style={{ flex: 1 }} />
             <View style={styles.settingInfo}>
               <Text style={styles.settingsTitle}>About App</Text>

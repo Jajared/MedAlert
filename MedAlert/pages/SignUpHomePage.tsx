@@ -3,7 +3,7 @@ import { useState } from "react";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { auth } from "../firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { fetchSignInMethodsForEmail } from "firebase/auth";
 import BackNavBar from "../components/BackNavBar";
 
 export default function SignUpHomePage({ navigation }) {
@@ -14,14 +14,28 @@ export default function SignUpHomePage({ navigation }) {
     setShowPassword(!showPassword);
   };
 
-  const isValidEmail = () => {
+  const isValidEmail = async () => {
     // Regular expression pattern for email validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailPattern.test(email);
+    if (emailPattern.test(email) === false) {
+      alert("Invalid email");
+      return false;
+    }
+    // Check if user has already an existing account
+    const signInMethods = await fetchSignInMethodsForEmail(auth, email);
+    if (signInMethods.length > 0) {
+      alert("Account already exists");
+      return false;
+    }
+    return true;
   };
 
-  const isValidPassword = () => {
-    return password.length >= 8;
+  const isValidPassword = async () => {
+    if (password.length >= 8) return true;
+    else {
+      alert("Password must be at least 8 characters");
+      return false;
+    }
   };
 
   return (
@@ -48,11 +62,9 @@ export default function SignUpHomePage({ navigation }) {
         </View>
       </View>
       <TouchableOpacity
-        onPress={() => {
-          if (isValidEmail() && isValidPassword()) {
+        onPress={async () => {
+          if ((await isValidEmail()) && (await isValidPassword())) {
             navigation.replace("Sign Up Details", { EmailAddress: email.toLowerCase(), Password: password });
-          } else {
-            alert("Invalid email or password");
           }
         }}
         style={styles.buttonContainer}

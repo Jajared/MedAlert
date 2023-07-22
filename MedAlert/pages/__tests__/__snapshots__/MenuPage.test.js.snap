@@ -1,0 +1,530 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MenuPage renders correctly 1`] = `
+<RCTSafeAreaView
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#fff",
+      "flex": 1,
+      "flexDirection": "column",
+      "width": "100%",
+    }
+  }
+  testID="MenuPage"
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#fff",
+        "flexDirection": "row",
+        "height": 50,
+        "justifyContent": "center",
+        "paddingHorizontal": 16,
+        "width": "100%",
+      }
+    }
+    testID="BackNavBar"
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "marginLeft": -20,
+          "opacity": 1,
+        }
+      }
+      testID="BackButton"
+    >
+      <Text />
+    </View>
+    <Text
+      style={
+        {
+          "fontSize": 20,
+          "fontWeight": "bold",
+          "marginLeft": 16,
+        }
+      }
+    >
+      Menu
+    </Text>
+  </View>
+  <View
+    style={
+      {
+        "borderColor": "black",
+        "borderRadius": 15,
+        "borderWidth": 1,
+        "flex": 5,
+        "flexDirection": "column",
+        "margin": 10,
+        "width": "90%",
+      }
+    }
+  >
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "flexDirection": "row",
+          "justifyContent": "center",
+          "opacity": 1,
+          "padding": 10,
+        }
+      }
+      testID="UpdateAccountButton"
+    >
+      <Text />
+      <View
+        style={
+          {
+            "flex": 6,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "fontSize": 16,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Update Account
+        </Text>
+        <Text
+          style={
+            {
+              "fontSize": 12,
+            }
+          }
+        >
+          Make changes to your account
+        </Text>
+      </View>
+      <Text />
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "flexDirection": "row",
+          "justifyContent": "center",
+          "opacity": 1,
+          "padding": 10,
+        }
+      }
+      testID="GuardianButton"
+    >
+      <Text />
+      <View
+        style={
+          {
+            "flex": 6,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "fontSize": 16,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Saved Guardian
+        </Text>
+        <Text
+          style={
+            {
+              "fontSize": 12,
+            }
+          }
+        >
+          Manage your guardian information
+        </Text>
+      </View>
+      <Text />
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "flexDirection": "row",
+          "justifyContent": "center",
+          "opacity": 1,
+          "padding": 10,
+        }
+      }
+      testID="MedicationDatabaseButton"
+    >
+      <Text />
+      <View
+        style={
+          {
+            "flex": 6,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "fontSize": 16,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Medication Database
+        </Text>
+        <Text
+          style={
+            {
+              "fontSize": 12,
+            }
+          }
+        >
+          Search through our database for your medication
+        </Text>
+      </View>
+      <Text />
+    </View>
+    <View
+      accessibilityState={
+        {
+          "busy": undefined,
+          "checked": undefined,
+          "disabled": undefined,
+          "expanded": undefined,
+          "selected": undefined,
+        }
+      }
+      accessibilityValue={
+        {
+          "max": undefined,
+          "min": undefined,
+          "now": undefined,
+          "text": undefined,
+        }
+      }
+      accessible={true}
+      collapsable={false}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        {
+          "alignItems": "center",
+          "flex": 1,
+          "flexDirection": "row",
+          "justifyContent": "center",
+          "opacity": 1,
+          "padding": 10,
+        }
+      }
+      testID="LogoutButton"
+    >
+      <Text />
+      <View
+        style={
+          {
+            "flex": 6,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "fontSize": 16,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Log Out
+        </Text>
+        <Text
+          style={
+            {
+              "fontSize": 12,
+            }
+          }
+        >
+          Log out of your existing account
+        </Text>
+      </View>
+      <Text />
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "flex": 3,
+        "flexDirection": "column",
+        "margin": 10,
+        "width": "90%",
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "flex": 1,
+          "fontSize": 15,
+          "fontWeight": "bold",
+        }
+      }
+    >
+      More
+    </Text>
+    <View
+      style={
+        {
+          "borderColor": "black",
+          "borderRadius": 15,
+          "borderWidth": 1,
+          "flex": 4,
+        }
+      }
+    >
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "flex": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "opacity": 1,
+            "padding": 10,
+          }
+        }
+        testID="HelpButton"
+      >
+        <Text />
+        <View
+          style={
+            {
+              "flex": 6,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "fontSize": 16,
+                "fontWeight": "bold",
+              }
+            }
+          >
+            Help & Support
+          </Text>
+        </View>
+        <Text />
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "flex": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "opacity": 1,
+            "padding": 10,
+          }
+        }
+        testID="AboutButton"
+      >
+        <Text />
+        <View
+          style={
+            {
+              "flex": 6,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "fontSize": 16,
+                "fontWeight": "bold",
+              }
+            }
+          >
+            About App
+          </Text>
+        </View>
+        <Text />
+      </View>
+    </View>
+  </View>
+</RCTSafeAreaView>
+`;

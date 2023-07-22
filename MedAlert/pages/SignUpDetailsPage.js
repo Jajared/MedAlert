@@ -31,6 +31,11 @@ export default function SignUpDetailsPage({ navigation, route, setIsSignUpComple
   }
 
   const handleFormSubmit = async () => {
+    // Check for empty fields
+    if (personalDetails.Name == "" || personalDetails.Gender == "" || personalDetails.DateOfBirth == "" || personalDetails.PhoneNumber == "") {
+      alert("Please fill in all fields.");
+      return;
+    }
     createUserWithEmailAndPassword(auth, emailAddress, password).then(async (userCredential) => {
       const user = userCredential.user;
       const userId = user.uid;
