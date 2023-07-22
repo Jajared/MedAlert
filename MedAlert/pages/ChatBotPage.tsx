@@ -172,9 +172,9 @@ export default function ChatBotPage({ navigation, gender, dateOfBirth }) {
         if (medication == "") {
           medicationText = "No medication recommendations found";
         } else {
-          medicationText = `Here are some medications that others are taking for your symptoms:\n${medication}`;
+          medicationText = `Recommended Medications:\n${medication}`;
         }
-        response = { _id: Math.round(Math.random() * 1000000), text: `Here are some possible diagnosis for your given symptoms:\n${diagnosisText}\n${medicationText}\n\n⚠️This is not an official diagnosis. Please consult a doctor for professional advice`, createdAt: new Date(), user: doctor };
+        response = { _id: Math.round(Math.random() * 1000000), text: `Based on the symptoms you have provided, here is a possible diagnosis and medication recommendation.\n\nPossible Diagnosis:\n${diagnosisText}\n${medicationText}\n\n⚠️This is not an official diagnosis. Please consult a doctor for professional advice⚠️`, createdAt: new Date(), user: doctor };
       }
       setMessages((previousMessages) => GiftedChat.append(previousMessages, [response]));
     } catch (error) {

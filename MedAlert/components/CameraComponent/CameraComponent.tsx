@@ -20,6 +20,7 @@ const CameraComponent = ({ onCancel, setIsLoading, setState, state }) => {
       const { status } = await Camera.requestCameraPermissionsAsync();
       setHasPermission(status === "granted");
     })();
+    alert("This feature only works with standard Singapore medication labels");
   }, []);
 
   const handleCapture = async () => {
