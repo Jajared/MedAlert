@@ -1,18 +1,36 @@
 # MedAlert
 ## Description
 <p align="center">
-  <img src="https://github.com/Jajared/MedAlert/assets/84561814/37dd4bfe-4010-4c9b-8bfa-10ba00401553" width="240" height="500">
+<img src="https://github.com/Jajared/MedAlert/assets/84561814/fd412cf4-a388-467b-8064-9feef0d39ebb" alt="MedAlert GIF" width="230" height="460">
 </p>
 MedAlert is a mobile app that aims to provide a user-friendly solution for individuals to manage their medication schedules efficiently. With a focus on user-accessibility, our app will offer a simple and intuitive interface, allowing users to set up personalised reminders for their medication needs. Our goal is to help people, especially those with chronic illnesses - to make consuming medication a less tedious and confusing process, which we understand can be very complicated.
 <br/>
 <br/>
-Our medication reminder app aims to provide a comprehensive solution for individuals to effectively manage their medication schedules and improve adherence. The scope of the project includes the following key components:
-1. User-Friendly Interface
-2. Medication Reminders and Tracking
-3. Medication Information Database
-4. Guardian System
-5. Predictive Analysis of medicating-taking habits
-<br/><br/>
+Our medication reminder app aims to provide a comprehensive solution for individuals to effectively manage their medication schedules and improve adherence.
+<br/>
+<br/>
+App Features:
+<ol>
+  <li>
+    Medication Reminders and Tracking
+  <lil>
+  <li>
+    Medication Database
+  </li>
+  <li>
+    Guardian System
+  </li>
+  <li>
+    Medication upload using Image Recognition
+  </li>
+  <li>
+    Consumption Statistics
+  </li>
+  <li>
+    DocBot (Symptoms Checker and Medication Recommendation)
+  </li>
+</ol>
+<br/>
 Full README: https://docs.google.com/document/d/15_JCCbonlIHDc7t6ML8B8pEOJ90FAFEL8INFauHBHz8/edit?usp=sharing
 
 ## Running the app (⚠️ This app has only been developed for iOS devices ⚠️)
